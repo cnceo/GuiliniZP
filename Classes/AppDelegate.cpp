@@ -1,12 +1,13 @@
-#include "AppDelegate.h"
+﻿#include "AppDelegate.h"
 #include "HelloWorldScene.h"
+#include "layer/GameScene.h"
 
 USING_NS_CC;
 
-static cocos2d::Size designResolutionSize = cocos2d::Size(480, 320);
-static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
-static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
-static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
+static cocos2d::Size mydesignResolutionSize = cocos2d::Size(960, 640);
+
+float DESIGN_RATIO = 1.5f;
+int DESIGN_PAD_WIDTH = 1024;
 
 AppDelegate::AppDelegate() {
 
@@ -27,25 +28,46 @@ void AppDelegate::initGLContextAttrs()
     GLView::setGLContextAttrs(glContextAttrs);
 }
 
-// If you want to use packages manager to install more packages, 
-// don't modify or remove this function
-static int register_all_packages()
-{
-    return 0; //flag for packages manager
-}
-
 bool AppDelegate::applicationDidFinishLaunching() {
+
+	//将log结果呈现在输出窗口
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+	AllocConsole();
+	freopen("CONIN$", "r", stdin);
+	freopen("CONOUT$", "w", stdout);
+	freopen("CONOUT$", "w", stderr);
+#endif
     // initialize director
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        glview = GLViewImpl::createWithRect("GuilinZP", Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
-#else
-        glview = GLViewImpl::create("GuilinZP");
-#endif
+        glview = GLViewImpl::createWithRect("ZIPAI", Rect(0, 0, 960, 640));
         director->setOpenGLView(glview);
     }
+
+	Size size = Director::getInstance()->getWinSize();
+
+	float ratio = size.width / size.height;
+
+	if (ratio >= DESIGN_RATIO)
+	{
+		float height = mydesignResolutionSize.height;
+		float width = height * ratio;
+		glview->setDesignResolutionSize(width, height, ResolutionPolicy::EXACT_FIT);
+	}
+	else
+	{
+		//float width = mydesignResolutionSize.width;
+		float width = DESIGN_PAD_WIDTH;
+		float height = width / ratio;
+		glview->setDesignResolutionSize(width, height, ResolutionPolicy::EXACT_FIT);
+	}
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+
+	glview->setFrameSize(960, 640);
+
+#endif
 
     // turn on display FPS
     director->setDisplayStats(true);
@@ -53,31 +75,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0 / 60);
 
-    // Set the design resolution
-    glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
-    Size frameSize = glview->getFrameSize();
-    // if the frame's height is larger than the height of medium size.
-    if (frameSize.height > mediumResolutionSize.height)
-    {        
-        director->setContentScaleFactor(MIN(largeResolutionSize.height/designResolutionSize.height, largeResolutionSize.width/designResolutionSize.width));
-    }
-    // if the frame's height is larger than the height of small size.
-    else if (frameSize.height > smallResolutionSize.height)
-    {        
-        director->setContentScaleFactor(MIN(mediumResolutionSize.height/designResolutionSize.height, mediumResolutionSize.width/designResolutionSize.width));
-    }
-    // if the frame's height is smaller than the height of medium size.
-    else
-    {        
-        director->setContentScaleFactor(MIN(smallResolutionSize.height/designResolutionSize.height, smallResolutionSize.width/designResolutionSize.width));
-    }
-
-    register_all_packages();
+    FileUtils::getInstance()->addSearchPath("res");
 
     // create a scene. it's an autorelease object
-    auto scene = HelloWorld::createScene();
-
-    // run
+	//auto scene = HelloWorld::createScene();
+	auto scene = GameScene::createScene();
     director->runWithScene(scene);
 
     return true;
