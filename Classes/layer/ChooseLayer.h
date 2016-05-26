@@ -1,8 +1,10 @@
 ﻿#pragma once
 
 #include "cocos2d.h"
+#include "ui/UIButton.h"
 
 using namespace cocos2d;
+using namespace ui;
 
 /*
 菜单选择层
@@ -17,12 +19,26 @@ public:
 
 	virtual bool init();
 	CREATE_FUNC(ChooseLayer);
-
+	virtual void onEnter();
 private:
 
 	void initData();
-
 	void initUI();
 
+private:
+	void chiBtnCbk(Ref* psender);
+	void pengBtnCbk(Ref* psender);
+	void huBtnCbk(Ref* psender);
+	void closeBtnCbk(Ref* psender);
+
+	void setBtnEnable(int index);
+
+	void close();
+
+private:
+	Button* m_chi_btn;
+	Button* m_peng_btn;
+	Button* m_hu_btn;
+	Button* m_close_btn;
 };
 
