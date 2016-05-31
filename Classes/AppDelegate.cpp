@@ -70,14 +70,14 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #endif
 
     // turn on display FPS
-    director->setDisplayStats(true);
+    director->setDisplayStats(false);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0 / 60);
 
-    FileUtils::getInstance()->addSearchPath("res");
+	FileUtils::getInstance()->addSearchPath("res");
+	FileUtils::getInstance()->addSearchPath("icon_image");
 
-    // create a scene. it's an autorelease object
 	//auto scene = HelloWorld::createScene();
 	auto scene = GameScene::createScene();
     director->runWithScene(scene);

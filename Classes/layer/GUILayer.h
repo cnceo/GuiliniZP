@@ -22,5 +22,7 @@ private:
 	void initData();
 	void initUI();
 
+private:
+
 };
 

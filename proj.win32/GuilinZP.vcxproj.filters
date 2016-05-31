@@ -10,10 +10,19 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\layer">
+      <UniqueIdentifier>{e57051ba-16c6-4cd9-a40e-569383ac5632}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\utils">
+      <UniqueIdentifier>{8652f4b4-0b09-4f20-90cd-3089362a1358}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\AccountsLayer.cpp">
+      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\AppDelegate.cpp">
       <Filter>src</Filter>
@@ -21,16 +30,70 @@
     <ClCompile Include="..\Classes\HelloWorldScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Win.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ZiPai.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ZiPaiManage.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\layer\ChooseLayer.cpp">
+      <Filter>src\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\layer\GameLayer.cpp">
+      <Filter>src\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\layer\GameScene.cpp">
+      <Filter>src\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\layer\GUILayer.cpp">
+      <Filter>src\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\utils\CommonFunction.cpp">
+      <Filter>src\utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
       <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AccountsLayer.h">
+      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\AppDelegate.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\HelloWorldScene.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Win.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ZiPai.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ZiPaiManage.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\layer\ChooseLayer.h">
+      <Filter>src\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\layer\GameLayer.h">
+      <Filter>src\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\layer\GameScene.h">
+      <Filter>src\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\layer\GUILayer.h">
+      <Filter>src\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\utils\CommonFunction.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\utils\Constant.h">
+      <Filter>src\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

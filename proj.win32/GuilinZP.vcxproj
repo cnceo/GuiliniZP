@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -96,7 +96,8 @@
       </Command>
     </PostBuildEvent>
     <PreLinkEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup>
@@ -108,7 +109,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
       <Inputs>$(TargetFileName)</Inputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
-
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
@@ -139,17 +139,37 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
       </Command>
     </PostBuildEvent>
     <PreLinkEvent>
-      <Command></Command>
+      <Command>
+      </Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Classes\AccountsLayer.cpp" />
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
+    <ClCompile Include="..\Classes\layer\ChooseLayer.cpp" />
+    <ClCompile Include="..\Classes\layer\GameLayer.cpp" />
+    <ClCompile Include="..\Classes\layer\GameScene.cpp" />
+    <ClCompile Include="..\Classes\layer\GUILayer.cpp" />
+    <ClCompile Include="..\Classes\utils\CommonFunction.cpp" />
+    <ClCompile Include="..\Classes\Win.cpp" />
+    <ClCompile Include="..\Classes\ZiPai.cpp" />
+    <ClCompile Include="..\Classes\ZiPaiManage.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Classes\AccountsLayer.h" />
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
+    <ClInclude Include="..\Classes\layer\ChooseLayer.h" />
+    <ClInclude Include="..\Classes\layer\GameLayer.h" />
+    <ClInclude Include="..\Classes\layer\GameScene.h" />
+    <ClInclude Include="..\Classes\layer\GUILayer.h" />
+    <ClInclude Include="..\Classes\utils\CommonFunction.h" />
+    <ClInclude Include="..\Classes\utils\Constant.h" />
+    <ClInclude Include="..\Classes\Win.h" />
+    <ClInclude Include="..\Classes\ZiPai.h" />
+    <ClInclude Include="..\Classes\ZiPaiManage.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>

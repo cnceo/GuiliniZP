@@ -1,5 +1,6 @@
 ﻿#include "GameScene.h"
 #include "GameLayer.h"
+#include "GUILayer.h"
 
 GameScene::GameScene()
 {
@@ -27,7 +28,7 @@ bool GameScene::init()
 	}
 
 	addChild(GameLayer::create());
-
+	addChild(GUILayer::create());
 	return true;
 
 }
