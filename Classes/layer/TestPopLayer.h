@@ -1,21 +1,18 @@
 ﻿#pragma once
 
 #include "cocos2d.h"
+#include "layerUtils/Pop.h"
 using namespace cocos2d;
 
-/*
-ui显示层 玩家信息等
-*/
-
-class GUILayer :public Layer
+class TestPopLayer :public Pop
 {
 public:
 
-	GUILayer();
-	~GUILayer();
+	TestPopLayer();
+	~TestPopLayer();
 
 	virtual bool init();
-	CREATE_FUNC(GUILayer);
+	CREATE_FUNC(TestPopLayer);
 
 private:
 

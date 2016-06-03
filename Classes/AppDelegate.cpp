@@ -1,6 +1,7 @@
 ﻿#include "AppDelegate.h"
 #include "HelloWorldScene.h"
 #include "layer/GameScene.h"
+#include "layer/WelcomeScene.h"
 
 USING_NS_CC;
 
@@ -70,7 +71,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #endif
 
     // turn on display FPS
-    director->setDisplayStats(false);
+    director->setDisplayStats(true);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0 / 60);
@@ -79,7 +80,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	FileUtils::getInstance()->addSearchPath("icon_image");
 
 	//auto scene = HelloWorld::createScene();
-	auto scene = GameScene::createScene();
+	//auto scene = GameScene::createScene();
+	auto scene = WelcomeScene::createScene();
     director->runWithScene(scene);
 
     return true;

@@ -559,44 +559,29 @@ void  ZiPai::addCard(int p_type, int p_value)
 //打印手上所有的牌
 void ZiPai:: logAllCard()
 {
-	//cout << " ";
+	cout << "牌数量=" << (m_MyCard[0].size() + m_MyCard[1].size()) << endl;
 	int length = m_MyCard[0].size() + m_MyCard[1].size();
-	for (int i = 0; i < length; i++)
-	{
-		//cout << i << " -";
-	}
-	cout << endl;
 	int icount = 0;
+
 	if (m_MyCard[0].size()>0)
 	{
 		for (int i = 0; i < m_MyCard[0].size(); i++)
 		{
-			//log("M=%d", m_MyCard[0][i]);
-			//cout << "T:0" << " " << "V:" << m_MyCard[0][i];
+			cout << "(0" << "," << "" << m_MyCard[0][i]<<"),";
 			icount++;
 		}
 	}
 	cout << endl;
-	for (int i = 0; i < icount; i++)
-	{
-		//cout << "  ";
-	}
 	if (m_MyCard[1].size()>0)
 	{
 		for (int i = 0; i < m_MyCard[1].size(); i++)
 		{
-			//log("L=%d", m_MyCard[1][i]);
-			//cout << "T:1" << " " << "V:" << m_MyCard[1][i];
+			cout << "(1" << "," << "" << m_MyCard[1][i]<<"),";
 			icount++;
 		}
 	}
-	//cout << endl;
-	for (int i = 0; i < icount; i++)
-	{
-		//cout << "  ";
-	}
-	//cout << endl;
-	//log("AllSize=%d", (m_MyCard[0].size() + m_MyCard[1].size()));
+	cout << endl;
+	cout << endl;
 }
 //打印所有碰的牌
 void	ZiPai::logAllPengCard()
@@ -651,8 +636,6 @@ bool ZiPai::delACard(int PaiIndex)
 		{
 			if (count == PaiIndex)
 			{
-				//cout << "打出的牌：" << "T:" << i << "V:" << (*Iter);
-				//cout << endl;
 				popCard.m_Type = i;
 				popCard.m_Value = (*Iter);
 				m_MyCard[i].erase(Iter);
@@ -690,9 +673,10 @@ bool	ZiPai::delACard(int p_type, int p_value)
 	{
 		if ((*it) == p_value)
 		{
-			m_MyCard[p_type].erase(it);
+			popCard.m_Type = p_type;
+			popCard.m_Value = p_value;
 
-			//log("erase a card");
+			m_MyCard[p_type].erase(it);
 
 			return true;
 		}

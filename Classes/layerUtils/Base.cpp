@@ -7,15 +7,15 @@ bool Base::init()
 
 	m_popNode = Node::create();
 	this->addChild(m_popNode, 10);
-
+	m_popNode->setCascadeOpacityEnabled(true);
 	this->setPosition(CommonFunction::getVisibleAchor(Center, Vec2::ZERO));
 
-	return Layer::init();
+	return Node::init();
 }
 
 void Base::onEnter()
 {
-	Layer::onEnter();
+	Node::onEnter();
 
 	// 屏蔽触摸
 	auto myListener = EventListenerTouchOneByOne::create();
@@ -39,26 +39,33 @@ void Base::onEnterTransitionDidFinish()
 
 void Base::createBg()
 {
-	/*
-	1.透明
-	2.不透明
-	3.有渐变(没改好)
-	*/
-	
-	auto layercolor = LayerColor::create(Color4B(0,0,0,150));
-	layercolor->setOpacity(10);
+	layercolor = LayerColor::create(Color4B(0, 0, 0, 255));
+	layercolor->setOpacity(0);
 	layercolor->ignoreAnchorPointForPosition(false);
 	layercolor->setAnchorPoint(Vec2(0.5, 0.5));
+	addChild(layercolor, -1);
 
-	addChild(layercolor,-1);
-
-	auto fadeIn = FadeIn::create(0.5f);
-
-	layercolor->runAction(fadeIn);
+	auto tintTo = FadeTo::create(0.3f, 150);
+	layercolor->runAction(tintTo);
 }
 
 bool Base::onTouchBegan(Touch *pTouch, Event *pEvent)
 {
+	//如果子节点的tag为99，说明是背景，点击外面背景外面移除此层，若不想用此功能可以重写此方法
+	for (auto &child : m_popNode->getChildren())
+	{
+		if (child->getTag() == 99)
+		{
+			Size size = child->getContentSize();
+			Rect rect = Rect(0, 0, size.width, size.height);
+			Vec2 locationNode = child->convertToNodeSpace(pTouch->getLocation());
+
+			if (!rect.containsPoint(locationNode))
+			{
+				close();
+			}
+		}
+	}
 	return true;
 }
 
@@ -75,10 +82,21 @@ void Base::onTouchEnded(Touch *pTouch, Event *pEvent)
 void Base::close()
 {
 	this->retain();
-	if (getParent())
+
+	auto fadeTo = FadeTo::create(0.1f, 0);
+	auto callFunc = CallFunc::create([this](){
+		if (getParent())
+		{
+			removeFromParent();
+		}
+	});
+
+	auto seq = Sequence::create(fadeTo, callFunc, nullptr);
+	if (layercolor)
 	{
-		removeFromParent();
+		layercolor->runAction(seq);
 	}
+
 	this->autorelease();
 }
 
