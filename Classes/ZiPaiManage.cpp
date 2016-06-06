@@ -5,6 +5,7 @@ ZiPaiManage::ZiPaiManage()
 {
 
 }
+
 ZiPaiManage::~ZiPaiManage()
 {
 
@@ -43,23 +44,35 @@ void ZiPaiManage::InitPai(int p_HZPaiNum)
 //起牌
 CardEx ZiPaiManage::GetAPai()
 {
+
+	if (m_ZPVec.size()<= 0)
+	{
+		return CardEx{};
+	}
+
 	CardEx t_pai;
+
 	t_pai.m_NewCard.m_Type = m_ZPVec.back().m_Type;
 	t_pai.m_NewCard.m_Value = m_ZPVec.back().m_Value;
+
 	t_pai.m_CardNum = m_ZPVec.size() - 1;
 
 	if (t_pai.m_CardNum == m_HZPaiNum)
 	{
-		t_pai.IsHz = true;
+		t_pai.IsHz = true;	//黄庄
 	}
 	else
 	{
 		t_pai.IsHz = false;
 	}
-	//扔去一个
-	m_ZPVec.pop_back();
 
-	return t_pai;
+	if (m_ZPVec.size()>=1)
+	{
+		m_ZPVec.pop_back();
+		return t_pai;
+	}
+
+	return CardEx{};
 }
 
 //洗牌 

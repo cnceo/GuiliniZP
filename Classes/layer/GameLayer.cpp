@@ -20,7 +20,8 @@
 GameLayer::GameLayer():
 m_isStartGame(true),
 m_line(nullptr),
-m_TempMoveCard(nullptr)
+m_TempMoveCard(nullptr),
+m_GameState(MyTurn)
 {
 
 }
@@ -37,6 +38,7 @@ bool GameLayer::init()
 		return false;
 	}
 
+	scheduleUpdate();
 	initData();
 
 	initUI();
@@ -44,6 +46,61 @@ bool GameLayer::init()
 	addChild(ShowLayer::create(this));
 
 	return true;
+}
+
+void GameLayer::update(float dt)
+{
+	switch (m_GameState)
+	{
+	case GameLayer::NPCTurn_1:	//我下家
+
+		//playNPC_1();
+
+		/*
+			我检测是否有：碰 ，开舵，重舵
+		*/
+
+		getANewCard();
+		logAllCard();
+		m_GameState = GameLayer::NPCTurn_0;
+
+		break;
+	case GameLayer::NPCTurn_0:	//我上家
+
+		/*
+			我检测是否有：吃，碰，开舵，重舵
+		*/
+
+		//playNPC_0();
+		getANewCard();
+		m_GameState = GameLayer::MyTurn;
+
+		//logAllCard();
+		break;
+	case GameLayer::MyTurn:		//我自己
+		/*
+			我检测是否有：吃，碰，扫，过扫，扫穿，开舵，重舵
+		*/
+
+		break;
+	case GameLayer::OFF:
+
+		break;
+	default:
+		break;
+	}
+}
+
+void GameLayer::playNPC_0()
+{
+	//t_Player[2].check(t_Player[0], PopPai[2].m_Type, PopPai[2].m_Value);
+
+}
+
+void GameLayer::playNPC_1()
+{
+	//t_Player[1].check(t_Player[1], PopPai[2].m_Type, PopPai[2].m_Value);
+
 }
 
 void GameLayer::initData()
@@ -64,18 +121,15 @@ void GameLayer::onEnter()
 
 bool GameLayer::onTouchBegan(Touch *touch, Event *unused_event)
 {
-	m_line = DrawNode::create();
-	addChild(m_line);
-	if (m_line)
+	if (m_GameState != GameLayer::GameState::MyTurn)
 	{
-		m_line->drawSegment(Point(0, VISIBLESIZE.height / 2 - 50), Point(VISIBLESIZE.width, VISIBLESIZE.height / 2 - 50), 2, Color4F(0, 1, 0, 1));
+		return false;
 	}
 
 	vector <CardSprite*>::iterator iter = m_CardList.begin();
 	for (; iter != m_CardList.end(); ++iter)
 	{
 		CardSprite* _card = static_cast<CardSprite*>(*iter);
-
 		Point locationInNode = _card->convertToNodeSpace(touch->getLocation());
 
 		Size s = _card->getContentSize();
@@ -86,21 +140,36 @@ bool GameLayer::onTouchBegan(Touch *touch, Event *unused_event)
 			m_TempMoveCard = _card;
 			m_OldPos = _card->getPosition(); 
 			m_TempMoveCard->setLocalZOrder(CARD_ZORDER_2);
-			cout << "T:" << _card->getCardData()->m_Type << "V:" << _card->getCardData()->m_Value << endl;
+
+			if (_card->getState() == CardSprite::CardState::ONTouch)
+			{
+				//画线
+				m_line = DrawNode::create();
+				addChild(m_line);
+				if (m_line)
+				{
+					m_line->drawSegment(Point(0, VISIBLESIZE.height / 2 - 50), Point(VISIBLESIZE.width, VISIBLESIZE.height / 2 - 50), 2, Color4F(0, 1, 0, 1));
+				}
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 
 			return true;
 		}
 	}
 
-	return true;
+	return false;
 }
 
 void GameLayer::onTouchMoved(Touch *touch, Event *unused_event)
 {
-	if (m_TempMoveCard)
-	{
-		m_TempMoveCard->setPosition(touch->getLocation());
-	}
+		if (m_TempMoveCard)
+		{
+			m_TempMoveCard->setPosition(touch->getLocation());
+		}
 }
 
 void GameLayer::onTouchEnded(Touch *touch, Event *unused_event)
@@ -134,12 +203,12 @@ void GameLayer::onTouchEnded(Touch *touch, Event *unused_event)
 
 		t_Player[2].delACard(_type, _value);
 
-		logAllCard();
-
 		createMyCardWall();
 	
 		PopPai[2] = t_Player[2].popCard;
 		_eventDispatcher->dispatchCustomEvent(CREATE_CARD);
+
+		m_GameState = GameLayer::GameState::NPCTurn_1;
 	}
 	else
 	{
@@ -191,9 +260,33 @@ void GameLayer::overCallBack(Ref* ref)
 
 }
 
+void GameLayer::getANewCard()
+{
+	CardEx t_newCard = t_ZPManage.GetAPai();
+
+	if (t_newCard.m_CardNum <= -1)
+	{
+		return;
+	}
+
+	if (t_newCard.IsHz == true)
+	{
+		m_newCard = t_newCard.m_NewCard;
+		_eventDispatcher->dispatchCustomEvent(NEW_CARD);
+		cout << "黄庄" << endl;
+
+	}
+	else
+	{
+		m_newCard = t_newCard.m_NewCard;
+		cout << "剩" << t_newCard.m_CardNum << "张牌" << endl;
+		_eventDispatcher->dispatchCustomEvent(NEW_CARD);
+	}
+}
+
 void GameLayer::xipai()
 {
-	t_ZPManage.InitPai();
+	t_ZPManage.InitPai(0);
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -220,10 +313,10 @@ void GameLayer::logAllCard()
 {
 	cout << "自己的牌（2）" << endl;
 	t_Player[2].logAllCard();
-	cout << "上家的牌（0）" << endl;
-	t_Player[0].logAllCard();
 	cout << "下家的牌（1）" << endl;
 	t_Player[1].logAllCard();
+	cout << "上家的牌（0）" << endl;
+	t_Player[0].logAllCard();
 	cout << "----------------------------------------" << endl;
 }
 
@@ -263,6 +356,8 @@ void GameLayer::createMyCardWall()
 			count++;
 		}
 	}
+
+	setCardState();
 }
 
 void GameLayer::removeMyCardWall()
@@ -276,4 +371,84 @@ void GameLayer::removeMyCardWall()
 		}
 	}
 	m_CardList.clear();
+}
+
+void GameLayer::setCardState()
+{
+	vector<CardSprite*> _tempList;
+	vector<CardSprite*> _temp_0;
+
+	for (auto& _card : m_CardList)
+	{
+		_tempList.push_back(_card);
+	}
+
+	for (auto& _tcard : _tempList)
+	{
+		int _ttype = _tcard->getCardData()->m_Type;
+		int _tvalue = _tcard->getCardData()->m_Value;
+		int _count = 0;
+
+		for (auto &_card : m_CardList)
+		{
+			int _type = _card->getCardData()->m_Type;
+			int _value = _card->getCardData()->m_Value;
+
+			if (_ttype == 0 && _type == 0)
+			{
+				if (_tvalue == _value)
+				{
+					_count ++;
+					if (_count>=3)
+					{
+						_temp_0.push_back(_card);
+					}
+				}
+	
+			}
+		}
+	}
+
+	for (auto& _tcard : _tempList)
+	{
+		int _ttype = _tcard->getCardData()->m_Type;
+		int _tvalue = _tcard->getCardData()->m_Value;
+		int _count = 0;
+
+		for (auto &_card : m_CardList)
+		{
+			int _type = _card->getCardData()->m_Type;
+			int _value = _card->getCardData()->m_Value;
+
+			if (_ttype == 1 && _type == 1)
+			{
+				if (_tvalue == _value)
+				{
+					_count++;
+					if (_count >= 3)
+					{
+						_temp_0.push_back(_card);
+					}
+				}
+
+			}
+		}
+	}
+
+	auto Iter = std::unique(std::begin(_temp_0), std::end(_temp_0));
+	_temp_0.erase(Iter, _temp_0.end());
+
+	for (auto &_tcard : _temp_0)
+	{
+		for (auto& _card : m_CardList)
+		{
+			if (_tcard->getCardData()->m_Type == _card->getCardData()->m_Type)
+			{
+				if (_tcard->getCardData()->m_Value == _card->getCardData()->m_Value)
+				{
+					_card->setState(CardSprite::CardState::OFFTouch);
+				}
+			}
+		}
+	}
 }

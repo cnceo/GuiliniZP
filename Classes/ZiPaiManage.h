@@ -14,7 +14,7 @@ struct CardEx
 {
 	CardData m_NewCard;		//起新的牌
 	int		 m_CardNum;		//剩余牌数量
-	bool	 IsHz;			//是否黄庄
+	bool	 IsHz = false;			//是否黄庄
 };
 
 class ZiPaiManage
@@ -30,7 +30,6 @@ public:
 	void InitPai(int p_HZPaiNum = 0);
 
 	CardEx  GetAPai();
-
 private:
 
 	void   XiPai();

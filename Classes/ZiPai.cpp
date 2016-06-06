@@ -1,4 +1,6 @@
 ﻿#include "ZiPai.h"
+#include "layerUtils/ToastLayer/ToastManger.h"
+#include "utils/CommonFunction.h"
 
 ZiPai::ZiPai():
 m_Score(0),
@@ -1228,6 +1230,7 @@ bool ZiPai::check(ZiPai &player,int t_Type, int t_Value)
 	if (player.checkChongDuo_saoChuan(t_Type, t_Value))
 	{
 		player.doChongDuo_saoChuan(t_Type, t_Value);
+
 		return true;
 	}
 	// 开舵的重舵

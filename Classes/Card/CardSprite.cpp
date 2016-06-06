@@ -37,6 +37,8 @@ bool	CardSprite::init(int type, int value)
 
 	initUI(type, value);
 
+	this->setState(CardSprite::CardState::ONTouch);		//都能触摸
+
 	return true;
 }
 

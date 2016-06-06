@@ -5,19 +5,27 @@
 
 ShowLayer::ShowLayer():
 m_GameLayer(nullptr),
-m_ACard(nullptr)
+m_ACard(nullptr),
+m_NewCard(nullptr)
 {
 	//显示卡牌
 	auto _listener_1 = EventListenerCustom::create(CREATE_CARD, [=](EventCustom*event){
 		createACard();
 	});
+	
+	//新的牌
+	auto _listener_2 = EventListenerCustom::create(NEW_CARD, [=](EventCustom*event){
+		createANewCard();
+	});
 
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_1, 1);
+	_eventDispatcher->addEventListenerWithFixedPriority(_listener_2, 1);
 }
 
 ShowLayer::~ShowLayer()
 {
 	_eventDispatcher->removeCustomEventListeners(CREATE_CARD);
+	_eventDispatcher->removeCustomEventListeners(NEW_CARD);
 }
 
 ShowLayer* ShowLayer::create(GameLayer* _layer)
@@ -107,18 +115,22 @@ Sprite* ShowLayer::createSmallCardSprite(int p_Type, int p_Value)
 
 void ShowLayer::createACard()
 {
-	if (m_ACard && m_ACard->getParent())
-	{
-		m_ACard->removeFromParent();
-	}
 
 	int _type = m_GameLayer->PopPai[2].m_Type;
 	int _value = m_GameLayer->PopPai[2].m_Value;
 
 	if (_type < 0 || _type > 1 || _value <= 0 || _value > 10)
 	{
-		log("_value or _type error");
+		log("_value or _type error0");
 		return;
+	}
+
+	if (m_ACard)
+	{
+		if (m_ACard->getParent())
+		{
+			m_ACard->removeFromParent();
+		}
 	}
 
 	m_ACard = createBigCardSprite(_type, _value);
@@ -127,6 +139,37 @@ void ShowLayer::createACard()
 	if (m_ACard)
 	{
 		m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 0)));
-
 	}
+}
+
+void ShowLayer::createANewCard()
+{
+	int _type = m_GameLayer->m_newCard.m_Type;
+	int _value = m_GameLayer->m_newCard.m_Value;
+
+	if (_type < 0 || _type > 1 || _value <= 0 || _value > 10)
+	{
+		log("_value or _type error1");
+		return;
+	}
+
+	if (m_NewCard)
+	{
+		if (m_NewCard->getParent())
+		{
+			m_NewCard->removeFromParent();
+		}
+	}
+
+	m_NewCard = createBigCardSprite(_type, _value);
+	addChild(m_NewCard);
+
+	if (!m_NewCard)return;
+
+	float height = m_NewCard->getContentSize().height;
+	m_NewCard->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, Vec2(0, height / 2)));
+
+	auto moveTo = MoveTo::create(0.3f, CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, height + 25)));
+	auto easeAction = EaseBackOut::create(moveTo);
+	m_NewCard->runAction(easeAction);
 }

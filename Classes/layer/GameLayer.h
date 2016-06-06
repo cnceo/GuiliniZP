@@ -19,6 +19,14 @@ class GameLayer :public Layer
 {
 public:
 
+	enum GameState
+	{
+		NPCTurn_0,
+		NPCTurn_1,
+		MyTurn,
+		OFF
+	};
+
 	GameLayer();
 	~GameLayer();
 
@@ -40,16 +48,24 @@ private:
 	void initData();
 	void initUI();
 
+	void getANewCard();						//起一张新牌
+
 	void xipai();
 
 	void createMyCardWall();				//创建我的牌墙
 	void removeMyCardWall();				//移除牌墙
+	void setCardState();
 
 	void logAllCard();
 
+	virtual void update(float dt);
+	void playNPC_0();						//上家
+	void playNPC_1();						//下家
+
 public:
-	CardEx		GetPai[3];					//玩家起的牌
 	CardData	PopPai[3];					//玩家出的牌
+
+	CardData    m_newCard;					//玩家起的牌
 
 private:
 	bool m_isStartGame;
@@ -64,5 +80,6 @@ private:
 
 	Vector<CardSprite* > m_CardList;		//牌数组
 
+	GameState m_GameState;
 };
 

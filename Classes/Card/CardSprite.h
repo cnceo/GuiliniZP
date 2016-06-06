@@ -10,6 +10,12 @@ class CardSprite : public Node
 {
 public:
 
+	enum CardState
+	{
+		ONTouch,		//能打
+		OFFTouch		//不能打
+	};
+
 	CardSprite();
 	~CardSprite();
 
@@ -17,6 +23,8 @@ public:
 	virtual bool	init(int type, int value);
 
 	void initUI(int type, int value);
+
+	CC_SYNTHESIZE(CardState,_state,State);
 public:
 	 CardData*	getCardData();
 

@@ -28,9 +28,12 @@ private:
 	Sprite* createSmallCardSprite(int p_Type, int p_Value);
 
 	void createACard();
-	GameLayer*	m_GameLayer;
+
+	void createANewCard();		//新摸的牌
 
 private:
 	Sprite* m_ACard;
+	Sprite* m_NewCard;
+	GameLayer*	m_GameLayer;
 };
 
