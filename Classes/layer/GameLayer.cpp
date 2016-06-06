@@ -61,6 +61,7 @@ void GameLayer::update(float dt)
 		*/
 
 		getANewCard();
+
 		logAllCard();
 		m_GameState = GameLayer::NPCTurn_0;
 
@@ -81,7 +82,6 @@ void GameLayer::update(float dt)
 		/*
 			我检测是否有：吃，碰，扫，过扫，扫穿，开舵，重舵
 		*/
-
 		break;
 	case GameLayer::OFF:
 

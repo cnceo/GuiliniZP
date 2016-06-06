@@ -22,7 +22,12 @@ private:
 	void initData();
 	void initUI();
 
+	void playerBlink_0();
+	void playerBlink_1();
+	void playerBlink_2();
 private:
-
+	Sprite* icon_left;
+	Sprite* icon_leftDown;
+	Sprite* icon_right;
 };
 

@@ -12,6 +12,11 @@ using namespace cocos2d;
 #define CREATE_CARD "createCard"
 #define NEW_CARD	"getANewCard"
 
+#define PLAYERBLINK_0	"blink_0"	//头像跳动
+#define PLAYERBLINK_1	"blink_1"
+#define PLAYERBLINK_2	"blink_2"
+
+
 //层zorder
 
 #define CARD_ZORDER_1 10
