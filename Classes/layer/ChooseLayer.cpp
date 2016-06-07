@@ -1,5 +1,6 @@
 ﻿#include "ChooseLayer.h"
 #include "utils/CommonFunction.h"
+#include "utils/Constant.h"
 
 ChooseLayer::ChooseLayer():
 m_chi_btn(nullptr),
@@ -51,7 +52,7 @@ void ChooseLayer::initUI()
 
 	 auto node = Node::create();
 	 addChild(node);
-	 node->setPosition(CommonFunction::getVisibleAchor(0.5,0.4,this,Vec2(0,0)));
+	 node->setPosition(CommonFunction::getVisibleAchor(0.5,0.4,this,Vec2(100,0)));
 	 node->setScale(0.7);
 
 	if (m_chi_btn)
@@ -93,6 +94,8 @@ void ChooseLayer::pengBtnCbk(Ref* psender)
 {
 	log("peng");
 	//close();
+	_eventDispatcher->dispatchCustomEvent(PLAYER_PENG);
+	close();
 }
 
 void ChooseLayer::huBtnCbk(Ref* psender)
@@ -104,6 +107,7 @@ void ChooseLayer::huBtnCbk(Ref* psender)
 void ChooseLayer::closeBtnCbk(Ref* psender)
 {
 	log("close");
+	_eventDispatcher->dispatchCustomEvent(CLOSE_CHOOSELAYER);
 	close();
 }
 

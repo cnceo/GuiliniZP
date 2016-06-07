@@ -62,15 +62,23 @@ private:
 	void playNPC_0();						//上家
 	void playNPC_1();						//下家
 
+private:
+	//我自己检测
+	void checkPeng();
+	void doPengACard();
+	void chooseLayerClose();
+	
+	void checkKaiduo();
+	void checkChongDuo();
+
 public:
 	CardData	PopPai[3];					//玩家出的牌
-
 	CardData    m_newCard;					//玩家起的牌
+
+	ZiPai		t_Player[3];				//三个玩家(2是自己)
 
 private:
 	bool m_isStartGame;
-
-	ZiPai		t_Player[3];				//三个玩家(2是自己)
 	ZiPaiManage t_ZPManage;					//管理器
 
 	DrawNode*	m_line;						//创建线

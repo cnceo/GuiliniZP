@@ -16,6 +16,11 @@ using namespace cocos2d;
 #define PLAYERBLINK_1	"blink_1"
 #define PLAYERBLINK_2	"blink_2"
 
+#define PLAYER_PENG			"pengACard"			//我碰
+#define CLOSE_CHOOSELAYER	"closeChooseLayer"	//关闭选择层
+
+#define SHOW_PENGCARD		"showPengCard"		//显示碰的牌
+#define SHOW_KAIDUOCARD		"showKaiduoCard"	//显示开舵的牌
 
 //层zorder
 

@@ -20,6 +20,10 @@ public:
 	virtual bool init();
 	CREATE_FUNC(ChooseLayer);
 	virtual void onEnter();
+
+public:
+	void setBtnEnable(int index);
+
 private:
 
 	void initData();
@@ -30,8 +34,6 @@ private:
 	void pengBtnCbk(Ref* psender);
 	void huBtnCbk(Ref* psender);
 	void closeBtnCbk(Ref* psender);
-
-	void setBtnEnable(int index);
 
 	void close();
 

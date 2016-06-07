@@ -7,6 +7,7 @@
 #include "utils/Constant.h"
 #include "layerUtils/ToastLayer/ToastManger.h"
 #include "ShowLayer.h"
+#include "ChooseLayer.h"
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 
@@ -23,12 +24,22 @@ m_line(nullptr),
 m_TempMoveCard(nullptr),
 m_GameState(MyTurn)
 {
+	auto _listener_1 = EventListenerCustom::create(PLAYER_PENG, [=](EventCustom*event){
+		doPengACard();
+	});
 
+	auto _listener_2 = EventListenerCustom::create(CLOSE_CHOOSELAYER, [=](EventCustom*event){
+		chooseLayerClose();
+	});
+
+	_eventDispatcher->addEventListenerWithFixedPriority(_listener_1, 1);
+	_eventDispatcher->addEventListenerWithFixedPriority(_listener_2, 1);
 }
 
 GameLayer::~GameLayer()
 {
-
+	_eventDispatcher->removeCustomEventListeners(PLAYER_PENG);
+	_eventDispatcher->removeCustomEventListeners(CLOSE_CHOOSELAYER);
 }
 
 bool GameLayer::init()
@@ -62,6 +73,10 @@ void GameLayer::update(float dt)
 
 		getANewCard();
 
+		checkChongDuo();
+		checkKaiduo();
+		checkPeng();
+
 		logAllCard();
 		m_GameState = GameLayer::NPCTurn_0;
 
@@ -73,7 +88,7 @@ void GameLayer::update(float dt)
 		*/
 
 		//playNPC_0();
-		getANewCard();
+		//getANewCard();
 		m_GameState = GameLayer::MyTurn;
 
 		//logAllCard();
@@ -101,6 +116,97 @@ void GameLayer::playNPC_1()
 {
 	//t_Player[1].check(t_Player[1], PopPai[2].m_Type, PopPai[2].m_Value);
 
+}
+
+void GameLayer::checkPeng()
+{
+	//下家摸的牌，我检测
+	if (t_Player[2].checkPengACard(m_newCard.m_Type, m_newCard.m_Value))
+	{
+		unscheduleUpdate();
+		auto chooseLayer = ChooseLayer::create();
+		addChild(chooseLayer);
+		chooseLayer->setBtnEnable(2);
+	}
+	else
+	{
+		scheduleUpdate();
+	}
+}
+
+void GameLayer::doPengACard()
+{
+	t_Player[2].doPengACard(m_newCard.m_Type, m_newCard.m_Value);
+	ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我碰！！！"));
+	m_GameState = GameState::MyTurn;
+
+	createMyCardWall();		//重新显示牌面
+	_eventDispatcher->dispatchCustomEvent(SHOW_PENGCARD);	//显示层显示碰的牌
+
+	scheduleUpdate();
+}
+
+void GameLayer::chooseLayerClose()
+{
+	ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我不想碰也不想吃！！"));
+	scheduleUpdate();
+}
+
+void GameLayer::checkKaiduo()
+{
+	//别人摸的牌，我检测
+	if (t_Player[2].checkKaiduoACard(m_newCard.m_Type, m_newCard.m_Value))
+	{
+		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"起手牌开舵！！！"));
+		t_Player[2].doKaiDuo(m_newCard.m_Type, m_newCard.m_Value);
+		createMyCardWall();
+		_eventDispatcher->dispatchCustomEvent(SHOW_KAIDUOCARD);
+		m_GameState = GameLayer::MyTurn;	//开舵后我出牌
+
+	}
+
+	if (t_Player[2].checkKaiDuo_Sao(m_newCard.m_Type, m_newCard.m_Value))
+	{
+		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"扫的开舵！！！"));
+		t_Player[2].doSao_KaiDuo(m_newCard.m_Type, m_newCard.m_Value);
+		createMyCardWall();
+		_eventDispatcher->dispatchCustomEvent(SHOW_KAIDUOCARD);
+		m_GameState = GameLayer::MyTurn;	//开舵后我出牌
+
+	}
+
+	if (t_Player[2].checkKaiDuo_peng(m_newCard.m_Type, m_newCard.m_Value))
+	{
+		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"碰的开舵！！！"));
+		t_Player[2].doPeng_kaiDuo(m_newCard.m_Type, m_newCard.m_Value);
+		createMyCardWall();
+		_eventDispatcher->dispatchCustomEvent(SHOW_KAIDUOCARD);
+		m_GameState = GameLayer::MyTurn;	//开舵后我出牌
+
+	}
+
+}
+
+void GameLayer::checkChongDuo()
+{
+	//重舵以后无需出牌，下家直接摸牌
+
+	if (t_Player[2].checkChongDuo_kaiDuo(m_newCard.m_Type, m_newCard.m_Value))
+	{
+		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"!!开舵的重舵！！！"));
+		t_Player[2].doChongDuo_kaiDuo(m_newCard.m_Type, m_newCard.m_Value);
+		createMyCardWall();
+		_eventDispatcher->dispatchCustomEvent(SHOW_KAIDUOCARD);
+		m_GameState = GameLayer::NPCTurn_1;
+	}
+	//扫穿还没处理好
+	if (t_Player[2].checkChongDuo_saoChuan(m_newCard.m_Type, m_newCard.m_Value))
+	{
+		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"扫穿的重舵！！！"));
+		t_Player[2].doChongDuo_saoChuan(m_newCard.m_Type, m_newCard.m_Value);
+		createMyCardWall();
+		m_GameState = GameLayer::NPCTurn_1;
+	}
 }
 
 void GameLayer::initData()
@@ -264,8 +370,9 @@ void GameLayer::getANewCard()
 {
 	CardEx t_newCard = t_ZPManage.GetAPai();
 
-	if (t_newCard.m_CardNum <= -1)
+	if (t_newCard.m_CardNum <= 0)
 	{
+		cout << "黄庄" << endl;
 		return;
 	}
 
@@ -273,7 +380,6 @@ void GameLayer::getANewCard()
 	{
 		m_newCard = t_newCard.m_NewCard;
 		_eventDispatcher->dispatchCustomEvent(NEW_CARD);
-		cout << "黄庄" << endl;
 
 	}
 	else

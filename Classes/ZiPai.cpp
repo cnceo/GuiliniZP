@@ -1054,6 +1054,21 @@ bool	ZiPai::doSao_KaiDuo(int p_type, int p_value)
 		delACard((*it).m_Type, (*it).m_Value);
 
 		m_KaiDuoCardVec[(*it).m_Type].push_back((*it).m_Value);
+		m_KaiDuoCardVec[(*it).m_Type].push_back((*it).m_Value);
+		m_KaiDuoCardVec[(*it).m_Type].push_back((*it).m_Value);
+		m_KaiDuoCardVec[(*it).m_Type].push_back((*it).m_Value);
+
+		for (auto iter = m_SaoCardVec[p_type].begin(); iter != m_SaoCardVec[p_type].end();)
+		{
+			if (*iter == (*it).m_Value)
+			{
+				iter = m_SaoCardVec[p_type].erase(iter);
+			}
+			else
+			{
+				iter++;
+			}
+		}
 	}
 
 	return true;
@@ -1099,6 +1114,21 @@ bool	ZiPai::doPeng_kaiDuo(int p_type, int p_value)
 		delACard((*it).m_Type, (*it).m_Value);
 
 		m_KaiDuoCardVec[(*it).m_Type].push_back((*it).m_Value);
+		m_KaiDuoCardVec[(*it).m_Type].push_back((*it).m_Value);
+		m_KaiDuoCardVec[(*it).m_Type].push_back((*it).m_Value);
+		m_KaiDuoCardVec[(*it).m_Type].push_back((*it).m_Value);
+
+		for (auto iter = m_PengCardVec[p_type].begin(); iter != m_PengCardVec[p_type].end();)
+		{
+			if (*iter == (*it).m_Value)
+			{
+				iter = m_PengCardVec[p_type].erase(iter);
+			}
+			else
+			{
+				iter++;
+			}
+		}
 	}
 
 	return true;

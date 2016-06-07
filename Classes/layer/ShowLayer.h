@@ -32,8 +32,15 @@ private:
 	void createANewCard();		//新摸的牌
 
 private:
+	void showPengCard();		//显示碰的牌
+	void showKaiduoCard();		//显示开舵的牌
+
+private:
 	Sprite* m_ACard;
 	Sprite* m_NewCard;
 	GameLayer*	m_GameLayer;
+
+	Vector<Sprite* > m_tmpPengCardList;
+	Vector<Sprite* > m_tmpKaiDuoCardList;
 };
 
