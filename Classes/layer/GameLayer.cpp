@@ -8,6 +8,7 @@
 #include "layerUtils/ToastLayer/ToastManger.h"
 #include "ShowLayer.h"
 #include "ChooseLayer.h"
+#include "BackLayer.h"
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 
@@ -442,10 +443,9 @@ void GameLayer::createMyCardWall()
 			addChild(_card);
 			if (_card)
 			{
-				_card->setPosition(Point(x + 35 * count, y));
+				//_card->setPosition(Point(x + 35 * count, y));
 				m_CardList.pushBack(_card);
 			}
-			count++;
 		}
 	}
 	if (t_Player[2].m_MyCard[1].size() > 0)
@@ -456,12 +456,23 @@ void GameLayer::createMyCardWall()
 			addChild(_card);
 			if (_card)
 			{
-				_card->setPosition(Point(x + 35 * count, y));
+				//_card->setPosition(Point(x + 35 * count, y));
 				m_CardList.pushBack(_card);
 			}
-			count++;
 		}
 	}
+
+	if (!m_CardList.empty())
+	{
+		for (int i = 0; i < m_CardList.size();++i)
+		{
+			if (m_CardList.at(i))
+			{
+				m_CardList.at(i)->setPosition(CommonFunction::getVisibleAchor(0.13f, 0, Vec2(40 * i, 80)));
+			}
+		}
+	}
+	
 
 	setCardState();
 }

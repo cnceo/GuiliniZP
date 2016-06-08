@@ -18,6 +18,10 @@ public:
 	virtual bool init();
 	CREATE_FUNC(GameScene);
 
+	virtual void onEnter();
+
+	virtual void onKeyReleased(EventKeyboard::KeyCode keycode, Event* event);
+
 private:
 
 };

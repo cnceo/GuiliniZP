@@ -19,5 +19,10 @@ public:
 	CREATE_FUNC(WelcomeScene);
 public:
 	void initUI();
+
+	void startGameCBK(Ref* pSender);
+private:
+	Label* m_goldLabel;
+	Label* m_diamLabel;
 };
 

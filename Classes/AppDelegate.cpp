@@ -67,7 +67,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 
-	glview->setFrameSize(960, 640);
+	glview->setFrameSize(1024, 768);
 
 #endif
 
@@ -79,6 +79,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 	FileUtils::getInstance()->addSearchPath("res");
 	FileUtils::getInstance()->addSearchPath("icon_image");
+	//FileUtils::getInstance()->addSearchPath("hall");
 
 	//auto scene = HelloWorld::createScene();
 	//auto scene = GameScene::createScene();
