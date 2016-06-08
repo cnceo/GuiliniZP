@@ -2,6 +2,7 @@
 #include "utils/CommonFunction.h"
 #include "ui/UIButton.h"
 #include "GameScene.h"
+#include "utils/Constant.h"
 
 using namespace ui;
 
@@ -42,6 +43,11 @@ void WelcomeScene::initUI()
 	auto bg_sp = Sprite::create("hall/bg_image.png");
 	if (bg_sp)
 	{
+		float w = bg_sp->getContentSize().width;
+		float h = bg_sp->getContentSize().height;
+
+		bg_sp->setScale(VISIBLESIZE.width / w, VISIBLESIZE.height / h);
+
 		addChild(bg_sp);
 		bg_sp->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 0)));
 	}
