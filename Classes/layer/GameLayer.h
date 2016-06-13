@@ -55,6 +55,7 @@ private:
 	void createMyCardWall();				//创建我的牌墙
 	void removeMyCardWall();				//移除牌墙
 	void setCardState();
+	void refrishCardPos();					//更新位置
 
 	void logAllCard();
 

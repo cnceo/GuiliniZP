@@ -26,6 +26,15 @@ Scene* WelcomeScene::createScene()
 	return scene;
 }
 
+void WelcomeScene::onEnter()
+{
+	Layer::onEnter();
+
+	auto listenerkeyPad = EventListenerKeyboard::create();
+	listenerkeyPad->onKeyReleased = CC_CALLBACK_2(WelcomeScene::onKeyReleased, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listenerkeyPad, this);
+}
+
 bool WelcomeScene::init()
 {
 	if (!Layer::init())
@@ -159,13 +168,35 @@ void WelcomeScene::initUI()
 
 		m_goldLabel->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, gold_bg, Vec2(0, 0)));
 		m_diamLabel->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, diam_bg, Vec2(0, 0)));
-
-		//m_goldLabel->setColor(Color3B::YELLOW);
-		//m_diamLabel->setColor(Color3B::YELLOW);
 	}
 }
 
 void WelcomeScene::startGameCBK(Ref* pSender)
 {
 	Director::getInstance()->replaceScene(TransitionFade::create(0.5, GameScene::createScene()));
+}
+
+void WelcomeScene::onKeyReleased(EventKeyboard::KeyCode keycode, Event* event)
+{
+	if (event->getType() == Event::Type::KEYBOARD)
+	{
+		event->stopPropagation();
+		{
+			if (keycode == EventKeyboard::KeyCode::KEY_BACK)  //返回
+			{
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+
+				JniMethodInfo info;
+				bool ret = JniHelper::getStaticMethodInfo(info, "org/cocos2dx/cpp/AppActivity", "exitGame", "()V");
+				if (ret)
+				{
+					jobject jobj = info.env->CallStaticObjectMethod(info.classID, info.methodID);
+				}
+				LOGD("end game<<<<");
+#else
+				//Director::getInstance()->end();
+#endif
+			}
+		}
+	}
 }

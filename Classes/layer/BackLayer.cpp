@@ -37,6 +37,7 @@ void BackLayer::initUI()
 	if (start_btn)
 	{
 		m_popNode->addChild(start_btn);
+		//start_btn->setTag(99);
 		//start_btn->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 0)));
 		start_btn->addClickEventListener([=](Ref*){
 		Director::getInstance()->replaceScene(TransitionFade::create(0.5, WelcomeScene::createScene()));
