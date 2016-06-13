@@ -22,6 +22,8 @@ using namespace cocos2d;
 #define SHOW_PENGCARD		"showPengCard"		//显示碰的牌
 #define SHOW_KAIDUOCARD		"showKaiduoCard"	//显示开舵的牌
 
+#define SHOW_CHICARDLAYER		"showChiCardLayer"	//显示吃层
+
 //层zorder
 
 #define CARD_ZORDER_1 10

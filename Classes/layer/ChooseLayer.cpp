@@ -48,7 +48,7 @@ void ChooseLayer::initUI()
 	 m_chi_btn	 = Button::create("chi.png");
 	 m_peng_btn	 = Button::create("peng.png");
 	 m_hu_btn		 = Button::create("hu.png");
-	 m_close_btn	 = Button::create("x.png");
+	 m_close_btn	 = Button::create("guo.png");
 
 	 auto node = Node::create();
 	 addChild(node);
@@ -58,7 +58,7 @@ void ChooseLayer::initUI()
 	if (m_chi_btn)
 	{
 		node->addChild(m_chi_btn);
-		m_chi_btn->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, node, Vec2(0, 0)));
+		m_chi_btn->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, node, Vec2(-20, 0)));
 		m_chi_btn->addClickEventListener(CC_CALLBACK_1(ChooseLayer::chiBtnCbk,this));
 	}
 
@@ -72,14 +72,14 @@ void ChooseLayer::initUI()
 	if (m_hu_btn)
 	{
 		node->addChild(m_hu_btn);
-		m_hu_btn->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, node, Vec2(200, 0)));
+		m_hu_btn->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, node, Vec2(220, 0)));
 		m_hu_btn->addClickEventListener(CC_CALLBACK_1(ChooseLayer::huBtnCbk, this));
 	}
 
 	if (m_close_btn)
 	{
 		node->addChild(m_close_btn);
-		m_close_btn->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, node, Vec2(300, 0)));
+		m_close_btn->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, node, Vec2(320, 0)));
 		m_close_btn->addClickEventListener(CC_CALLBACK_1(ChooseLayer::closeBtnCbk, this));
 
 	}
@@ -88,6 +88,8 @@ void ChooseLayer::initUI()
 void ChooseLayer::chiBtnCbk(Ref* psender)
 {
 	log("chi");
+	_eventDispatcher->dispatchCustomEvent(SHOW_CHICARDLAYER);
+
 }
 
 void ChooseLayer::pengBtnCbk(Ref* psender)
@@ -141,6 +143,17 @@ void ChooseLayer::setBtnEnable(int index)
 			m_chi_btn->setEnabled(false);
 			m_peng_btn->setEnabled(false);
 			m_close_btn->setEnabled(false);
+		}
+	}
+	else if (index == 4)	//可吃可碰
+	{
+		if (m_chi_btn && m_peng_btn && m_close_btn)
+		{
+			m_chi_btn->setEnabled(true);
+			m_peng_btn->setEnabled(true);
+			m_hu_btn->setEnabled(false);
+			m_close_btn->setEnabled(true);
+
 		}
 	}
 }

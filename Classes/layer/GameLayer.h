@@ -65,18 +65,24 @@ private:
 
 private:
 	//我自己检测
-	void checkPeng();
+	bool checkPeng();
 	void doPengACard();
 	void chooseLayerClose();
 	
 	void checkKaiduo();
 	void checkChongDuo();
 
+	bool checkChi();
+	void doChiACard();
+
 public:
 	CardData	PopPai[3];					//玩家出的牌
 	CardData    m_newCard;					//玩家起的牌
 
 	ZiPai		t_Player[3];				//三个玩家(2是自己)
+
+	std::vector<ChiCard> m_TempChiCard;		//所有可吃的牌
+	std::vector<CardData> m_TempChiList;	//所有可吃的牌(只管A_A_a_a和A_A_a)
 
 private:
 	bool m_isStartGame;

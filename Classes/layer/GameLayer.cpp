@@ -9,6 +9,7 @@
 #include "ShowLayer.h"
 #include "ChooseLayer.h"
 #include "BackLayer.h"
+#include "ChiCardLayer.h"
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 
@@ -33,14 +34,20 @@ m_GameState(MyTurn)
 		chooseLayerClose();
 	});
 
+	auto _listener_3 = EventListenerCustom::create(SHOW_CHICARDLAYER, [=](EventCustom*event){
+		doChiACard();
+	});
+
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_1, 1);
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_2, 1);
+	_eventDispatcher->addEventListenerWithFixedPriority(_listener_3, 1);
 }
 
 GameLayer::~GameLayer()
 {
 	_eventDispatcher->removeCustomEventListeners(PLAYER_PENG);
 	_eventDispatcher->removeCustomEventListeners(CLOSE_CHOOSELAYER);
+	_eventDispatcher->removeCustomEventListeners(SHOW_CHICARDLAYER);
 }
 
 bool GameLayer::init()
@@ -62,6 +69,9 @@ bool GameLayer::init()
 
 void GameLayer::update(float dt)
 {
+	/*
+		我(2)->下家(1)->上家(0)  逆时针
+	*/
 	switch (m_GameState)
 	{
 	case GameLayer::NPCTurn_1:	//我下家
@@ -69,6 +79,7 @@ void GameLayer::update(float dt)
 		//playNPC_1();
 
 		/*
+			下家起一张牌
 			我检测是否有：碰 ，开舵，重舵
 		*/
 
@@ -76,7 +87,13 @@ void GameLayer::update(float dt)
 
 		checkChongDuo();
 		checkKaiduo();
-		checkPeng();
+		if (checkPeng())
+		{
+			unscheduleUpdate();
+			auto chooseLayer = ChooseLayer::create();
+			addChild(chooseLayer);
+			chooseLayer->setBtnEnable(2);
+		}
 
 		logAllCard();
 		m_GameState = GameLayer::NPCTurn_0;
@@ -85,17 +102,29 @@ void GameLayer::update(float dt)
 	case GameLayer::NPCTurn_0:	//我上家
 
 		/*
+			上家起一张牌
 			我检测是否有：吃，碰，开舵，重舵
 		*/
 
-		//playNPC_0();
-		//getANewCard();
+		getANewCard();
+
+		checkChongDuo();
+		checkKaiduo();
+		if (checkChi() && checkPeng())		//no
+		{
+			unscheduleUpdate();
+			auto chooseLayer = ChooseLayer::create();
+			addChild(chooseLayer);
+			chooseLayer->setBtnEnable(4);
+		}
+		
+		logAllCard();
 		m_GameState = GameLayer::MyTurn;
 
-		//logAllCard();
 		break;
 	case GameLayer::MyTurn:		//我自己
 		/*
+			我起一张牌
 			我检测是否有：吃，碰，扫，过扫，扫穿，开舵，重舵
 		*/
 		break;
@@ -119,20 +148,15 @@ void GameLayer::playNPC_1()
 
 }
 
-void GameLayer::checkPeng()
+bool GameLayer::checkPeng()
 {
 	//下家摸的牌，我检测
 	if (t_Player[2].checkPengACard(m_newCard.m_Type, m_newCard.m_Value))
 	{
-		unscheduleUpdate();
-		auto chooseLayer = ChooseLayer::create();
-		addChild(chooseLayer);
-		chooseLayer->setBtnEnable(2);
+		return true;
 	}
-	else
-	{
-		scheduleUpdate();
-	}
+
+	return false;
 }
 
 void GameLayer::doPengACard()
@@ -145,6 +169,80 @@ void GameLayer::doPengACard()
 	_eventDispatcher->dispatchCustomEvent(SHOW_PENGCARD);	//显示层显示碰的牌
 
 	scheduleUpdate();
+}
+
+bool GameLayer::checkChi()
+{
+	bool isAction = false;	//有可吃的
+
+	if (!m_TempChiCard.empty())
+	{
+		m_TempChiCard.clear();
+	}
+
+	if (!m_TempChiList.empty())
+	{
+		m_TempChiList.clear();
+	}
+
+	//上家摸的牌，我检测
+	if (t_Player[2].checkChiACard1_2_3(m_newCard.m_Type, m_newCard.m_Value))
+	{
+		for (auto &_data:t_Player[2].m_TempChiCardVec)
+		{
+			m_TempChiCard.push_back(_data);
+		}
+		isAction = true;
+	}
+
+	if (t_Player[2].checkChiACard2_7_10(m_newCard.m_Type, m_newCard.m_Value))
+	{
+		for (auto &_data : t_Player[2].m_TempChiCardVec)
+		{
+			m_TempChiCard.push_back(_data);
+		}
+		isAction = true;
+	}
+
+	if (t_Player[2].checkChiA_B_C(m_newCard.m_Type, m_newCard.m_Value))
+	{
+		for (auto &_data : t_Player[2].m_TempChiCardVec)
+		{
+			m_TempChiCard.push_back(_data);
+		}
+		isAction = true;
+	}
+
+	if (t_Player[2].checkChiACardA_A_a(m_newCard.m_Type, m_newCard.m_Value))
+	{
+		for (auto &_data : t_Player[2].m_TempChiCardList)
+		{
+			m_TempChiList.push_back(_data);
+		}
+		isAction = true;
+	}
+
+	if (t_Player[2].checkChiACardA_A_a_a(m_newCard.m_Type, m_newCard.m_Value))
+	{
+		for (auto &_data : t_Player[2].m_TempChiCardList)
+		{
+			m_TempChiList.push_back(_data);
+		}
+		isAction = true;
+	}
+
+	if (isAction)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+void GameLayer::doChiACard()
+{
+	//显示吃的牌层
+	addChild(ChiCardLayer::create(this));
 }
 
 void GameLayer::chooseLayerClose()

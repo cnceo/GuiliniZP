@@ -217,10 +217,10 @@ void ShowLayer::showPengCard()
 		for (int i = 0; i < _pengList[0].size(); i++)
 		{
 			auto _card = createSmallCardSprite(0, _pengList[0][i]);
-			addChild(_card);
 
 			if (_card)
 			{
+				addChild(_card);
 				m_tmpPengCardList.pushBack(_card);
 			}
 		}
@@ -231,9 +231,9 @@ void ShowLayer::showPengCard()
 		for (int i = 0; i < _pengList[1].size(); i++)
 		{
 			auto _card = createSmallCardSprite(1, _pengList[1][i]);
-			addChild(_card);
-
+			
 			if (_card)
+				addChild(_card);
 			{
 				m_tmpPengCardList.pushBack(_card);
 			}

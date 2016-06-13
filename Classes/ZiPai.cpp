@@ -338,9 +338,14 @@ bool	ZiPai::checkChiACardA_A_a(int p_type, int p_value)
 {
 	//a  AA ,  a  aA
 
-	if (m_TempChiCardVec.size()>0)
+	/*if (m_TempChiCardVec.size()>0)
 	{
 		m_TempChiCardVec.clear();
+	}*/
+
+	if (m_TempChiCardList.size()>0)
+	{
+		m_TempChiCardList.clear();
 	}
 
 	std::vector<int> vec[2];
@@ -380,23 +385,40 @@ bool	ZiPai::checkChiACardA_A_a(int p_type, int p_value)
 		T = 1; V = vec1[0];
 		T = 1; V = vec1[0];*/
 
-		ChiCard t_Chi;
+		/*ChiCard t_Chi;
 		t_Chi.m_Type = 1;
 		t_Chi.m_Value1 = vec[1][0];
 		t_Chi.m_Value2 = vec[1][0];
-		m_TempChiCardVec.push_back(t_Chi);
+		m_TempChiCardVec.push_back(t_Chi);*/
+
+		CardData t_Chi_1 = { 1, vec[1][0]};
+		CardData t_Chi_2 = { 1, vec[1][0]};
+		CardData t_Chi_3 = { 0, p_value };
+
+		m_TempChiCardList.push_back(t_Chi_1);
+		m_TempChiCardList.push_back(t_Chi_2);
+		m_TempChiCardList.push_back(t_Chi_3);
 	}
 
 	if (vec[0].size() == 2) //手里2个小写  来了一张大写
 	{
-		ChiCard t_Chi;
+		/*ChiCard t_Chi;
 		t_Chi.m_Type = 0;
 		t_Chi.m_Value1 = vec[0][0];
 		t_Chi.m_Value2 = vec[0][0];
-		m_TempChiCardVec.push_back(t_Chi);
+		m_TempChiCardVec.push_back(t_Chi);*/
+
+		CardData t_Chi_1 = { 0, vec[0][0] };
+		CardData t_Chi_2 = { 0, vec[0][0] };
+		CardData t_Chi_3 = { 1, p_value };
+
+		m_TempChiCardList.push_back(t_Chi_1);
+		m_TempChiCardList.push_back(t_Chi_2);
+		m_TempChiCardList.push_back(t_Chi_3);
+
 	}
 
-	if (m_TempChiCardVec.size() > 0)
+	if (m_TempChiCardList.size() > 0)
 	{
 		return true;
 	}
@@ -406,7 +428,7 @@ bool	ZiPai::checkChiACardA_A_a(int p_type, int p_value)
 
 bool	ZiPai::doChiA_A_a(int p_type, int p_value)
 {
-	for (std::vector<ChiCard>::iterator it = m_TempChiCardVec.begin(); it != m_TempChiCardVec.end(); ++it)
+	/*for (std::vector<ChiCard>::iterator it = m_TempChiCardVec.begin(); it != m_TempChiCardVec.end(); ++it)
 	{
 		delACard((*it).m_Type, (*it).m_Value1);
 		delACard((*it).m_Type, (*it).m_Value2);
@@ -414,15 +436,34 @@ bool	ZiPai::doChiA_A_a(int p_type, int p_value)
 		m_ChiCardVec[(*it).m_Type].push_back((*it).m_Value1);
 		m_ChiCardVec[(*it).m_Type].push_back((*it).m_Value2);
 		m_ChiCardVec[p_type].push_back(p_value);
+	}*/
+
+	addCard(p_type, p_value);
+
+	for (std::vector<CardData>::iterator it = m_TempChiCardList.begin(); it != m_TempChiCardList.end(); ++it)
+	{
+		delACard((*it).m_Type, (*it).m_Value);
+		delACard((*it).m_Type, (*it).m_Value);
+		delACard((*it).m_Type, (*it).m_Value);
+
+		m_ChiCardVec[(*it).m_Type].push_back((*it).m_Value);
+		m_ChiCardVec[(*it).m_Type].push_back((*it).m_Value);
+		m_ChiCardVec[(*it).m_Type].push_back((*it).m_Value);
 	}
+
 	return true;
 }
 //来了张a  手里有A a, 来了张A 手里有A a
 bool	ZiPai::checkChiACardA_A_a_a(int p_type, int p_value)
 {
-	if (m_TempChiCardVec.size()>0)
+	/*if (m_TempChiCardVec.size()>0)
 	{
 		m_TempChiCardVec.clear();
+	}*/
+
+	if (m_TempChiCardList.size()>0)
+	{
+		m_TempChiCardList.clear();
 	}
 
 	std::vector<int> vec1[2];
@@ -474,23 +515,37 @@ bool	ZiPai::checkChiACardA_A_a_a(int p_type, int p_value)
 		}
 	}
 
-	if (vec1[0].size()>0 && vec1[1].size()>0)//来了张小写的
+	if (vec1[0].size()>0 && vec1[1].size()>0)//来了张小写的 (一张大写，两张小写)
 	{
-		ChiCard t_Chi;
+		/*ChiCard t_Chi;
 		t_Chi.m_Type = 1;
 		t_Chi.m_Value1 = vec1[1][0];
-		m_TempChiCardVec.push_back(t_Chi);
+		m_TempChiCardVec.push_back(t_Chi);*/
+
+		CardData t_Chi_1 = { 1, vec1[1][0] };
+		CardData t_Chi_2 = { 0, vec1[1][0] };
+		CardData t_Chi_3 = { 0, vec1[1][0] };
+		m_TempChiCardList.push_back(t_Chi_1);
+		m_TempChiCardList.push_back(t_Chi_2);
+		m_TempChiCardList.push_back(t_Chi_3);
 	}
 
-	if (vec2[0].size()>0 && vec2[1].size()>0)//来了张大写的
+	if (vec2[0].size()>0 && vec2[1].size()>0)//来了张大写的 （一张小写，两张大写）
 	{
-		ChiCard t_Chi;
+		/*ChiCard t_Chi;
 		t_Chi.m_Type = 0;
 		t_Chi.m_Value1 = vec2[0][0];
-		m_TempChiCardVec.push_back(t_Chi);
+		m_TempChiCardVec.push_back(t_Chi);*/
+
+		CardData t_Chi_1 = { 0,	vec2[0][0] };
+		CardData t_Chi_2 = { 1, vec2[0][0] };
+		CardData t_Chi_3 = { 1, vec2[0][0] };
+		m_TempChiCardList.push_back(t_Chi_1);
+		m_TempChiCardList.push_back(t_Chi_2);
+		m_TempChiCardList.push_back(t_Chi_3);
 	}
 
-	if (m_TempChiCardVec.size()>0)
+	if (m_TempChiCardList.size()>0)
 	{
 		return true;
 	}
@@ -499,6 +554,7 @@ bool	ZiPai::checkChiACardA_A_a_a(int p_type, int p_value)
 
 bool	ZiPai::doChiA_A_a_a(int p_type, int p_value)
 {
+	/*
 	for (std::vector<ChiCard>::iterator it = m_TempChiCardVec.begin(); it != m_TempChiCardVec.end(); ++it)
 	{
 		delACard((*it).m_Type, (*it).m_Value1);
@@ -508,6 +564,19 @@ bool	ZiPai::doChiA_A_a_a(int p_type, int p_value)
 		m_ChiCardVec[p_type].push_back(p_value);
 		m_ChiCardVec[p_type].push_back(p_value);
 	}
+	*/
+	addCard(p_type, p_value);
+	for (std::vector<CardData>::iterator it = m_TempChiCardList.begin(); it != m_TempChiCardList.end(); ++it)
+	{
+		delACard((*it).m_Type, (*it).m_Value);
+		delACard((*it).m_Type, (*it).m_Value);
+		delACard((*it).m_Type, (*it).m_Value);
+
+		m_ChiCardVec[(*it).m_Type].push_back((*it).m_Value);
+		m_ChiCardVec[(*it).m_Type].push_back((*it).m_Value);
+		m_ChiCardVec[(*it).m_Type].push_back((*it).m_Value);
+	}
+
 	return true;
 }
 
