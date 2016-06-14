@@ -335,11 +335,11 @@ bool GameLayer::checkChi()
 
 void GameLayer::doChiACard(int num)
 {
-	t_Player[2].doChi1_2_3(m_newCard.m_Type, m_newCard.m_Value, num);
+	/*t_Player[2].doChi1_2_3(m_newCard.m_Type, m_newCard.m_Value, num);
 	t_Player[2].doChi2_7_10(m_newCard.m_Type, m_newCard.m_Value, num);
 	t_Player[2].doChiA_B_C(m_newCard.m_Type, m_newCard.m_Value, num);
 	t_Player[2].doChiA_A_a(m_newCard.m_Type, m_newCard.m_Value);
-	t_Player[2].doChiA_A_a_a(m_newCard.m_Type, m_newCard.m_Value);
+	t_Player[2].doChiA_A_a_a(m_newCard.m_Type, m_newCard.m_Value);*/
 }
 
 void GameLayer::showChiCardLayer()
