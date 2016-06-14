@@ -89,7 +89,7 @@ void ChooseLayer::chiBtnCbk(Ref* psender)
 {
 	log("chi");
 	_eventDispatcher->dispatchCustomEvent(SHOW_CHICARDLAYER);
-
+	//close();
 }
 
 void ChooseLayer::pengBtnCbk(Ref* psender)
@@ -115,7 +115,7 @@ void ChooseLayer::closeBtnCbk(Ref* psender)
 
 void ChooseLayer::setBtnEnable(int index)
 {
-	if (index <= 0 || index >3)
+	if (index <= 0 || index >4)
 	{
 		return;
 	}
@@ -147,12 +147,9 @@ void ChooseLayer::setBtnEnable(int index)
 	}
 	else if (index == 4)	//可吃可碰
 	{
-		if (m_chi_btn && m_peng_btn && m_close_btn)
+		if (m_hu_btn)
 		{
-			m_chi_btn->setEnabled(true);
-			m_peng_btn->setEnabled(true);
 			m_hu_btn->setEnabled(false);
-			m_close_btn->setEnabled(true);
 
 		}
 	}

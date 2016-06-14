@@ -12,7 +12,7 @@ using namespace cocos2d;
 #define CREATE_CARD "createCard"
 #define NEW_CARD	"getANewCard"
 
-#define PLAYERBLINK_0	"blink_0"	//头像跳动
+#define PLAYERBLINK_0	"blink_0"				//头像跳动
 #define PLAYERBLINK_1	"blink_1"
 #define PLAYERBLINK_2	"blink_2"
 
@@ -21,8 +21,11 @@ using namespace cocos2d;
 
 #define SHOW_PENGCARD		"showPengCard"		//显示碰的牌
 #define SHOW_KAIDUOCARD		"showKaiduoCard"	//显示开舵的牌
+#define SHOW_SAOCHUANCARD	"showSaoChuanCard"	//显示扫穿的牌
+#define SHOW_SAOCARD		"showSaoCard"		//显示扫的牌
+#define SHOW_CHICARD		"showChiCard"		//显示吃的牌
 
-#define SHOW_CHICARDLAYER		"showChiCardLayer"	//显示吃层
+#define SHOW_CHICARDLAYER	"showChiCardLayer"	//显示吃层
 
 //层zorder
 

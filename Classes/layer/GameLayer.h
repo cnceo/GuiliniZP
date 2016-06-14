@@ -27,6 +27,14 @@ public:
 		OFF
 	};
 
+	enum ChiType
+	{
+		Chi_2_7_10,
+		Chi_A_B_C,
+		Chi_A_A_a,
+		Chi_A_A_a_a
+	};
+
 	GameLayer();
 	~GameLayer();
 
@@ -69,11 +77,15 @@ private:
 	void doPengACard();
 	void chooseLayerClose();
 	
-	void checkKaiduo();
-	void checkChongDuo();
+	bool checkKaiduo();
+	bool checkChongDuo();
 
 	bool checkChi();
-	void doChiACard();
+	void doChiACard(int num);
+	void showChiCardLayer();
+
+	bool checkSaochuan();
+	bool checkSao();
 
 public:
 	CardData	PopPai[3];					//玩家出的牌
@@ -81,8 +93,8 @@ public:
 
 	ZiPai		t_Player[3];				//三个玩家(2是自己)
 
-	std::vector<ChiCard> m_TempChiCard;		//所有可吃的牌
-	std::vector<CardData> m_TempChiList;	//所有可吃的牌(只管A_A_a_a和A_A_a)
+	std::vector<ChiCard>	m_TempChiCard;		//所有可吃的牌
+	std::vector<CardData>	m_TempChiList;	//所有可吃的牌(只管A_A_a_a和A_A_a)
 
 private:
 	bool m_isStartGame;
@@ -96,5 +108,6 @@ private:
 	Vector<CardSprite* > m_CardList;		//牌数组
 
 	GameState m_GameState;
+	ChiType m_ChiType;
 };
 

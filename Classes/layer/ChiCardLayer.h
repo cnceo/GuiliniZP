@@ -21,6 +21,10 @@ public:
 	virtual bool init(GameLayer* _layer);
 	static ChiCardLayer* create(GameLayer* _layer);
 
+	virtual bool onTouchBegan(Touch *touch, Event *unused_event);
+	virtual void onTouchMoved(Touch *touch, Event *unused_event);
+	virtual void onTouchEnded(Touch *touch, Event *unused_event);
+
 private:
 
 	void initData();

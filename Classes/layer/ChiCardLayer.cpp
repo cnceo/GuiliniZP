@@ -49,10 +49,42 @@ void ChiCardLayer::onEnter()
 {
 	Layer::onEnter();
 
-	auto myListener = EventListenerTouchOneByOne::create();
-	myListener->setSwallowTouches(true);
-	myListener->onTouchBegan = [](Touch*, Event*){return true; };
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(myListener, this);
+	auto listenerEvent = EventListenerTouchOneByOne::create();
+	listenerEvent->setSwallowTouches(true);
+	listenerEvent->onTouchBegan = CC_CALLBACK_2(ChiCardLayer::onTouchBegan, this);
+	listenerEvent->onTouchMoved = CC_CALLBACK_2(ChiCardLayer::onTouchMoved, this);
+	listenerEvent->onTouchEnded = CC_CALLBACK_2(ChiCardLayer::onTouchEnded, this);
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listenerEvent, this);
+}
+
+bool ChiCardLayer::onTouchBegan(Touch *touch, Event *unused_event)
+{
+	return true;
+}
+
+void ChiCardLayer::onTouchMoved(Touch *touch, Event *unused_event)
+{
+
+}
+
+void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
+{
+	std::vector <Sprite*>::iterator iter = m_tmpChiCardList.begin();
+	for (; iter != m_tmpChiCardList.end(); ++iter)
+	{
+		Sprite* _card = static_cast<Sprite*>(*iter);
+		Point locationInNode = _card->convertToNodeSpace(touch->getLocation());
+
+		Size s = _card->getContentSize();
+		Rect rect = Rect(0, 0, s.width, s.height);
+
+		if (rect.containsPoint(locationInNode))
+		{
+			log("tag=%d", _card->getTag());
+			//选择吃什么牌
+		}
+	}
 }
 
 void ChiCardLayer::initData()
@@ -124,6 +156,7 @@ void ChiCardLayer::initUI()
 		{
 			int _height = m_tmpChiCardList.at(i)->getContentSize().height;
 			m_tmpChiCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i % 3)*(_height / 4)+ 100, i / 3 * (_height - 73))));
+			m_tmpChiCardList.at(i)->setTag(i);
 		}
 	}
 }

@@ -34,6 +34,9 @@ private:
 private:
 	void showPengCard();		//显示碰的牌
 	void showKaiduoCard();		//显示开舵的牌
+	void showSaochuanCard();	//显示扫穿的牌
+	void showSaoCard();			//显示扫的牌
+	void showChiCard();			//显示吃的牌
 
 private:
 	Sprite* m_ACard;
@@ -42,5 +45,9 @@ private:
 
 	Vector<Sprite* > m_tmpPengCardList;
 	Vector<Sprite* > m_tmpKaiDuoCardList;
+	Vector<Sprite* > m_tmpSaoChuanCardList;
+	Vector<Sprite* > m_tmpSaoCardList;
+	Vector<Sprite* > m_tmpChiCardList;
+
 };
 

@@ -962,6 +962,21 @@ bool	ZiPai::doSao_SaoChuan(int p_type, int p_value)
 		delACard((*it).m_Type, (*it).m_Value);
 
 		m_SaoChuanCardVec[(*it).m_Type].push_back((*it).m_Value);
+		m_SaoChuanCardVec[(*it).m_Type].push_back((*it).m_Value);
+		m_SaoChuanCardVec[(*it).m_Type].push_back((*it).m_Value);
+		m_SaoChuanCardVec[(*it).m_Type].push_back((*it).m_Value);
+
+		for (auto iter = m_SaoCardVec[p_type].begin(); iter != m_SaoCardVec[p_type].end();)
+		{
+			if (*iter == (*it).m_Value)
+			{
+				iter = m_SaoCardVec[p_type].erase(iter);
+			}
+			else
+			{
+				iter++;
+			}
+		}
 	}
 
 	return true;

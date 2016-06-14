@@ -28,10 +28,28 @@ m_NewCard(nullptr)
 		showKaiduoCard();
 	});
 
+	//扫穿的牌
+	auto _listener_5 = EventListenerCustom::create(SHOW_SAOCHUANCARD, [=](EventCustom*event){
+		showSaochuanCard();
+	});
+
+	//扫的牌
+	auto _listener_6 = EventListenerCustom::create(SHOW_SAOCARD, [=](EventCustom*event){
+		showSaoCard();
+	});
+
+	//扫的牌
+	auto _listener_7 = EventListenerCustom::create(SHOW_CHICARD, [=](EventCustom*event){
+		showChiCard();
+	});
+
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_1, 1);
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_2, 1);
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_3, 1);
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_4, 1);
+	_eventDispatcher->addEventListenerWithFixedPriority(_listener_5, 1);
+	_eventDispatcher->addEventListenerWithFixedPriority(_listener_6, 1);
+	_eventDispatcher->addEventListenerWithFixedPriority(_listener_7, 1);
 }
 
 ShowLayer::~ShowLayer()
@@ -40,6 +58,9 @@ ShowLayer::~ShowLayer()
 	_eventDispatcher->removeCustomEventListeners(NEW_CARD);
 	_eventDispatcher->removeCustomEventListeners(SHOW_PENGCARD);
 	_eventDispatcher->removeCustomEventListeners(SHOW_KAIDUOCARD);
+	_eventDispatcher->removeCustomEventListeners(SHOW_SAOCHUANCARD);
+	_eventDispatcher->removeCustomEventListeners(SHOW_SAOCARD);
+	_eventDispatcher->removeCustomEventListeners(SHOW_CHICARD);
 }
 
 ShowLayer* ShowLayer::create(GameLayer* _layer)
@@ -254,6 +275,7 @@ void ShowLayer::showPengCard()
 void ShowLayer::showKaiduoCard()
 {
 	showPengCard();
+	showSaoCard();
 	if (m_tmpKaiDuoCardList.size()>0)
 	{
 		for (auto &_card : m_tmpKaiDuoCardList)
@@ -304,6 +326,178 @@ void ShowLayer::showKaiduoCard()
 		{
 			int _height = m_tmpKaiDuoCardList.at(i)->getContentSize().height;
 			m_tmpKaiDuoCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i % 4)*(_height / 4) + 150, i / 4 * (_height - 73) - 120)));
+			//_tmpSpriteList.at(i)->setPosition(Vec2((i % 3)*(_height / 4) + 100, (i / 3)*(_height- 73) + 200));
+		}
+	}
+}
+
+void ShowLayer::showSaochuanCard()
+{
+	showSaoCard();
+	if (m_tmpSaoChuanCardList.size()>0)
+	{
+		for (auto &_card : m_tmpSaoChuanCardList)
+		{
+			if (_card->getParent())
+			{
+				_card->removeFromParent();
+			}
+		}
+		m_tmpSaoChuanCardList.clear();
+	}
+
+	std::vector<int > _saochuanList[2];
+	_saochuanList[0] = m_GameLayer->t_Player[2].m_SaoChuanCardVec[0];
+	_saochuanList[1] = m_GameLayer->t_Player[2].m_SaoChuanCardVec[1];
+
+	if (_saochuanList[0].size()>0)
+	{
+		for (int i = 0; i < _saochuanList[0].size(); i++)
+		{
+			auto _card = createSmallCardSprite(0, _saochuanList[0][i]);
+			addChild(_card);
+
+			if (_card)
+			{
+				m_tmpSaoChuanCardList.pushBack(_card);
+			}
+		}
+	}
+
+	if (_saochuanList[1].size()>0)
+	{
+		for (int i = 0; i < _saochuanList[1].size(); i++)
+		{
+			auto _card = createSmallCardSprite(1, _saochuanList[1][i]);
+			addChild(_card);
+
+			if (_card)
+			{
+				m_tmpSaoChuanCardList.pushBack(_card);
+			}
+		}
+	}
+
+	if (m_tmpSaoChuanCardList.size()>0)
+	{
+		for (int i = 0; i < m_tmpSaoChuanCardList.size(); i++)
+		{
+			int _height = m_tmpSaoChuanCardList.at(i)->getContentSize().height;
+			m_tmpSaoChuanCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i % 4)*(_height / 4) + 280, i / 4 * (_height - 73) - 120)));
+			//_tmpSpriteList.at(i)->setPosition(Vec2((i % 3)*(_height / 4) + 100, (i / 3)*(_height- 73) + 200));
+		}
+	}
+}
+
+void ShowLayer::showSaoCard()
+{
+	if (m_tmpSaoCardList.size()>0)
+	{
+		for (auto &_card : m_tmpSaoCardList)
+		{
+			if (_card->getParent())
+			{
+				_card->removeFromParent();
+			}
+		}
+		m_tmpSaoCardList.clear();
+	}
+
+	std::vector<int > _saoList[2];
+	_saoList[0] = m_GameLayer->t_Player[2].m_SaoCardVec[0];
+	_saoList[1] = m_GameLayer->t_Player[2].m_SaoCardVec[1];
+
+	if (_saoList[0].size()>0)
+	{
+		for (int i = 0; i < _saoList[0].size(); i++)
+		{
+			auto _card = createSmallCardSprite(0, _saoList[0][i]);
+
+			if (_card)
+			{
+				addChild(_card);
+				m_tmpSaoCardList.pushBack(_card);
+			}
+		}
+	}
+
+	if (_saoList[1].size()>0)
+	{
+		for (int i = 0; i < _saoList[1].size(); i++)
+		{
+			auto _card = createSmallCardSprite(1, _saoList[1][i]);
+
+			if (_card)
+				addChild(_card);
+			{
+				m_tmpSaoCardList.pushBack(_card);
+			}
+		}
+	}
+
+	if (m_tmpSaoCardList.size()>0)
+	{
+		for (int i = 0; i < m_tmpSaoCardList.size(); i++)
+		{
+			int _height = m_tmpSaoCardList.at(i)->getContentSize().height;
+			m_tmpSaoCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i % 3)*(_height / 4) - 120, i / 3 * (_height - 73) - 120)));
+			//_tmpSpriteList.at(i)->setPosition(Vec2((i % 3)*(_height / 4) + 100, (i / 3)*(_height- 73) + 200));
+		}
+	}
+}
+
+void ShowLayer::showChiCard()
+{
+	if (m_tmpChiCardList.size()>0)
+	{
+		for (auto &_card : m_tmpChiCardList)
+		{
+			if (_card->getParent())
+			{
+				_card->removeFromParent();
+			}
+		}
+		m_tmpChiCardList.clear();
+	}
+
+	std::vector<int > _chiList[2];
+	_chiList[0] = m_GameLayer->t_Player[2].m_ChiCardVec[0];
+	_chiList[1] = m_GameLayer->t_Player[2].m_ChiCardVec[1];
+
+	if (_chiList[0].size()>0)
+	{
+		for (int i = 0; i < _chiList[0].size(); i++)
+		{
+			auto _card = createSmallCardSprite(0, _chiList[0][i]);
+
+			if (_card)
+			{
+				addChild(_card);
+				m_tmpChiCardList.pushBack(_card);
+			}
+		}
+	}
+
+	if (_chiList[1].size()>0)
+	{
+		for (int i = 0; i < _chiList[1].size(); i++)
+		{
+			auto _card = createSmallCardSprite(1, _chiList[1][i]);
+
+			if (_card)
+				addChild(_card);
+			{
+				m_tmpChiCardList.pushBack(_card);
+			}
+		}
+	}
+
+	if (m_tmpChiCardList.size()>0)
+	{
+		for (int i = 0; i < m_tmpChiCardList.size(); i++)
+		{
+			int _height = m_tmpChiCardList.at(i)->getContentSize().height;
+			m_tmpChiCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::RightMid, Vec2((i % 3)*(_height / 4) - 120, i / 3 * (_height - 73) - 120)));
 			//_tmpSpriteList.at(i)->setPosition(Vec2((i % 3)*(_height / 4) + 100, (i / 3)*(_height- 73) + 200));
 		}
 	}
