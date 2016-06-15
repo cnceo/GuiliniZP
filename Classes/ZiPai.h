@@ -2,6 +2,7 @@
 #include"Win.h"
 #include <iostream>  
 #include <vector>  
+#include "utils/Actionstate.h"
 using namespace std;
 
 #include "cocos2d.h"
@@ -79,7 +80,7 @@ public:
 
 	void	addCard(int p_type, int p_value);	//初始化手牌
 	bool	delACard(int p_type, int p_value);	//打一张牌
-
+	void	playerAction();						//使用状态机
 public:
 
 	//牌型检测
@@ -193,7 +194,7 @@ public:
 	int 	checkHushu();															//检测胡数
 
 	std::vector<int >	 m_MyCard_Temp[2];			   			//临时牌型数组
-
+	Actionstate* m_ActionState;
 private:
 	int m_Score;
 

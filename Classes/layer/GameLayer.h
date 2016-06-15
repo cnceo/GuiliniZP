@@ -5,6 +5,7 @@
 #include "ZiPaiManage.h"
 #include "ui/UIButton.h"
 #include "Card/CardSprite.h"
+#include "utils/Actionstate.h"
 
 using namespace cocos2d;
 using namespace ui;
@@ -43,9 +44,9 @@ public:
 	virtual void onEnter();
 
 public:
-
 	void startCallBack(Ref* ref);
 	void overCallBack(Ref* ref);
+
 public:
 	virtual bool onTouchBegan(Touch *touch, Event *unused_event);
 	virtual void onTouchMoved(Touch *touch, Event *unused_event);
@@ -68,8 +69,10 @@ private:
 	void logAllCard();
 
 	virtual void update(float dt);
-	void playNPC_0();						//上家
-	void playNPC_1();						//下家
+
+	void schePlayerCallBack_0(float dt);	//上家
+	void schePlayerCallBack_1(float dt);	//下家
+	void schePlayerCallBack_2(float dt);	//自己
 
 private:
 	//我自己检测

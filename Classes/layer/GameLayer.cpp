@@ -65,7 +65,6 @@ bool GameLayer::init()
 	initUI();
 
 	addChild(ShowLayer::create(this));
-
 	return true;
 }
 
@@ -78,7 +77,8 @@ void GameLayer::update(float dt)
 	switch (m_GameState)
 	{
 	case GameLayer::NPCTurn_1:	//我下家
-
+		
+		_eventDispatcher->dispatchCustomEvent(PLAYERBLINK_1);
 		//playNPC_1();
 
 		/*
@@ -91,14 +91,17 @@ void GameLayer::update(float dt)
 
 		if (checkChongDuo())
 		{
+			t_Player[2].m_ActionState->doEvent("ChongDuo");
 			std::cout << "重舵" << std::endl;
 		}
 		else if (checkKaiduo())
 		{
+			t_Player[2].m_ActionState->doEvent("KaiDuo");
 			std::cout << "开舵" << std::endl;
 		}
 		else if (checkPeng())
 		{
+			t_Player[2].m_ActionState->doEvent("Peng");
 			unscheduleUpdate();
 			auto chooseLayer = ChooseLayer::create();
 			addChild(chooseLayer);
@@ -110,6 +113,7 @@ void GameLayer::update(float dt)
 		
 		break;
 	case GameLayer::NPCTurn_0:	//我上家
+		_eventDispatcher->dispatchCustomEvent(PLAYERBLINK_0);
 
 		/*
 			上家起一张牌
@@ -162,9 +166,13 @@ void GameLayer::update(float dt)
 		break;
 	case GameLayer::MyTurn:		//我出牌
 
+		//scheduleOnce([=](float dt){
+		//	_eventDispatcher->dispatchCustomEvent(PLAYERBLINK_2);
+		//	log("PLAYERBLINK_2");
+		//}, 1 / 30, "PLAYERBLINK_2");
+
 		break;
 	case GameLayer::OFF:		//轮到我起牌
-
 		/*
 		我起一张牌
 		我检测是否有：吃，碰，扫，过扫，扫穿，开舵，重舵
@@ -228,15 +236,41 @@ void GameLayer::update(float dt)
 	}
 }
 
-void GameLayer::playNPC_0()
+void GameLayer::schePlayerCallBack_1(float dt)	//下家
 {
-	//t_Player[2].check(t_Player[0], PopPai[2].m_Type, PopPai[2].m_Value);
+	//检测吃碰等，若没有，下家直接摸牌，我和上家检测
+	//我：碰 ，开舵，重舵
+
+	std::cout << "下家起牌~~~~~~~~~~~~~~~~" << std::endl;
+	getANewCard();
+
+	if (checkChongDuo())
+	{
+		std::cout << "重舵" << std::endl;
+	}
+	else if (checkKaiduo())
+	{
+		std::cout << "开舵" << std::endl;
+	}
+	else if (checkPeng())
+	{
+		unschedule(schedule_selector(GameLayer::schePlayerCallBack_0));
+		unschedule(schedule_selector(GameLayer::schePlayerCallBack_1));
+		unschedule(schedule_selector(GameLayer::schePlayerCallBack_2));
+		auto chooseLayer = ChooseLayer::create();
+		addChild(chooseLayer);
+		chooseLayer->setBtnEnable(2);
+	}
+}
+
+void GameLayer::schePlayerCallBack_0(float dt)	//上家
+{
+	//检测，若没有，直接摸牌，我和下家检测
 
 }
 
-void GameLayer::playNPC_1()
+void GameLayer::schePlayerCallBack_2(float dt)	//自己
 {
-	//t_Player[1].check(t_Player[1], PopPai[2].m_Type, PopPai[2].m_Value);
 
 }
 
@@ -258,8 +292,8 @@ void GameLayer::doPengACard()
 
 	createMyCardWall();		//重新显示牌面
 	_eventDispatcher->dispatchCustomEvent(SHOW_PENGCARD);	//显示层显示碰的牌
-
 	scheduleUpdate();
+
 }
 
 bool GameLayer::checkChi()
@@ -584,6 +618,7 @@ void GameLayer::onTouchEnded(Touch *touch, Event *unused_event)
 		_eventDispatcher->dispatchCustomEvent(CREATE_CARD);
 
 		m_GameState = GameLayer::GameState::NPCTurn_1;
+
 	}
 	else
 	{
@@ -620,7 +655,6 @@ void GameLayer::initUI()
 			Director::getInstance()->replaceScene(WelcomeScene::createScene());
 		});
 	}
-
 
 	//开始游戏
 	auto startButton = Button::create("CloseSelected.png", "CloseNormal.png");
@@ -745,7 +779,7 @@ void GameLayer::createMyCardWall()
 		{
 			if (m_CardList.at(i))
 			{
-				m_CardList.at(i)->setPosition(CommonFunction::getVisibleAchor(0.13f, 0, Vec2(40 * i, 80)));
+				m_CardList.at(i)->setPosition(CommonFunction::getVisibleAchor(0.13f, 0, Vec2(42 * i, 80)));
 			}
 		}
 	}
