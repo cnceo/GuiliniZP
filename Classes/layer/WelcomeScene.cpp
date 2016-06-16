@@ -3,6 +3,7 @@
 #include "ui/UIButton.h"
 #include "GameScene.h"
 #include "utils/Constant.h"
+#include "layerUtils/RotateMenu.h"
 
 using namespace ui;
 
@@ -60,40 +61,44 @@ void WelcomeScene::initUI()
 		addChild(bg_sp);
 		bg_sp->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 0)));
 	}
-
 	//中间
 	auto item_0 = MenuItemSprite::create(Sprite::create("hall/ima_two.png"), Sprite::create("hall/ima_two.png"));
 	auto item_1 = MenuItemSprite::create(Sprite::create("hall/ima_seven.png"),Sprite::create("hall/ima_seven.png"));
 	auto item_2 = MenuItemSprite::create(Sprite::create("hall/ima_ten.png"), Sprite::create("hall/ima_ten.png"));
+	//auto item_3 = MenuItemSprite::create(Sprite::create("hall/ima_ten.png"), Sprite::create("hall/ima_ten.png"));
 
 	if (item_0 && item_1 && item_2)
 	{
-		item_0->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(-300, 0)));
-		item_1->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 0)));
-		item_2->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(300, 0)));
+		auto rotateMenu = RotateMenu::create();
+		rotateMenu->addMenuItem(item_0);
+		rotateMenu->addMenuItem(item_1);
+		rotateMenu->addMenuItem(item_2);
+		//rotateMenu->addMenuItem(item_3);
 
-		auto menu = Menu::create(item_0, item_1, item_2, nullptr);
-		addChild(menu);
-		menu->setPosition(Vec2::ZERO);
-
+		addChild(rotateMenu);
+		rotateMenu->setPosition(CommonFunction::getVisibleAchor(Anchor::Center,Vec2(0,20)));
+		
 		item_0->setCallback(CC_CALLBACK_1(WelcomeScene::startGameCBK, this));
 		item_1->setCallback(CC_CALLBACK_1(WelcomeScene::startGameCBK, this));
 		item_2->setCallback(CC_CALLBACK_1(WelcomeScene::startGameCBK, this));
-	}
 
-	auto room_0 = MenuItemSprite::create(Sprite::create("hall/room_ct.png"), Sprite::create("hall/room_ct.png"));
-	auto room_1 = MenuItemSprite::create(Sprite::create("hall/room_ziyou.png"), Sprite::create("hall/room_ziyou.png"));
-	auto room_2 = MenuItemSprite::create(Sprite::create("hall/room_bisai.png"), Sprite::create("hall/room_bisai.png"));
+		item_0->setTag(0);
+		item_1->setTag(1);
+		item_2->setTag(2);
 
-	if (room_0 && room_1 && room_2)
-	{
-		room_0->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(-300, -175)));
-		room_1->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, -175)));
-		room_2->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(300, -175)));
+		auto sp_0 = Sprite::create("hall/room_ct.png");
+		auto sp_1 = Sprite::create("hall/room_ziyou.png");
+		auto sp_2 = Sprite::create("hall/room_bisai.png");
+		if (sp_0 && sp_1 && sp_2)
+		{
+			item_0->addChild(sp_0);
+			item_1->addChild(sp_1);
+			item_2->addChild(sp_2);
 
-		auto menu_1 = Menu::create(room_0, room_1, room_2, nullptr);
-		addChild(menu_1);
-		menu_1->setPosition(Vec2::ZERO);
+			sp_0->setPosition(CommonFunction::getVisibleAchor(Anchor::MidButtom, item_0, Vec2(0, -sp_0->getContentSize().height / 2)));
+			sp_1->setPosition(CommonFunction::getVisibleAchor(Anchor::MidButtom, item_1, Vec2(0, -sp_1->getContentSize().height / 2)));
+			sp_2->setPosition(CommonFunction::getVisibleAchor(Anchor::MidButtom, item_2, Vec2(0, -sp_2->getContentSize().height / 2)));
+		}
 	}
 	//右上角
 	auto water_sp = Sprite::create("hall/water.png");
@@ -173,6 +178,19 @@ void WelcomeScene::initUI()
 
 void WelcomeScene::startGameCBK(Ref* pSender)
 {
+	int _tag = ((MenuItemSprite*)pSender)->getTag();
+	if (_tag == 0)
+	{
+		std::cout << "二二二二二二二二" << std::endl;
+	}
+	else if (_tag == 1)
+	{
+		std::cout << "七七七七七七七七七" << std::endl;
+	}
+	else if (_tag == 2)
+	{
+		std::cout << "十十十十十十十十" << std::endl;
+	}
 	Director::getInstance()->replaceScene(TransitionFade::create(0.5, GameScene::createScene()));
 }
 

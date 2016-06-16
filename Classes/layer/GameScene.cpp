@@ -2,6 +2,7 @@
 #include "GameLayer.h"
 #include "GUILayer.h"
 #include "BackLayer.h"
+#include "utils/GetLayer.h"
 
 GameScene::GameScene()
 {
@@ -28,11 +29,13 @@ bool GameScene::init()
 		return false;
 	}
 
-	addChild(GameLayer::create());
+	auto gamelayer = GameLayer::create();
+	addChild(gamelayer);
 	addChild(GUILayer::create());
 
-	return true;
+	GetLayer::getInstance()->setgameLayer(gamelayer);
 
+	return true;
 }
 
 void GameScene::onEnter()

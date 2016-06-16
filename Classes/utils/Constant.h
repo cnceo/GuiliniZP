@@ -2,11 +2,9 @@
 
 #include "cocos2d.h"
 #include <iostream>
-
 using namespace cocos2d;
 
 #define VISIBLESIZE  Director::getInstance()->getVisibleSize()
-
 //消息名称
 
 #define CREATE_CARD "createCard"
@@ -31,3 +29,8 @@ using namespace cocos2d;
 
 #define CARD_ZORDER_1 10
 #define CARD_ZORDER_2 20
+
+
+#define ISFIRSTPLAY "isFirstPlay"			//是否第一次打牌
+#define ISGETORPLAY	"isGetOrPlay"			//是摸牌还是打牌   true 摸牌，false 打牌
+#define ISPLAYCAED	"isPlayCard"			//我能否出牌

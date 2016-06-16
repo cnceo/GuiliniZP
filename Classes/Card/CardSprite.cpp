@@ -47,12 +47,12 @@ void CardSprite::initUI(int type, int value)
 	Sprite *card;
 	if (type == 0)
 	{
-		card = Sprite::create(StringUtils::format("chang_d%d.png", value));
+		card = Sprite::create(StringUtils::format("chang_x%d.png", value));
 		card->setScale(0.6f);
 	}
 	else if (type == 1)
 	{
-		card = Sprite::create(StringUtils::format("chang_x%d.png", value));
+		card = Sprite::create(StringUtils::format("chang_d%d.png", value));
 		card->setScale(0.6f);
 	}
 	addChild(card);

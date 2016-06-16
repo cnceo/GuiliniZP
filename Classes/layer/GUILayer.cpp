@@ -75,6 +75,7 @@ void GUILayer::initUI()
 
 void GUILayer::playerBlink_0()
 {
+	icon_left->stopAllActions();
 	auto tink = Blink::create(1, 5);
 	auto repeate = RepeatForever::create(tink);
 	if (icon_left)
@@ -91,6 +92,7 @@ void GUILayer::playerBlink_0()
 
 void GUILayer::playerBlink_1()
 {
+	icon_right->stopAllActions();
 	auto tink = Blink::create(1, 5);
 	auto repeate = RepeatForever::create(tink);
 	if (icon_right)
@@ -107,6 +109,7 @@ void GUILayer::playerBlink_1()
 
 void GUILayer::playerBlink_2()
 {
+	icon_leftDown->stopAllActions();
 	auto tink = Blink::create(1, 5);
 	auto repeate = RepeatForever::create(tink);
 	if (icon_leftDown)

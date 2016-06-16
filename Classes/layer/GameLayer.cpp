@@ -11,6 +11,9 @@
 #include "BackLayer.h"
 #include "ChiCardLayer.h"
 #include "WelcomeScene.h"
+#include "PlayerTwoState.h"
+#include "PlayerOneState.h"
+#include "PlayerZeroState.h"
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 
@@ -25,7 +28,8 @@ GameLayer::GameLayer():
 m_isStartGame(true),
 m_line(nullptr),
 m_TempMoveCard(nullptr),
-m_GameState(MyTurn)
+m_GameState(MyTurn),
+m_CurrState(nullptr)
 {
 	auto _listener_1 = EventListenerCustom::create(PLAYER_PENG, [=](EventCustom*event){
 		doPengACard();
@@ -37,7 +41,6 @@ m_GameState(MyTurn)
 
 	auto _listener_3 = EventListenerCustom::create(SHOW_CHICARDLAYER, [=](EventCustom*event){
 		showChiCardLayer();
-		//doChiACard();
 	});
 
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_1, 1);
@@ -61,10 +64,16 @@ bool GameLayer::init()
 
 	scheduleUpdate();
 	initData();
-
 	initUI();
 
 	addChild(ShowLayer::create(this));
+
+	UserDefault::getInstance()->setBoolForKey(ISFIRSTPLAY, false);	//是否第一次打牌
+	UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, true);	//只摸牌不打牌
+	UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//我是否可以出牌（能否触摸）
+
+	changeState(new PlayerTwoState());
+
 	return true;
 }
 
@@ -74,34 +83,35 @@ void GameLayer::update(float dt)
 		我(2)->下家(1)->上家(0)  逆时针
 	*/
 
+	if (m_CurrState)
+	{
+		m_CurrState->Update();
+	}
+
 	switch (m_GameState)
 	{
 	case GameLayer::NPCTurn_1:	//我下家
 		
-		_eventDispatcher->dispatchCustomEvent(PLAYERBLINK_1);
-		//playNPC_1();
+		//_eventDispatcher->dispatchCustomEvent(PLAYERBLINK_1);
 
 		/*
 			下家起一张牌
 			我检测是否有：碰 ，开舵，重舵
 		*/
-		
+		/*
 		std::cout << "下家起牌~~~~~~~~~~~~~~~~" << std::endl;
 		getANewCard();
 
 		if (checkChongDuo())
 		{
-			t_Player[2].m_ActionState->doEvent("ChongDuo");
 			std::cout << "重舵" << std::endl;
 		}
 		else if (checkKaiduo())
 		{
-			t_Player[2].m_ActionState->doEvent("KaiDuo");
 			std::cout << "开舵" << std::endl;
 		}
 		else if (checkPeng())
 		{
-			t_Player[2].m_ActionState->doEvent("Peng");
 			unscheduleUpdate();
 			auto chooseLayer = ChooseLayer::create();
 			addChild(chooseLayer);
@@ -110,21 +120,17 @@ void GameLayer::update(float dt)
 		
 		//logAllCard();
 		m_GameState = GameLayer::NPCTurn_0;
-		
+		*/
 		break;
 	case GameLayer::NPCTurn_0:	//我上家
-		_eventDispatcher->dispatchCustomEvent(PLAYERBLINK_0);
+		//_eventDispatcher->dispatchCustomEvent(PLAYERBLINK_0);
 
 		/*
 			上家起一张牌
 			我检测是否有：吃，碰，开舵，重舵
 		*/
-		
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
-		//::_sleep(2000);
-#else
-		usleep(2000000);
-#endif
+
+		/*
 		std::cout << "上家起牌~~~~~~~~~~~~~~~~" << std::endl;
 
 		getANewCard();
@@ -162,15 +168,9 @@ void GameLayer::update(float dt)
 		logAllCard();
 		
 		m_GameState = GameLayer::MyTurn;
-
+		*/
 		break;
 	case GameLayer::MyTurn:		//我出牌
-
-		//scheduleOnce([=](float dt){
-		//	_eventDispatcher->dispatchCustomEvent(PLAYERBLINK_2);
-		//	log("PLAYERBLINK_2");
-		//}, 1 / 30, "PLAYERBLINK_2");
-
 		break;
 	case GameLayer::OFF:		//轮到我起牌
 		/*
@@ -236,12 +236,23 @@ void GameLayer::update(float dt)
 	}
 }
 
+void GameLayer::changeState(StateManager* _state)
+{
+	if (m_CurrState)
+	{
+		delete m_CurrState;
+		m_CurrState = _state;
+		return;
+	}
+	m_CurrState = _state;
+}
+
 void GameLayer::schePlayerCallBack_1(float dt)	//下家
 {
 	//检测吃碰等，若没有，下家直接摸牌，我和上家检测
 	//我：碰 ，开舵，重舵
 
-	std::cout << "下家起牌~~~~~~~~~~~~~~~~" << std::endl;
+	/*std::cout << "下家起牌~~~~~~~~~~~~~~~~" << std::endl;
 	getANewCard();
 
 	if (checkChongDuo())
@@ -260,13 +271,12 @@ void GameLayer::schePlayerCallBack_1(float dt)	//下家
 		auto chooseLayer = ChooseLayer::create();
 		addChild(chooseLayer);
 		chooseLayer->setBtnEnable(2);
-	}
+	}*/
 }
 
 void GameLayer::schePlayerCallBack_0(float dt)	//上家
 {
 	//检测，若没有，直接摸牌，我和下家检测
-
 }
 
 void GameLayer::schePlayerCallBack_2(float dt)	//自己
@@ -288,7 +298,10 @@ void GameLayer::doPengACard()
 {
 	t_Player[2].doPengACard(m_newCard.m_Type, m_newCard.m_Value);
 	ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我碰！！！"));
-	m_GameState = GameState::MyTurn;
+
+	UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//碰完后我打牌
+	UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
+	//changeState(new PlayerTwoState());
 
 	createMyCardWall();		//重新显示牌面
 	_eventDispatcher->dispatchCustomEvent(SHOW_PENGCARD);	//显示层显示碰的牌
@@ -393,7 +406,10 @@ bool GameLayer::checkSaochuan()
 		createMyCardWall();
 		_eventDispatcher->dispatchCustomEvent(SHOW_SAOCHUANCARD);
 		isAction = true;
-		m_GameState = GameLayer::MyTurn;
+
+		//m_GameState = GameLayer::MyTurn;
+		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//扫穿完后我打牌
+		UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
 	}
 
 	if (t_Player[2].checkSao_saoChuanACard(m_newCard.m_Type, m_newCard.m_Value))
@@ -403,8 +419,10 @@ bool GameLayer::checkSaochuan()
 		createMyCardWall();
 		_eventDispatcher->dispatchCustomEvent(SHOW_SAOCHUANCARD);
 		isAction = true;
-		m_GameState = GameLayer::MyTurn;
 
+		//m_GameState = GameLayer::MyTurn;
+		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//扫穿完后我打牌
+		UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
 	}
 
 	if (isAction)
@@ -422,7 +440,11 @@ bool GameLayer::checkSao()
 		t_Player[2].doSaoACard(m_newCard.m_Type, m_newCard.m_Value);
 		createMyCardWall();
 		_eventDispatcher->dispatchCustomEvent(SHOW_SAOCARD);
-		m_GameState = GameLayer::MyTurn;
+
+		//m_GameState = GameLayer::MyTurn;
+		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//扫完后我打牌
+		UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
+
 		return true;
 	}
 	return false;
@@ -431,7 +453,7 @@ bool GameLayer::checkSao()
 void GameLayer::chooseLayerClose()
 {
 	ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我不想碰也不想吃！！"));
-	scheduleUpdate();
+	changeState(new PlayerTwoState());
 }
 
 bool GameLayer::checkKaiduo()
@@ -445,8 +467,9 @@ bool GameLayer::checkKaiduo()
 		createMyCardWall();
 		_eventDispatcher->dispatchCustomEvent(SHOW_KAIDUOCARD);
 		isAction = true;
-		m_GameState = GameLayer::MyTurn;	
-
+		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//开舵后我打牌
+		UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
+		changeState(new PlayerTwoState());
 	}
 
 	if (t_Player[2].checkKaiDuo_Sao(m_newCard.m_Type, m_newCard.m_Value))
@@ -456,8 +479,9 @@ bool GameLayer::checkKaiduo()
 		createMyCardWall();
 		_eventDispatcher->dispatchCustomEvent(SHOW_KAIDUOCARD);
 		isAction = true;
-		m_GameState = GameLayer::MyTurn;	
-
+		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//开舵后我打牌
+		UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
+		changeState(new PlayerTwoState());
 	}
 
 	if (t_Player[2].checkKaiDuo_peng(m_newCard.m_Type, m_newCard.m_Value))
@@ -467,10 +491,10 @@ bool GameLayer::checkKaiduo()
 		createMyCardWall();
 		_eventDispatcher->dispatchCustomEvent(SHOW_KAIDUOCARD);
 		isAction = true;
-		m_GameState = GameLayer::MyTurn;	
-
+		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//开舵后我打牌
+		UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
+		changeState(new PlayerTwoState());
 	}
-
 	if (isAction)
 	{
 		return true;
@@ -492,7 +516,7 @@ bool GameLayer::checkChongDuo()
 		_eventDispatcher->dispatchCustomEvent(SHOW_KAIDUOCARD);
 
 		isAction = true;
-		m_GameState = GameLayer::NPCTurn_1;
+		changeState(new PlayerOneState());
 	}
 	//扫穿还没处理好
 	if (t_Player[2].checkChongDuo_saoChuan(m_newCard.m_Type, m_newCard.m_Value))
@@ -502,7 +526,7 @@ bool GameLayer::checkChongDuo()
 		createMyCardWall();
 
 		isAction = true;
-		m_GameState = GameLayer::NPCTurn_1;
+		changeState(new PlayerOneState());
 	}
 
 	if (isAction)
@@ -531,6 +555,10 @@ void GameLayer::onEnter()
 bool GameLayer::onTouchBegan(Touch *touch, Event *unused_event)
 {
 	if (m_GameState != GameLayer::GameState::MyTurn)
+	{
+		return false;
+	}
+	if (!UserDefault::getInstance()->getBoolForKey(ISPLAYCAED))
 	{
 		return false;
 	}
@@ -617,8 +645,10 @@ void GameLayer::onTouchEnded(Touch *touch, Event *unused_event)
 		PopPai[2] = t_Player[2].popCard;
 		_eventDispatcher->dispatchCustomEvent(CREATE_CARD);
 
-		m_GameState = GameLayer::GameState::NPCTurn_1;
-
+		UserDefault::getInstance()->setBoolForKey(ISFIRSTPLAY,true);
+		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, true);	//打完牌后我可以摸牌
+		UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, false);	//打完牌后我不能出牌
+		changeState(new PlayerOneState());
 	}
 	else
 	{
@@ -672,6 +702,7 @@ void GameLayer::initUI()
 
 void GameLayer::startCallBack(Ref* ref)
 {
+	UserDefault::getInstance()->setBoolForKey(ISFIRSTPLAY, false);
 	xipai();
 }
 

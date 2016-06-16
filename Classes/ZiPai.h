@@ -2,7 +2,6 @@
 #include"Win.h"
 #include <iostream>  
 #include <vector>  
-#include "utils/Actionstate.h"
 using namespace std;
 
 #include "cocos2d.h"
@@ -194,7 +193,6 @@ public:
 	int 	checkHushu();															//检测胡数
 
 	std::vector<int >	 m_MyCard_Temp[2];			   			//临时牌型数组
-	Actionstate* m_ActionState;
 private:
 	int m_Score;
 

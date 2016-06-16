@@ -34,26 +34,10 @@ Actionstate* Actionstate::addState(std::string state, std::function<void()> onEn
     return this;
 }
 
-//bool Actionstate::isContainState(std::string stateName)
-//{
-//	//return _states.find(stateName) != _states.end();
-//	return false;
-//}
-
 bool Actionstate::isContain(std::string stateName)
 {
 	return _states.find(stateName) != _states.end();
 }
-
-//void Actionstate::printState()
-//{
-//    //	std::for_each(_states.begin(), _states.end(), &FSM::print);
-//    cocos2d::log("FSM::printState: list of states");
-//    for(auto iter = _states.begin(); iter!=_states.end(); iter++)
-//    {
-//         cocos2d::log("%s",iter->c_str());
-//    }
-//}
 
 void Actionstate::logState()
 {

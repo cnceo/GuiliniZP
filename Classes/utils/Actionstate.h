@@ -4,7 +4,7 @@
 #include <set>
 #include "cocos2d.h"
 USING_NS_CC;
-
+//http://www.waitingfy.com/archives/1273   状态机
 class Actionstate:public Ref
 {
 public:
@@ -21,11 +21,9 @@ public:
     Actionstate* addEvent(std::string eventName, std::string from, std::string to);
 
     //判断动作状态是否存在
-	//bool isContainState(std::string stateName);
-
 	bool isContain(std::string stateName);
+
     //打印状态列表
-    //void printState();
 	void logState();
 
     //执行动作动画

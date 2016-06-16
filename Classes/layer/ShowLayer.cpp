@@ -130,7 +130,12 @@ Sprite* ShowLayer::createBigCardSprite(int p_Type, int p_Value)
 		//大写 1-10.png	
 		card = Sprite::create(StringUtils::format("chang_d%0d.png", p_Value));
 	}
-	return card;
+	if (card)
+	{
+		card->setScale(0.7f);
+		return card;
+	}
+	return nullptr;
 }
 
 //短牌创建
@@ -210,7 +215,7 @@ void ShowLayer::createANewCard()
 	float height = m_NewCard->getContentSize().height;
 	m_NewCard->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, Vec2(0, height / 2)));
 
-	auto moveTo = MoveTo::create(0.3f, CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, height + 25)));
+	auto moveTo = MoveTo::create(0.3f, CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, height)));
 	auto easeAction = EaseBackOut::create(moveTo);
 	m_NewCard->runAction(easeAction);
 }

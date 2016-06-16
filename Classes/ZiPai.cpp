@@ -15,14 +15,7 @@ ZiPai::~ZiPai()
 
 void ZiPai::playerAction()
 {
-	m_ActionState = Actionstate::create("MyTurn", [](){cocos2d::log("Enter MyTurn"); });
-	m_ActionState->retain();
 
-	m_ActionState->setOnEnter("MyTurn", [](){cocos2d::log("Enter MyTurn<<<<<"); });	//进入这个状态所做的事情
-	m_ActionState->setOnEnter("NpcTurn_1", [](){cocos2d::log("Enter NpcTurn_1<<<<<"); });
-	m_ActionState->setOnEnter("NpcTurn_0", [](){cocos2d::log("Enter NpcTurn_0<<<<<"); });
-
-	m_ActionState->logState();
 }
 
 //获取，设置用户状态
