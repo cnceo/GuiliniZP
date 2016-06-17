@@ -67,7 +67,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 
-	glview->setFrameSize(1024, 768);
+	glview->setFrameSize(1136, 640);
 
 #endif
 

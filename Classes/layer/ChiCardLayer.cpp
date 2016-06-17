@@ -98,7 +98,7 @@ void ChiCardLayer::initData()
 	{
 		addChild(closeBtn);
 		closeBtn->setScale(0.5f);
-		closeBtn->setPosition(CommonFunction::getVisibleAchor(Anchor::Center,Vec2(250,0)));
+		closeBtn->setPosition(CommonFunction::getVisibleAchor(Anchor::Center,Vec2(340,155)));
 		closeBtn->addClickEventListener([=](Ref* pSender){
 			if (getParent())
 			{
@@ -155,7 +155,8 @@ void ChiCardLayer::initUI()
 		for (int i = 0; i < m_tmpChiCardList.size(); i++)
 		{
 			int _height = m_tmpChiCardList.at(i)->getContentSize().height;
-			m_tmpChiCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i % 3)*(_height / 4)+ 100, i / 3 * (_height - 73))));
+			//m_tmpChiCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i % 3)*(_height)+100, i / 3 * (_height - 73))));
+			m_tmpChiCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i / 3)*(_height+15)+100, i % 3 * (_height - 83)+100)));
 			m_tmpChiCardList.at(i)->setTag(i);
 		}
 	}
@@ -166,16 +167,15 @@ Sprite* ChiCardLayer::createSmallCardSprite(int p_Type, int p_Value)
 	Sprite* card = nullptr;
 	if (p_Type == 0)
 	{
-		card = Sprite::create(StringUtils::format("duanpai_x%0d.png", p_Value));
+		card = Sprite::create(StringUtils::format("xiaopai_x%0d.png", p_Value));
 	}
 	if (p_Type == 1)
 	{
-		card = Sprite::create(StringUtils::format("duanpai_d%0d.png", p_Value));
+		card = Sprite::create(StringUtils::format("xiaopai_d%0d.png", p_Value));
 	}
 
 	if (card)
 	{
-		card->setScale(0.3f);
 		return card;
 	}
 	return nullptr;

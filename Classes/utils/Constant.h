@@ -30,7 +30,10 @@ using namespace cocos2d;
 #define CARD_ZORDER_1 10
 #define CARD_ZORDER_2 20
 
+//userdefault 数据存储
 
 #define ISFIRSTPLAY "isFirstPlay"			//是否第一次打牌
 #define ISGETORPLAY	"isGetOrPlay"			//是摸牌还是打牌   true 摸牌，false 打牌
 #define ISPLAYCAED	"isPlayCard"			//我能否出牌
+#define ISHZ		"ishuangzhuang"			//是否黄庄
+#define GAMESTATE	"gamestate"				//游戏状态	0（上家）， 1（下家）， 2（我）

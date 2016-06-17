@@ -3,6 +3,7 @@
 #include "utils/GetLayer.h"
 #include "ChooseLayer.h"
 #include "PlayerOneState.h"
+#include "GameLayer.h"
 
 USING_NS_CC;
 
@@ -11,9 +12,11 @@ USING_NS_CC;
 PlayerTwoState::PlayerTwoState()
 {
 	std::cout << "我[2]摸牌打牌" << std::endl;
-
+	UserDefault::getInstance()->setIntegerForKey(GAMESTATE, 2);
 	if (!UserDefault::getInstance()->getBoolForKey(ISFIRSTPLAY))
 	{
+		Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(PLAYERBLINK_2);
+
 		/*
 			false:庄家，第一次打牌，不摸牌
 			true:第二圈开始，摸牌
@@ -25,10 +28,10 @@ PlayerTwoState::PlayerTwoState()
 		if (UserDefault::getInstance()->getBoolForKey(ISGETORPLAY))
 		{
 			//摸牌不打牌
-			Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(PLAYERBLINK_2);
-
 			auto callfunc = CallFunc::create([this](){
 				GAMELAYER->getANewCard();
+				Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(PLAYERBLINK_2);
+
 				myCheck();
 			});
 			auto delayTime = DelayTime::create(1.5f);
@@ -38,6 +41,7 @@ PlayerTwoState::PlayerTwoState()
 		else
 		{
 			//打牌不摸牌
+			Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(PLAYERBLINK_2);
 		}
 	}
 }

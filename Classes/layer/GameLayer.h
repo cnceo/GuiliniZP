@@ -23,7 +23,7 @@ public:
 
 	enum GameState
 	{
-		NPCTurn_0,
+		NPCTurn_0=0,
 		NPCTurn_1,
 		MyTurn,
 		OFF
@@ -62,11 +62,7 @@ public:
 	virtual void update(float dt);
 
 	void changeState(StateManager* _state);
-
-	void schePlayerCallBack_0(float dt);	//上家
-	void schePlayerCallBack_1(float dt);	//下家
-	void schePlayerCallBack_2(float dt);	//自己
-
+	
 public:
 	//我自己检测
 	bool checkPeng();

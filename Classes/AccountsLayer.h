@@ -2,31 +2,33 @@
 
 #include "cocos2d.h"
 #include "Win.h"
+#include "layerUtils/Pop.h"
 
 using namespace cocos2d;
 /*
 	结算界面
 */
 
-class AccountsLayer: public LayerColor
+class AccountsLayer: public Layer
 {
 public:
 	AccountsLayer();
 	~AccountsLayer();
 
+	static Scene* createScene();
 	virtual bool init();
 	CREATE_FUNC(AccountsLayer);
 	virtual void onEnter();
+	virtual void onKeyReleased(EventKeyboard::KeyCode keycode, Event* event);
 public:
 
 	void addUI();
-	int getHushu();
 	
 public:
 
 	void quiteCallback(Ref* sender);
 	void restartCallback(Ref* sender);
-	Sprite* createSmallCardSprite(int p_Type, int p_Value);
+
 private:
 	std::vector<Sprite*> SpriteVec;
 };

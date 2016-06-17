@@ -53,19 +53,18 @@ void WelcomeScene::initUI()
 	auto bg_sp = Sprite::create("hall/bg_image.png");
 	if (bg_sp)
 	{
-		float w = bg_sp->getContentSize().width;
-		float h = bg_sp->getContentSize().height;
-
-		bg_sp->setScale(VISIBLESIZE.width / w, VISIBLESIZE.height / h);
+		//float w = bg_sp->getContentSize().width;
+		//float h = bg_sp->getContentSize().height;
+		//bg_sp->setScale(VISIBLESIZE.width / w, VISIBLESIZE.height / h);
 
 		addChild(bg_sp);
 		bg_sp->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 0)));
 	}
 	//中间
-	auto item_0 = MenuItemSprite::create(Sprite::create("hall/ima_two.png"), Sprite::create("hall/ima_two.png"));
-	auto item_1 = MenuItemSprite::create(Sprite::create("hall/ima_seven.png"),Sprite::create("hall/ima_seven.png"));
-	auto item_2 = MenuItemSprite::create(Sprite::create("hall/ima_ten.png"), Sprite::create("hall/ima_ten.png"));
-	//auto item_3 = MenuItemSprite::create(Sprite::create("hall/ima_ten.png"), Sprite::create("hall/ima_ten.png"));
+	auto item_0 = MenuItemSprite::create(Sprite::create("hall/ima_bisai.png"), Sprite::create("hall/ima_bisai.png"));
+	auto item_1 = MenuItemSprite::create(Sprite::create("hall/ima_ct.png"),Sprite::create("hall/ima_ct.png"));
+	auto item_2 = MenuItemSprite::create(Sprite::create("hall/ima_ziyou.png"), Sprite::create("hall/ima_ziyou.png"));
+	//auto item_3 = MenuItemSprite::create(Sprite::create("hall/ima_ziyou.png"), Sprite::create("hall/ima_ziyou.png"));
 
 	if (item_0 && item_1 && item_2)
 	{
@@ -76,8 +75,8 @@ void WelcomeScene::initUI()
 		//rotateMenu->addMenuItem(item_3);
 
 		addChild(rotateMenu);
-		rotateMenu->setPosition(CommonFunction::getVisibleAchor(Anchor::Center,Vec2(0,20)));
-		
+		rotateMenu->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(-150, 20)));
+
 		item_0->setCallback(CC_CALLBACK_1(WelcomeScene::startGameCBK, this));
 		item_1->setCallback(CC_CALLBACK_1(WelcomeScene::startGameCBK, this));
 		item_2->setCallback(CC_CALLBACK_1(WelcomeScene::startGameCBK, this));
@@ -85,29 +84,7 @@ void WelcomeScene::initUI()
 		item_0->setTag(0);
 		item_1->setTag(1);
 		item_2->setTag(2);
-
-		auto sp_0 = Sprite::create("hall/room_ct.png");
-		auto sp_1 = Sprite::create("hall/room_ziyou.png");
-		auto sp_2 = Sprite::create("hall/room_bisai.png");
-		if (sp_0 && sp_1 && sp_2)
-		{
-			item_0->addChild(sp_0);
-			item_1->addChild(sp_1);
-			item_2->addChild(sp_2);
-
-			sp_0->setPosition(CommonFunction::getVisibleAchor(Anchor::MidButtom, item_0, Vec2(0, -sp_0->getContentSize().height / 2)));
-			sp_1->setPosition(CommonFunction::getVisibleAchor(Anchor::MidButtom, item_1, Vec2(0, -sp_1->getContentSize().height / 2)));
-			sp_2->setPosition(CommonFunction::getVisibleAchor(Anchor::MidButtom, item_2, Vec2(0, -sp_2->getContentSize().height / 2)));
-		}
 	}
-	//右上角
-	auto water_sp = Sprite::create("hall/water.png");
-	if (!water_sp) return;
-
-	addChild(water_sp);
-	float _width = water_sp->getContentSize().width / 2 ;
-	float _height = water_sp->getContentSize().height / 2 + 20;
-	water_sp->setPosition(CommonFunction::getVisibleAchor(1, 1, Vec2(-_width, -_height)));
 
 	auto shop_btn =		Button::create("hall/lab_shop.png");
 	auto mission_btn =	Button::create("hall/lab_mission.png");
@@ -117,8 +94,11 @@ void WelcomeScene::initUI()
 	if (shop_btn && mission_btn && bag_btn && setting_btn)
 	{
 		auto _node = Node::create();
-		water_sp->addChild(_node);
-		_node->setPosition(CommonFunction::getVisibleAchor(Anchor::Center,water_sp,Vec2(0,0)));
+		_node->setContentSize(Size(477, 82));
+		addChild(_node);
+
+		_node->setPosition(CommonFunction::getVisibleAchor(1, 1, Vec2(-477 / 2, -82 / 2)));
+
 
 		_node->addChild(shop_btn);
 		_node->addChild(mission_btn);
@@ -160,12 +140,12 @@ void WelcomeScene::initUI()
 		hero_icon->addChild(gold_bg);
 		hero_icon->addChild(diam_bg);
 
-		gold_bg->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, hero_icon, Vec2(175, 25)));
-		diam_bg->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, hero_icon, Vec2(175, -25)));
+		gold_bg->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, hero_icon, Vec2(200, 25)));
+		diam_bg->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, hero_icon, Vec2(200, -25)));
 	}
 
-	m_goldLabel = Label::createWithTTF("20000","fonts/Roboto-Medium.ttf",32);
-	m_diamLabel = Label::createWithTTF("100000", "fonts/Roboto-Medium.ttf", 32);
+	m_goldLabel = Label::createWithTTF("2000","fonts/Roboto-Medium.ttf",32);
+	m_diamLabel = Label::createWithTTF("1000", "fonts/Roboto-Medium.ttf", 32);
 	if (m_goldLabel && m_diamLabel && gold_bg && diam_bg)
 	{
 		gold_bg->addChild(m_goldLabel);

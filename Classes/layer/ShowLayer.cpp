@@ -142,18 +142,19 @@ Sprite* ShowLayer::createBigCardSprite(int p_Type, int p_Value)
 Sprite* ShowLayer::createSmallCardSprite(int p_Type, int p_Value)
 {
 	Sprite* card = nullptr;
+
 	if (p_Type == 0)
 	{
-		card = Sprite::create(StringUtils::format("duanpai_x%0d.png", p_Value));
+		card = Sprite::create(StringUtils::format("xiaopai_x%0d.png", p_Value));
 	}
 	if (p_Type == 1)
 	{
-		card = Sprite::create(StringUtils::format("duanpai_d%0d.png", p_Value));
+		card = Sprite::create(StringUtils::format("xiaopai_d%0d.png", p_Value));
 	}
 
 	if (card)
 	{
-		card->setScale(0.3f);
+		card->setScale(0.7f);
 		return card;
 	}
 	return nullptr;
@@ -238,6 +239,13 @@ void ShowLayer::showPengCard()
 	_pengList[0] = m_GameLayer->t_Player[2].m_PengCardVec[0];
 	_pengList[1] = m_GameLayer->t_Player[2].m_PengCardVec[1];
 
+	_pengList[0].push_back(4);
+	_pengList[0].push_back(4);
+	_pengList[0].push_back(4);
+	_pengList[0].push_back(4);
+	_pengList[0].push_back(4);
+	_pengList[0].push_back(4);
+
 	if (_pengList[0].size()>0)
 	{
 		for (int i = 0; i < _pengList[0].size(); i++)
@@ -271,7 +279,7 @@ void ShowLayer::showPengCard()
 		for (int i = 0; i < m_tmpPengCardList.size(); i++)
 		{
 			int _height = m_tmpPengCardList.at(i)->getContentSize().height;
-			m_tmpPengCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i % 3)*(_height / 4) + 50, i / 3 * (_height - 73) - 120)));
+			m_tmpPengCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i / 3)*(_height - 8) + 50, i % 3 * (_height - 70) - 60)));
 			//_tmpSpriteList.at(i)->setPosition(Vec2((i % 3)*(_height / 4) + 100, (i / 3)*(_height- 73) + 200));
 		}
 	}
@@ -297,6 +305,15 @@ void ShowLayer::showKaiduoCard()
 	_kaiduoList[0] = m_GameLayer->t_Player[2].m_KaiDuoCardVec[0];
 	_kaiduoList[1] = m_GameLayer->t_Player[2].m_KaiDuoCardVec[1];
 	
+	_kaiduoList[0].push_back(1);
+	_kaiduoList[0].push_back(1);
+	_kaiduoList[0].push_back(1);
+	_kaiduoList[0].push_back(1);
+	_kaiduoList[0].push_back(1);
+	_kaiduoList[0].push_back(1);
+	_kaiduoList[0].push_back(1);
+	_kaiduoList[0].push_back(1);
+
 	if (_kaiduoList[0].size()>0)
 	{
 		for (int i = 0; i < _kaiduoList[0].size(); i++)
@@ -330,8 +347,9 @@ void ShowLayer::showKaiduoCard()
 		for (int i = 0; i < m_tmpKaiDuoCardList.size(); i++)
 		{
 			int _height = m_tmpKaiDuoCardList.at(i)->getContentSize().height;
-			m_tmpKaiDuoCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i % 4)*(_height / 4) + 150, i / 4 * (_height - 73) - 120)));
+			m_tmpKaiDuoCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i / 4)*(_height-8) + 150, i % 4 * (_height - 70) - 30)));
 			//_tmpSpriteList.at(i)->setPosition(Vec2((i % 3)*(_height / 4) + 100, (i / 3)*(_height- 73) + 200));
+
 		}
 	}
 }
@@ -354,6 +372,15 @@ void ShowLayer::showSaochuanCard()
 	std::vector<int > _saochuanList[2];
 	_saochuanList[0] = m_GameLayer->t_Player[2].m_SaoChuanCardVec[0];
 	_saochuanList[1] = m_GameLayer->t_Player[2].m_SaoChuanCardVec[1];
+
+	_saochuanList[0].push_back(2);
+	_saochuanList[0].push_back(2);
+	_saochuanList[0].push_back(2);
+	_saochuanList[0].push_back(2);
+	_saochuanList[0].push_back(2);
+	_saochuanList[0].push_back(2);
+	_saochuanList[0].push_back(2);
+	_saochuanList[0].push_back(2);
 
 	if (_saochuanList[0].size()>0)
 	{
@@ -388,8 +415,9 @@ void ShowLayer::showSaochuanCard()
 		for (int i = 0; i < m_tmpSaoChuanCardList.size(); i++)
 		{
 			int _height = m_tmpSaoChuanCardList.at(i)->getContentSize().height;
-			m_tmpSaoChuanCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i % 4)*(_height / 4) + 280, i / 4 * (_height - 73) - 120)));
+			m_tmpSaoChuanCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i / 4)*(_height -8) + 280, i % 4 * (_height - 70) - 30)));
 			//_tmpSpriteList.at(i)->setPosition(Vec2((i % 3)*(_height / 4) + 100, (i / 3)*(_height- 73) + 200));
+			//m_tmpKaiDuoCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i / 4)*(_height + 5) + 150, i % 4 * (_height - 83) - 25)));
 		}
 	}
 }
@@ -411,6 +439,16 @@ void ShowLayer::showSaoCard()
 	std::vector<int > _saoList[2];
 	_saoList[0] = m_GameLayer->t_Player[2].m_SaoCardVec[0];
 	_saoList[1] = m_GameLayer->t_Player[2].m_SaoCardVec[1];
+
+	_saoList[0].push_back(3);
+	_saoList[0].push_back(3);
+	_saoList[0].push_back(3);
+	_saoList[0].push_back(3);
+	_saoList[0].push_back(3);
+	_saoList[0].push_back(3);
+	_saoList[0].push_back(3);
+	_saoList[0].push_back(3);
+	_saoList[0].push_back(3);
 
 	if (_saoList[0].size()>0)
 	{
@@ -445,8 +483,10 @@ void ShowLayer::showSaoCard()
 		for (int i = 0; i < m_tmpSaoCardList.size(); i++)
 		{
 			int _height = m_tmpSaoCardList.at(i)->getContentSize().height;
-			m_tmpSaoCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i % 3)*(_height / 4) - 120, i / 3 * (_height - 73) - 120)));
+			m_tmpSaoCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i / 3)*(_height -8) - 120, i % 3 * (_height - 70) - 60)));
 			//_tmpSpriteList.at(i)->setPosition(Vec2((i % 3)*(_height / 4) + 100, (i / 3)*(_height- 73) + 200));
+			//m_tmpPengCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i / 3)*(_height + 5) + 50, i % 3 * (_height - 83) - 60)));
+
 		}
 	}
 }
@@ -502,7 +542,7 @@ void ShowLayer::showChiCard()
 		for (int i = 0; i < m_tmpChiCardList.size(); i++)
 		{
 			int _height = m_tmpChiCardList.at(i)->getContentSize().height;
-			m_tmpChiCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::RightMid, Vec2((i % 3)*(_height / 4) - 120, i / 3 * (_height - 73) - 120)));
+			m_tmpChiCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::RightMid, Vec2((i % 3)*(_height) - 120, i / 3 * (_height - 73) - 120)));
 			//_tmpSpriteList.at(i)->setPosition(Vec2((i % 3)*(_height / 4) + 100, (i / 3)*(_height- 73) + 200));
 		}
 	}

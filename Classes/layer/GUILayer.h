@@ -6,7 +6,7 @@ using namespace cocos2d;
 /*
 ui显示层 玩家信息等
 */
-
+class TimeCounter;
 class GUILayer :public Layer
 {
 public:
@@ -17,7 +17,7 @@ public:
 	virtual bool init();
 	CREATE_FUNC(GUILayer);
 
-private:
+public:
 
 	void initData();
 	void initUI();
@@ -29,5 +29,6 @@ private:
 	Sprite* icon_left;
 	Sprite* icon_leftDown;
 	Sprite* icon_right;
+	TimeCounter* _timecount;
 };
 

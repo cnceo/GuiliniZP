@@ -31,7 +31,9 @@ bool GameScene::init()
 
 	auto gamelayer = GameLayer::create();
 	addChild(gamelayer);
-	addChild(GUILayer::create());
+
+	auto guilayer = GUILayer::create();
+	addChild(guilayer);
 
 	GetLayer::getInstance()->setgameLayer(gamelayer);
 

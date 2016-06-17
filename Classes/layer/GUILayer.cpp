@@ -1,8 +1,9 @@
 ﻿#include "GUILayer.h"
 #include "utils/CommonFunction.h"
 #include "utils/Constant.h"
+#include "utils/TimeCounter.h"
 
-GUILayer::GUILayer()
+GUILayer::GUILayer() : icon_left(nullptr), icon_right(nullptr), icon_leftDown(nullptr), _timecount(nullptr)
 {
 	auto _listener_1 = EventListenerCustom::create(PLAYERBLINK_0, [=](EventCustom*event){
 		playerBlink_0();
@@ -71,55 +72,47 @@ void GUILayer::initUI()
 		addChild(icon_right);
 		icon_right->setPosition(CommonFunction::getVisibleAchor(1, 1, this, Vec2(-width, -width)));
 	}
+
+	_timecount = TimeCounter::create();
+	addChild(_timecount);
+	_timecount->setPosition(CommonFunction::getVisibleAchor(Anchor::Center,this,Vec2(0,0)));
+	_timecount->setVisible(false);
+	_timecount->setScale(0.7f);
 }
 
-void GUILayer::playerBlink_0()
+void GUILayer::playerBlink_0()	//上家
 {
-	icon_left->stopAllActions();
-	auto tink = Blink::create(1, 5);
-	auto repeate = RepeatForever::create(tink);
-	if (icon_left)
+	if (!_timecount)
 	{
-		icon_left->runAction(repeate);
+		return;
 	}
+	cout << "playerBlink_0" << endl;
 
-	if (icon_right && icon_leftDown)
-	{
-		icon_right->stopAllActions();
-		icon_leftDown->stopAllActions();
-	}
+	_timecount->setPosition(icon_left->getPosition() + Vec2(0, -100));
+	_timecount->start(5, [](){log("0 timeout........"); });
+
 }
 
-void GUILayer::playerBlink_1()
+void GUILayer::playerBlink_1()//下家
 {
-	icon_right->stopAllActions();
-	auto tink = Blink::create(1, 5);
-	auto repeate = RepeatForever::create(tink);
-	if (icon_right)
+	if (!_timecount)
 	{
-		icon_right->runAction(repeate);
+		return;
 	}
+	cout << "playerBlink_1" << endl;
 
-	if (icon_left && icon_leftDown)
-	{
-		icon_left->stopAllActions();
-		icon_leftDown->stopAllActions();
-	}
+	_timecount->setPosition(icon_right->getPosition() + Vec2(0, -100));
+	_timecount->start(5, [](){log("1 timeout........"); });
 }
 
 void GUILayer::playerBlink_2()
 {
-	icon_leftDown->stopAllActions();
-	auto tink = Blink::create(1, 5);
-	auto repeate = RepeatForever::create(tink);
-	if (icon_leftDown)
+	if (!_timecount)
 	{
-		icon_leftDown->runAction(repeate);
+		return;
 	}
-
-	if (icon_left && icon_right)
-	{
-		icon_left->stopAllActions();
-		icon_right->stopAllActions();
-	}
+	cout << "playerBlink_2" << endl;
+	_timecount->setVisible(true);
+	_timecount->setPosition(icon_leftDown->getPosition() + Vec2(0,100));
+	_timecount->start(5, [](){log("2 timeout........"); });
 }
