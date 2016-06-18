@@ -52,7 +52,7 @@ void ChooseLayer::initUI()
 
 	 auto node = Node::create();
 	 addChild(node);
-	 node->setPosition(CommonFunction::getVisibleAchor(0.5,0.4,this,Vec2(100,0)));
+	 node->setPosition(CommonFunction::getVisibleAchor(0.5,0.4,this,Vec2(150,0)));
 	 node->setScale(0.7);
 
 	if (m_chi_btn)

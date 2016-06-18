@@ -156,7 +156,7 @@ void ChiCardLayer::initUI()
 		{
 			int _height = m_tmpChiCardList.at(i)->getContentSize().height;
 			//m_tmpChiCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i % 3)*(_height)+100, i / 3 * (_height - 73))));
-			m_tmpChiCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i / 3)*(_height+15)+100, i % 3 * (_height - 83)+100)));
+			m_tmpChiCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i / 3)*(_height+15)+150, i % 3 * (_height - 83)+100)));
 			m_tmpChiCardList.at(i)->setTag(i);
 		}
 	}

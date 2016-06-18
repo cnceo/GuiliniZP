@@ -5,10 +5,11 @@
 using namespace cocos2d;
 
 /*
-	显示玩家打的牌
+	显示玩家的各种操作了的牌
 */
 
 class GameLayer;
+class ShowCard;
 
 class ShowLayer :public Layer
 {
@@ -38,16 +39,50 @@ private:
 	void showSaoCard();			//显示扫的牌
 	void showChiCard();			//显示吃的牌
 
+	void refrishCardPos();		//更新位置
 private:
 	Sprite* m_ACard;
 	Sprite* m_NewCard;
 	GameLayer*	m_GameLayer;
 
-	Vector<Sprite* > m_tmpPengCardList;
-	Vector<Sprite* > m_tmpKaiDuoCardList;
-	Vector<Sprite* > m_tmpSaoChuanCardList;
-	Vector<Sprite* > m_tmpSaoCardList;
-	Vector<Sprite* > m_tmpChiCardList;
+	Vector<ShowCard* > m_tmpPengCardVec;
+	Vector<ShowCard* > m_tmpKaiDuoCardVec;
+	Vector<ShowCard* > m_tmpSaoChuanCardVec;
+	Vector<ShowCard* > m_tmpSaoCardVec;
+	Vector<ShowCard* > m_tmpChiCardVec;
 
+	Vector<ShowCard* > m_ThreeCardVec;		//存三张牌
+	Vector<ShowCard* > m_FourCardVec;		//存四张牌
+};
+
+class ShowCard: public Sprite
+{
+	/*
+		一个牌
+	*/
+public:
+	//牌的状态
+	enum STATE
+	{
+		Peng = 0,	//碰
+		Chi,		//吃
+		Sao,		//扫
+		Kaiduo,		//开舵
+		Saochuan,	//扫穿
+		Default		//默认
+	};
+	ShowCard();
+	~ShowCard();
+	static ShowCard* create(int p_Type, int p_Value);
+	bool init(int p_Type, int p_Value);
+	void setState(STATE _state);
+	STATE getState();
+	virtual void onEnter();
+	virtual bool onTouchBegan(Touch *touch, Event *unused_event);
+	virtual void onTouchMoved(Touch *touch, Event *unused_event);
+	virtual void onTouchEnded(Touch *touch, Event *unused_event);
+
+private:
+	STATE m_state;
 };
 

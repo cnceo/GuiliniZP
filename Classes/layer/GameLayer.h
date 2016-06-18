@@ -101,5 +101,7 @@ public:
 
 	GameState m_GameState;
 	StateManager* m_CurrState;
+	Label* m_beilv;							//倍率标签
+	int _beilv;								//倍率
 };
 
