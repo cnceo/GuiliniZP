@@ -21,6 +21,7 @@ public:
 
 	void initData();
 	void initUI();
+	void showNameAndMoney();
 
 	void playerBlink_0();
 	void playerBlink_1();

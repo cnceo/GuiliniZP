@@ -29,7 +29,8 @@ m_TempMoveCard(nullptr),
 m_GameState(MyTurn),
 m_CurrState(nullptr),
 m_beilv(nullptr),
-_beilv(1000)
+_beilv(1000),
+m_dipai(nullptr)
 {
 	auto _listener_1 = EventListenerCustom::create(PLAYER_PENG, [=](EventCustom*event){
 		doPengACard();
@@ -43,9 +44,14 @@ _beilv(1000)
 		showChiCardLayer();
 	});
 
+	auto _listener_4 = EventListenerCustom::create(PLAYER_CHI, [=](EventCustom*event){
+	
+	});
+
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_1, 1);
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_2, 1);
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_3, 1);
+	_eventDispatcher->addEventListenerWithFixedPriority(_listener_4, 1);
 }
 
 GameLayer::~GameLayer()
@@ -53,6 +59,7 @@ GameLayer::~GameLayer()
 	_eventDispatcher->removeCustomEventListeners(PLAYER_PENG);
 	_eventDispatcher->removeCustomEventListeners(CLOSE_CHOOSELAYER);
 	_eventDispatcher->removeCustomEventListeners(SHOW_CHICARDLAYER);
+	_eventDispatcher->removeCustomEventListeners(PLAYER_CHI);
 }
 
 bool GameLayer::init()
@@ -341,13 +348,16 @@ bool GameLayer::checkChi()
 	return false;
 }
 
-void GameLayer::doChiACard(int num)
+void GameLayer::doChiACard()
 {
-	/*t_Player[2].doChi1_2_3(m_newCard.m_Type, m_newCard.m_Value, num);
+	int num = UserDefault::getInstance()->getIntegerForKey(CHIWHAT,0);
+	/*
+	t_Player[2].doChi1_2_3(m_newCard.m_Type, m_newCard.m_Value, num);
 	t_Player[2].doChi2_7_10(m_newCard.m_Type, m_newCard.m_Value, num);
 	t_Player[2].doChiA_B_C(m_newCard.m_Type, m_newCard.m_Value, num);
 	t_Player[2].doChiA_A_a(m_newCard.m_Type, m_newCard.m_Value);
-	t_Player[2].doChiA_A_a_a(m_newCard.m_Type, m_newCard.m_Value);*/
+	t_Player[2].doChiA_A_a_a(m_newCard.m_Type, m_newCard.m_Value);
+	*/
 }
 
 void GameLayer::showChiCardLayer()
@@ -654,7 +664,7 @@ void GameLayer::initUI()
 	if (back_btn)
 	{
 		addChild(back_btn);
-		back_btn->setPosition(CommonFunction::getVisibleAchor(0.5, 1, Vec2(-135, -back_btn->getContentSize().height / 2 - 10)));
+		back_btn->setPosition(CommonFunction::getVisibleAchor(0.5, 1, Vec2(-135, -back_btn->getContentSize().height / 2 - 5)));
 		back_btn->addClickEventListener([this](Ref*){
 			Director::getInstance()->replaceScene(WelcomeScene::createScene());
 		});
@@ -672,14 +682,30 @@ void GameLayer::initUI()
 	{
 		startButton->addClickEventListener(CC_CALLBACK_1(GameLayer::overCallBack, this));
 	}
-
-	auto _str = CommonFunction::WStrToUTF8(L"本场倍率:");
-	_str = _str + Value(_beilv).asString();
-	m_beilv = Label::createWithTTF(_str, "fonts/Roboto-Medium.ttf", 20);
+	//倍率
+	auto beilv_str = CommonFunction::WStrToUTF8(L"倍率  ");
+	m_beilv = Label::createWithTTF(beilv_str + Value(_beilv).asString(), "fonts/Roboto-Medium.ttf", 20);
 	if (m_beilv)
 	{
 		addChild(m_beilv);
-		m_beilv->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, Vec2(0, -m_beilv->getContentSize().height - 6)));
+		m_beilv->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, Vec2(-5, -m_beilv->getContentSize().height - 6)));
+	}
+	//底牌
+	auto dipai_str = CommonFunction::WStrToUTF8(L"底牌:19");
+	m_dipai = Label::createWithTTF(dipai_str, "fonts/Roboto-Medium.ttf", 24);
+	if (m_dipai)
+	{
+		addChild(m_dipai);
+		m_dipai->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, Vec2(80, -75)));
+	}
+
+	//机器人
+	auto robot_btn = Button::create("robot.png");
+	if (robot_btn)
+	{
+		addChild(robot_btn);
+		robot_btn->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, Vec2(130,  -robot_btn->getContentSize().height / 2 -5)));
+		robot_btn->addClickEventListener([](Ref*){std::cout << "托管" << std::endl;; });
 	}
 }
 
@@ -725,6 +751,12 @@ void GameLayer::getANewCard()
 		m_newCard = t_newCard.m_NewCard;
 		cout << "剩" << t_newCard.m_CardNum << "张牌" << endl;
 		_eventDispatcher->dispatchCustomEvent(NEW_CARD);
+
+		auto dipai_str = CommonFunction::WStrToUTF8(L"底牌:");
+		if (m_dipai)
+		{
+			m_dipai->setString(dipai_str + Value(t_newCard.m_CardNum).asString());
+		}
 	}
 }
 
@@ -803,7 +835,7 @@ void GameLayer::createMyCardWall()
 		{
 			if (m_CardList.at(i))
 			{
-				m_CardList.at(i)->setPosition(CommonFunction::getVisibleAchor(0.13f, 0, Vec2(45 * i, 80)));
+				m_CardList.at(i)->setPosition(CommonFunction::getVisibleAchor(0.13f, 0, Vec2(45 * i, 100)));
 			}
 		}
 	}

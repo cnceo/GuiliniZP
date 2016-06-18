@@ -15,6 +15,7 @@ using namespace cocos2d;
 #define PLAYERBLINK_2	"blink_2"
 
 #define PLAYER_PENG			"pengACard"			//我碰
+#define PLAYER_CHI			"chiACard"			//我吃
 #define CLOSE_CHOOSELAYER	"closeChooseLayer"	//关闭选择层
 
 #define SHOW_PENGCARD		"showPengCard"		//显示碰的牌
@@ -37,3 +38,5 @@ using namespace cocos2d;
 #define ISPLAYCAED	"isPlayCard"			//我能否出牌
 #define ISHZ		"ishuangzhuang"			//是否黄庄
 #define GAMESTATE	"gamestate"				//游戏状态	0（上家）， 1（下家）， 2（我）
+#define CHIWHAT		"chiwhat"				//吃什么牌
+

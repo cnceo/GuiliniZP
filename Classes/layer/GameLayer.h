@@ -73,7 +73,7 @@ public:
 	bool checkChongDuo();
 
 	bool checkChi();
-	void doChiACard(int num);
+	void doChiACard();
 	void showChiCardLayer();
 
 	bool checkSaochuan();
@@ -85,7 +85,7 @@ public:
 
 	ZiPai		t_Player[3];				//三个玩家(2是自己)
 
-	std::vector<ChiCard>	m_TempChiCard;		//所有可吃的牌
+	std::vector<ChiCard>	m_TempChiCard;	//所有可吃的牌(不包括A_A_a_a和A_A_a)
 	std::vector<CardData>	m_TempChiList;	//所有可吃的牌(只管A_A_a_a和A_A_a)
 
 public:
@@ -101,7 +101,9 @@ public:
 
 	GameState m_GameState;
 	StateManager* m_CurrState;
+private:
 	Label* m_beilv;							//倍率标签
 	int _beilv;								//倍率
+	Label* m_dipai;							//底牌
 };
 

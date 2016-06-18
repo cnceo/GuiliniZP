@@ -83,6 +83,7 @@ void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
 		{
 			log("tag=%d", _card->getTag());
 			//选择吃什么牌
+			UserDefault::getInstance()->setIntegerForKey(CHIWHAT, _card->getTag());
 		}
 	}
 }
