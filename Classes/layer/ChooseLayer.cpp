@@ -1,6 +1,7 @@
 ﻿#include "ChooseLayer.h"
 #include "utils/CommonFunction.h"
 #include "utils/Constant.h"
+#include "utils/GetLayer.h"
 
 ChooseLayer::ChooseLayer():
 m_chi_btn(nullptr),
@@ -103,7 +104,8 @@ void ChooseLayer::pengBtnCbk(Ref* psender)
 void ChooseLayer::huBtnCbk(Ref* psender)
 {
 	log("hu");
-	//close();
+	GetLayer::getInstance()->getgameLayer()->createMyCardWall();
+	close();
 }
 
 void ChooseLayer::closeBtnCbk(Ref* psender)

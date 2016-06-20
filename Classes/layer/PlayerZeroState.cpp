@@ -37,7 +37,16 @@ void PlayerZeroState::Update()
 
 void PlayerZeroState::myCheck()
 {
-	if (GAMELAYER->checkChongDuo())
+	if (GAMELAYER->checkHu())
+	{
+		std::cout << "=======胡========" << std::endl;
+
+		auto chooseLayer = ChooseLayer::create();
+		GAMELAYER->addChild(chooseLayer);
+		chooseLayer->setBtnEnable(3);
+		chooseLayer->setName(CHOOSELAYER);
+	}
+	else if (GAMELAYER->checkChongDuo())
 	{
 		std::cout << "重舵" << std::endl;
 	}
@@ -50,18 +59,21 @@ void PlayerZeroState::myCheck()
 		auto chooseLayer = ChooseLayer::create();
 		GAMELAYER->addChild(chooseLayer);
 		chooseLayer->setBtnEnable(4);
+		chooseLayer->setName(CHOOSELAYER);
 	}
 	else if (GAMELAYER->checkChi() && !GAMELAYER->checkPeng())	//可吃不能碰
 	{
 		auto chooseLayer = ChooseLayer::create();
 		GAMELAYER->addChild(chooseLayer);
 		chooseLayer->setBtnEnable(1);
+		chooseLayer->setName(CHOOSELAYER);
 	}
 	else if (!GAMELAYER->checkChi() && GAMELAYER->checkPeng())//可吃不能碰
 	{
 		auto chooseLayer = ChooseLayer::create();
 		GAMELAYER->addChild(chooseLayer);
 		chooseLayer->setBtnEnable(2);
+		chooseLayer->setName(CHOOSELAYER);
 	}
 	else
 	{

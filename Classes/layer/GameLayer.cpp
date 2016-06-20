@@ -15,6 +15,7 @@
 #include "PlayerOneState.h"
 #include "PlayerZeroState.h"
 #include "../AccountsLayer.h"
+#include "utils/GetScore.h"
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 
@@ -30,7 +31,11 @@ m_GameState(MyTurn),
 m_CurrState(nullptr),
 m_beilv(nullptr),
 _beilv(1000),
-m_dipai(nullptr)
+m_dipai(nullptr),
+score(nullptr),
+_hand(nullptr),
+_line(nullptr),
+_note(nullptr)
 {
 	auto _listener_1 = EventListenerCustom::create(PLAYER_PENG, [=](EventCustom*event){
 		doPengACard();
@@ -82,6 +87,21 @@ bool GameLayer::init()
 	UserDefault::getInstance()->setIntegerForKey(GAMESTATE,2);		//设置当前状态(我)
 
 	changeState(new PlayerTwoState());
+
+	auto _delay_1 = DelayTime::create(1.0f);
+	auto _delay_2 = DelayTime::create(0.5f);
+
+	auto _callfunc_1 = CallFunc::create([=](){
+	
+		UserDefault::getInstance()->setBoolForKey(ISFIRSTPLAY, false);
+		_eventDispatcher->dispatchCustomEvent(PLAYERBLINK_2);
+		xipai();
+	});
+	auto _callfunc_2 = CallFunc::create([=](){creatAction();});
+
+	auto _seq = Sequence::create(_delay_1, _callfunc_1, _delay_2, _callfunc_2, nullptr);
+	runAction(_seq);
+
 	return true;
 }
 
@@ -255,6 +275,15 @@ void GameLayer::changeState(StateManager* _state)
 	m_CurrState = _state;
 }
 
+bool GameLayer::checkHu()
+{
+	if (t_Player[2].checkHuPai(m_newCard.m_Type, m_newCard.m_Value))
+	{
+		return true;
+	}
+	return false;
+}
+
 bool GameLayer::checkPeng()
 {
 	//下家摸的牌，我检测
@@ -276,6 +305,18 @@ void GameLayer::doPengACard()
 
 	createMyCardWall();		//重新显示牌面
 	_eventDispatcher->dispatchCustomEvent(SHOW_PENGCARD);	//显示层显示碰的牌
+
+	//测试
+	if (m_newCard.m_Type == 0)
+	{
+		GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 3); //修改胡数
+		refreshHuShu();		//刷新胡数
+	}
+	if (m_newCard.m_Type == 1)
+	{
+		GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 6); //修改胡数
+		refreshHuShu();		//刷新胡数
+	}
 }
 
 bool GameLayer::checkChi()
@@ -380,6 +421,8 @@ bool GameLayer::checkSaochuan()
 
 		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//扫穿完后我打牌
 		UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
+		changeState(new PlayerTwoState());
+		setActionVisible(true);
 	}
 
 	if (t_Player[2].checkSao_saoChuanACard(m_newCard.m_Type, m_newCard.m_Value))
@@ -392,6 +435,8 @@ bool GameLayer::checkSaochuan()
 
 		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//扫穿完后我打牌
 		UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
+		changeState(new PlayerTwoState());
+		setActionVisible(true);
 	}
 
 	if (isAction)
@@ -413,6 +458,8 @@ bool GameLayer::checkSao()
 		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//扫完后我打牌
 		UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
 
+		changeState(new PlayerTwoState());
+		setActionVisible(true);
 		return true;
 	}
 	return false;
@@ -420,7 +467,7 @@ bool GameLayer::checkSao()
 
 void GameLayer::chooseLayerClose()
 {
-	ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我不想碰也不想吃！！"));
+	//ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"！！"));
 	int _state = UserDefault::getInstance()->getIntegerForKey(GAMESTATE, 0);
 	if (_state == 0)
 	{
@@ -634,6 +681,7 @@ void GameLayer::onTouchEnded(Touch *touch, Event *unused_event)
 		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, true);	//打完牌后我可以摸牌
 		UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, false);	//打完牌后我不能出牌
 		changeState(new PlayerOneState());
+		setActionVisible(false);
 	}
 	else
 	{
@@ -667,6 +715,7 @@ void GameLayer::initUI()
 		back_btn->setPosition(CommonFunction::getVisibleAchor(0.5, 1, Vec2(-135, -back_btn->getContentSize().height / 2 - 5)));
 		back_btn->addClickEventListener([this](Ref*){
 			Director::getInstance()->replaceScene(WelcomeScene::createScene());
+			GetScore::getInstance()->setScore(0);
 		});
 	}
 
@@ -676,6 +725,7 @@ void GameLayer::initUI()
 	addChild(startButton);
 	if (startButton && m_isStartGame)
 	{
+		startButton->setVisible(false);
 		startButton->addClickEventListener(CC_CALLBACK_1(GameLayer::startCallBack, this));
 	}
 	else
@@ -707,6 +757,16 @@ void GameLayer::initUI()
 		robot_btn->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, Vec2(130,  -robot_btn->getContentSize().height / 2 -5)));
 		robot_btn->addClickEventListener([](Ref*){std::cout << "托管" << std::endl;; });
 	}
+
+	//添加胡数
+	Label* hushu = Label::createWithTTF(CommonFunction::WStrToUTF8(L"胡数:"), "fonts/Roboto-Medium.ttf", 20);
+	hushu->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, Vec2(-30, -100)));
+	addChild(hushu);
+	log("%d", GetScore::getInstance()->getScore());
+
+	score = Label::createWithTTF(Value(GetScore::getInstance()->getScore()).asString(), "fonts/arial.ttf", 25);
+	score->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, Vec2(10, -100)));
+	addChild(score);
 }
 
 void GameLayer::startCallBack(Ref* ref)
@@ -714,12 +774,7 @@ void GameLayer::startCallBack(Ref* ref)
 	UserDefault::getInstance()->setBoolForKey(ISFIRSTPLAY, false);
 	_eventDispatcher->dispatchCustomEvent(PLAYERBLINK_2);
 	xipai();
-	//addChild(AccountsLayer::create());
-	_eventDispatcher->dispatchCustomEvent(SHOW_KAIDUOCARD);			
-	_eventDispatcher->dispatchCustomEvent(SHOW_SAOCHUANCARD);		
-	_eventDispatcher->dispatchCustomEvent(SHOW_SAOCARD);		
-	_eventDispatcher->dispatchCustomEvent(SHOW_PENGCARD);		
-	_eventDispatcher->dispatchCustomEvent(SHOW_CHICARD);
+	creatAction();
 }
 
 void GameLayer::overCallBack(Ref* ref)
@@ -757,6 +812,21 @@ void GameLayer::getANewCard()
 		{
 			m_dipai->setString(dipai_str + Value(t_newCard.m_CardNum).asString());
 		}
+	}
+	//检测胡牌
+	if (t_Player[2].checkHuPai(m_newCard.m_Type, m_newCard.m_Value))
+	{
+		/*ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
+		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
+		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
+		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
+		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
+		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
+		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
+		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
+		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
+		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));*/
+		std::cout << "胡~~~~~~" << std::endl;
 	}
 }
 
@@ -947,5 +1017,64 @@ void GameLayer::setCardState()
 				}
 			}
 		}
+	}
+}
+
+void GameLayer::creatAction()
+{
+	 _line = DrawNode::create();
+	 addChild(_line);
+	 if (_line)
+	{
+		 _line->drawSegment(Point(0, VISIBLESIZE.height / 2 - 50), Point(VISIBLESIZE.width, VISIBLESIZE.height / 2 - 50), 2, Color4F(0, 1, 0, 1));
+	}
+	 _note = Label::createWithTTF(CommonFunction::WStrToUTF8(L"将牌划过线"), "fonts/Roboto-Medium.ttf", 30);
+	 _note->setPosition(Vec2(850, 320));
+	 addChild(_note);
+
+	 _hand = Sprite::create("finger.png");
+	 if (_hand)
+	{
+		 _hand->setAnchorPoint(Vec2(0, 0));
+		 _hand->setPosition(Vec2(850, 150)); //开始位置
+		 addChild(_hand);
+		//move 到 930，340
+		MoveTo* move = MoveTo::create(0.5, Vec2(930, 300));
+		//让动作永久
+		_hand->runAction(RepeatForever::create(Sequence::create(move, CallFunc::create([&]{
+
+			_hand->setPosition(Vec2(850, 150));
+		}), move, NULL)));
+	}
+}
+
+void GameLayer::setActionVisible(bool _visible)
+{
+	if (_visible)
+	{
+		if (_line && _note && _hand)
+		{
+			_line->setVisible(true);
+			_note->setVisible(true);
+			_hand->setVisible(true);
+		}
+	}
+	else
+	{
+		if (_line && _note && _hand)
+		{
+			_line->setVisible(false);
+			_note->setVisible(false);
+			_hand->setVisible(false);
+		}
+	}
+}
+
+//添加刷新胡数label
+void GameLayer::refreshHuShu()
+{
+	if (score)
+	{
+		score->setString(Value(GetScore::getInstance()->getScore()).asString());
 	}
 }

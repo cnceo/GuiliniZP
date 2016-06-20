@@ -17,6 +17,7 @@ using namespace cocos2d;
 #define PLAYER_PENG			"pengACard"			//我碰
 #define PLAYER_CHI			"chiACard"			//我吃
 #define CLOSE_CHOOSELAYER	"closeChooseLayer"	//关闭选择层
+#define CHOOSELAYER			"chooseLayer"
 
 #define SHOW_PENGCARD		"showPengCard"		//显示碰的牌
 #define SHOW_KAIDUOCARD		"showKaiduoCard"	//显示开舵的牌

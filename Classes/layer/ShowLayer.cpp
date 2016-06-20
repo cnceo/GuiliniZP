@@ -183,9 +183,11 @@ void ShowLayer::createACard()
 	m_ACard = createBigCardSprite(_type, _value);
 	addChild(m_ACard);
 
+	auto fadeOut = FadeOut::create(3.0f);
 	if (m_ACard)
 	{
 		m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 0)));
+		m_ACard->runAction(fadeOut);
 	}
 }
 

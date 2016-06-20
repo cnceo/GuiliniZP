@@ -62,9 +62,14 @@ public:
 	virtual void update(float dt);
 
 	void changeState(StateManager* _state);
-	
+	void creatAction();
+	void setActionVisible(bool _visible);
+	void refreshHuShu();					//刷新胡数label
 public:
 	//我自己检测
+
+	bool checkHu();
+
 	bool checkPeng();
 	void doPengACard();
 	void chooseLayerClose();
@@ -105,5 +110,10 @@ private:
 	Label* m_beilv;							//倍率标签
 	int _beilv;								//倍率
 	Label* m_dipai;							//底牌
+
+	DrawNode*	_line;						//创建线
+	Label*		_note;					
+	Sprite*		_hand;
+	Label*		score;						//胡数
 };
 

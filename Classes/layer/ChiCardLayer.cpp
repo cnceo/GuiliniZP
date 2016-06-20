@@ -3,6 +3,8 @@
 #include "utils/CommonFunction.h"
 #include "ui/UIButton.h"
 #include "utils/Constant.h"
+#include "utils/GetScore.h"
+#include "utils/GetLayer.h"
 
 ChiCardLayer::ChiCardLayer():
 _gameLayer(nullptr)
@@ -60,6 +62,7 @@ void ChiCardLayer::onEnter()
 
 bool ChiCardLayer::onTouchBegan(Touch *touch, Event *unused_event)
 {
+
 	return true;
 }
 
@@ -92,6 +95,8 @@ void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
 
 		if (_cardTag_0 >= 0)
 		{
+			//先把新牌添加到手里，再删除
+			_gameLayer->t_Player[2].addCard(_gameLayer->m_newCard.m_Type, _gameLayer->m_newCard.m_Value);
 			for (auto &_scard : m_tmpChiCardList)
 			{
 				if (_scard->getTag() / 3 == _cardTag_0)
@@ -103,12 +108,36 @@ void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
 						int _value = _scard->getCardData().m_Value;
 						_gameLayer->t_Player[2].m_ChiCardVec[_type].push_back(_value);			//连续的
 						//log("___size =%d", _gameLayer->t_Player[2].m_ChiCardVec[_type].size());
+						_gameLayer->t_Player[2].delACard(_type, _value);
+
+						//修改123的胡数
+						if (_value == 1)
+						{
+							if (_type == 0)
+							{
+								GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 3);
+								GetLayer::getInstance()->getgameLayer()->refreshHuShu();
+							}
+							if (_type == 1)
+							{
+								GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 6);
+								GetLayer::getInstance()->getgameLayer()->refreshHuShu();
+							}
+						}
 					}
 				}
 			}
+			_gameLayer->createMyCardWall();
 			_eventDispatcher->dispatchCustomEvent(SHOW_CHICARD);
 			if (getParent())
 			{
+				_gameLayer->removeChildByName(CHOOSELAYER);
+
+				UserDefault::getInstance()->setIntegerForKey(GAMESTATE, 0);
+				UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//吃完后我打牌
+				UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
+
+				_gameLayer->chooseLayerClose();
 				removeFromParent();
 			}
 		}
@@ -136,6 +165,7 @@ void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
 
 		if (_cardTag_1 >= 0)
 		{
+			_gameLayer->t_Player[2].addCard(_gameLayer->m_newCard.m_Type, _gameLayer->m_newCard.m_Value);
 			for (auto &_scard : m_tmpChiCardVec)
 			{
 				if (_scard->getTag() / 3 == _cardTag_1)
@@ -145,14 +175,24 @@ void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
 					{
 						int _type = _scard->getCardData().m_Type;
 						int _value = _scard->getCardData().m_Value;
-						_gameLayer->t_Player[2].m_ChiCardList[_type].push_back(_value);			
+						_gameLayer->t_Player[2].m_ChiCardList[_type].push_back(_value);
 						//log("type__=%d,size___ =%d", _type, _gameLayer->t_Player[2].m_ChiCardList[_type].size());	//A_A_a_a
+						_gameLayer->t_Player[2].delACard(_type, _value);
+
 					}
 				}
 			}
+			_gameLayer->createMyCardWall();
 			_eventDispatcher->dispatchCustomEvent(SHOW_CHICARD);
+			
 			if (getParent())
 			{
+				_gameLayer->removeChildByName(CHOOSELAYER);
+				UserDefault::getInstance()->setIntegerForKey(GAMESTATE, 0);
+				UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//吃完后我打牌
+				UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
+
+				_gameLayer->chooseLayerClose();
 				removeFromParent();
 			}
 		}

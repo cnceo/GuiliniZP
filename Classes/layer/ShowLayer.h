@@ -28,7 +28,7 @@ private:
 	Sprite* createBigCardSprite(int p_Type, int p_Value);
 	Sprite* createSmallCardSprite(int p_Type, int p_Value);
 
-	void createACard();
+	void createACard();			//玩家出的牌
 
 	void createANewCard();		//新摸的牌
 

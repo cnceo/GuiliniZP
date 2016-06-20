@@ -7,6 +7,7 @@
 #include "layer/WelcomeScene.h"
 #include "utils/GetLayer.h"
 #include "utils/Constant.h"
+#include "utils/GetScore.h"
 
 using namespace std;
 using namespace ui;
@@ -159,6 +160,7 @@ void AccountsLayer::quiteCallback(Ref* sender)
 	{
 		Director::getInstance()->replaceScene(TransitionFade::create(0.5f, WelcomeScene::createScene()));
 		//this->removeFromParent();
+		GetScore::getInstance()->setScore(0);
 	}
 }
 
@@ -168,5 +170,6 @@ void AccountsLayer::restartCallback(Ref* sender)
 	{
 		Director::getInstance()->replaceScene(TransitionFade::create(0.5f, GameScene::createScene()));
 		//this->removeFromParent();
+		GetScore::getInstance()->setScore(0);
 	}
 }
