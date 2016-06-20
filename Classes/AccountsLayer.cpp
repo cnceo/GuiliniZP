@@ -158,9 +158,9 @@ void AccountsLayer::quiteCallback(Ref* sender)
 {
 	if (this->getParent())
 	{
-		Director::getInstance()->replaceScene(TransitionFade::create(0.5f, WelcomeScene::createScene()));
-		//this->removeFromParent();
 		GetScore::getInstance()->setScore(0);
+		Director::getInstance()->replaceScene(TransitionFade::create(0.5f, WelcomeScene::createScene()));
+
 	}
 }
 
@@ -168,8 +168,7 @@ void AccountsLayer::restartCallback(Ref* sender)
 {
 	if (this->getParent())
 	{
-		Director::getInstance()->replaceScene(TransitionFade::create(0.5f, GameScene::createScene()));
-		//this->removeFromParent();
 		GetScore::getInstance()->setScore(0);
+		Director::getInstance()->replaceScene(TransitionFade::create(0.5f, GameScene::createScene()));
 	}
 }
