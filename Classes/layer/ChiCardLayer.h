@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include "cocos2d.h"
+#include "ZiPai.h"
+
 using namespace cocos2d;
 
 /*
@@ -8,6 +10,7 @@ using namespace cocos2d;
 */
 
 class GameLayer;
+class SmallCard;
 
 class ChiCardLayer :public Layer
 {
@@ -34,6 +37,20 @@ private:
 
 private:
 	GameLayer* _gameLayer;
-	Vector<Sprite* > m_tmpChiCardList;
+	Vector<SmallCard* > m_tmpChiCardList;		//只管连续的
+	Vector<SmallCard* > m_tmpChiCardVec;		//只管A_A_a_a或A_A_a
+
+	Vector<SmallCard*> m_allChiCardVec;			//所有能吃的
+
 };
 
+class SmallCard : public Node
+{
+public:
+	bool init(int p_Type, int p_Value);
+	static SmallCard* create(int p_Type, int p_Value);
+	void setCardData(CardData _data);
+	CardData getCardData();
+private:
+	CardData m_cardData;
+};

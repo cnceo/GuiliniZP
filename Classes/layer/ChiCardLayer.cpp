@@ -70,20 +70,91 @@ void ChiCardLayer::onTouchMoved(Touch *touch, Event *unused_event)
 
 void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
 {
-	std::vector <Sprite*>::iterator iter = m_tmpChiCardList.begin();
-	for (; iter != m_tmpChiCardList.end(); ++iter)
+	if (!m_tmpChiCardList.empty())
 	{
-		Sprite* _card = static_cast<Sprite*>(*iter);
-		Point locationInNode = _card->convertToNodeSpace(touch->getLocation());
-
-		Size s = _card->getContentSize();
-		Rect rect = Rect(0, 0, s.width, s.height);
-
-		if (rect.containsPoint(locationInNode))
+		int _cardTag_0 = -1;
+		for (auto iter = m_tmpChiCardList.begin(); iter != m_tmpChiCardList.end(); ++iter)
 		{
-			log("tag=%d", _card->getTag());
-			//选择吃什么牌
-			UserDefault::getInstance()->setIntegerForKey(CHIWHAT, _card->getTag());
+			SmallCard* _card = static_cast<SmallCard*>(*iter);
+			Point locationInNode = _card->convertToNodeSpace(touch->getLocation());
+
+			Size s = _card->getContentSize();
+			Rect rect = Rect(-s.width / 2, -s.height / 2, s.width, s.height);
+
+			if (rect.containsPoint(locationInNode))
+			{
+				log("---------tag=%d", _card->getTag());
+				//log("tag/3==%d",_card->getTag() / 3);
+				//log("T:%d,V:%d", _card->getCardData().m_Type, _card->getCardData().m_Value);
+				_cardTag_0 = _card->getTag() / 3;
+			}
+		}
+
+		if (_cardTag_0 >= 0)
+		{
+			for (auto &_scard : m_tmpChiCardList)
+			{
+				if (_scard->getTag() / 3 == _cardTag_0)
+				{
+					log("___T:%d,___V:%d", _scard->getCardData().m_Type, _scard->getCardData().m_Value);
+					if (_gameLayer)
+					{
+						int _type = _scard->getCardData().m_Type;
+						int _value = _scard->getCardData().m_Value;
+						_gameLayer->t_Player[2].m_ChiCardVec[_type].push_back(_value);			//连续的
+						//log("___size =%d", _gameLayer->t_Player[2].m_ChiCardVec[_type].size());
+					}
+				}
+			}
+			_eventDispatcher->dispatchCustomEvent(SHOW_CHICARD);
+			if (getParent())
+			{
+				removeFromParent();
+			}
+		}
+	}
+	
+	if (!m_tmpChiCardVec.empty())
+	{
+		int _cardTag_1 = -1;
+		for (auto iter = m_tmpChiCardVec.begin(); iter != m_tmpChiCardVec.end(); ++iter)
+		{
+			SmallCard* _card = static_cast<SmallCard*>(*iter);
+			Point locationInNode = _card->convertToNodeSpace(touch->getLocation());
+
+			Size s = _card->getContentSize();
+			Rect rect = Rect(-s.width / 2, -s.height / 2, s.width, s.height);
+
+			if (rect.containsPoint(locationInNode))
+			{
+				log("tag=%d---------", _card->getTag());
+				//log("tag/3==%d",_card->getTag() / 3);
+				//log("T:%d,V:%d", _card->getCardData().m_Type, _card->getCardData().m_Value);
+				_cardTag_1 = _card->getTag() / 3;
+			}
+		}
+
+		if (_cardTag_1 >= 0)
+		{
+			for (auto &_scard : m_tmpChiCardVec)
+			{
+				if (_scard->getTag() / 3 == _cardTag_1)
+				{
+					//log("T:___%d,V___:%d", _scard->getCardData().m_Type, _scard->getCardData().m_Value);
+					if (_gameLayer)
+					{
+						int _type = _scard->getCardData().m_Type;
+						int _value = _scard->getCardData().m_Value;
+						_gameLayer->t_Player[2].m_ChiCardList[_type].push_back(_value);			
+						//log("type__=%d,size___ =%d", _type, _gameLayer->t_Player[2].m_ChiCardList[_type].size());	//A_A_a_a
+					}
+				}
+			}
+			_eventDispatcher->dispatchCustomEvent(SHOW_CHICARD);
+			if (getParent())
+			{
+				removeFromParent();
+			}
 		}
 	}
 }
@@ -123,14 +194,31 @@ void ChiCardLayer::initUI()
 		m_tmpChiCardList.clear();
 	}
 
-	for (int i = 0; i < _gameLayer->m_TempChiCard.size();i++)
+	if (m_tmpChiCardVec.size()>0)
 	{
-		auto _card_1 = createSmallCardSprite(_gameLayer->m_TempChiCard[i].m_Type, _gameLayer->m_TempChiCard[i].m_Value1);
-		auto _card_2 = createSmallCardSprite(_gameLayer->m_TempChiCard[i].m_Type, _gameLayer->m_TempChiCard[i].m_Value2);
-		auto _card_3 = createSmallCardSprite(_gameLayer->m_TempChiCard[i].m_Type, _gameLayer->m_TempChiCard[i].m_Value3);
+		for (auto &_card : m_tmpChiCardVec)
+		{
+			if (_card->getParent())
+			{
+				_card->removeFromParent();
+			}
+		}
+		m_tmpChiCardVec.clear();
+	}
+
+	if (!m_allChiCardVec.empty())
+	{
+		m_allChiCardVec.clear();
+	}
+
+	for (int i = 0; i < _gameLayer->m_TempChiCard.size(); i++)
+	{
+		auto _card_1 = SmallCard::create(_gameLayer->m_TempChiCard[i].m_Type, _gameLayer->m_TempChiCard[i].m_Value1);
+		auto _card_2 = SmallCard::create(_gameLayer->m_TempChiCard[i].m_Type, _gameLayer->m_TempChiCard[i].m_Value2);
+		auto _card_3 = SmallCard::create(_gameLayer->m_TempChiCard[i].m_Type, _gameLayer->m_TempChiCard[i].m_Value3);
 
 		if (_card_1 && _card_2 && _card_3)
-		{ 
+		{
 			addChild(_card_1);
 			addChild(_card_2);
 			addChild(_card_3);
@@ -143,24 +231,38 @@ void ChiCardLayer::initUI()
 
 	for (int i = 0; i < _gameLayer->m_TempChiList.size(); i++)
 	{
-		auto _card = createSmallCardSprite(_gameLayer->m_TempChiList[i].m_Type, _gameLayer->m_TempChiList[i].m_Value);
+		auto _card = SmallCard::create(_gameLayer->m_TempChiList[i].m_Type, _gameLayer->m_TempChiList[i].m_Value);
 		if (_card)
 		{
 			addChild(_card);
-			m_tmpChiCardList.pushBack(_card);
+			m_tmpChiCardVec.pushBack(_card);
 		}
 	}
 
-	if (m_tmpChiCardList.size()>0)
+	m_allChiCardVec.pushBack(m_tmpChiCardList);
+	m_allChiCardVec.pushBack(m_tmpChiCardVec);
+
+	if (!m_allChiCardVec.empty())
+	{
+		for (int i = 0; i < m_allChiCardVec.size();i++)
+		{
+			int _height = m_allChiCardVec.at(i)->getContentSize().height;
+			m_allChiCardVec.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i / 3)*(_height + 15) + 150, i % 3 * (_height - 83) + 100)));
+			m_allChiCardVec.at(i)->setTag(i);
+		}
+	}
+	/*
+	if (!m_tmpChiCardList.empty())
 	{
 		for (int i = 0; i < m_tmpChiCardList.size(); i++)
 		{
 			int _height = m_tmpChiCardList.at(i)->getContentSize().height;
 			//m_tmpChiCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i % 3)*(_height)+100, i / 3 * (_height - 73))));
-			m_tmpChiCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i / 3)*(_height+15)+150, i % 3 * (_height - 83)+100)));
+			m_tmpChiCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i / 3)*(_height + 15) + 150, i % 3 * (_height - 83) + 100)));
 			m_tmpChiCardList.at(i)->setTag(i);
 		}
 	}
+	*/
 }
 
 Sprite* ChiCardLayer::createSmallCardSprite(int p_Type, int p_Value)
@@ -180,4 +282,63 @@ Sprite* ChiCardLayer::createSmallCardSprite(int p_Type, int p_Value)
 		return card;
 	}
 	return nullptr;
+}
+
+
+//--------------------SmallCard类--------------------------//
+
+SmallCard* SmallCard::create(int p_Type, int p_Value)
+{
+	SmallCard *pRet = new(std::nothrow) SmallCard();
+	if (pRet && pRet->init(p_Type,p_Value))
+	{ 
+		pRet->autorelease(); 
+		return pRet; 
+	} 
+	else 
+	{ 
+		delete pRet; 
+		pRet = nullptr; 
+		return nullptr; 
+	} 
+	return nullptr;
+}
+
+bool SmallCard::init(int p_Type, int p_Value)
+{
+	if (!Node::init())
+	{
+		return false;
+	}
+
+	CardData _data = { p_Type ,p_Value};
+	setCardData(_data);
+	
+	Sprite* _card = nullptr;
+	if (p_Type == 0)
+	{
+		_card = Sprite::create(StringUtils::format("xiaopai_x%0d.png", p_Value));
+	}
+	if (p_Type == 1)
+	{
+		_card = Sprite::create(StringUtils::format("xiaopai_d%0d.png", p_Value));
+	}
+
+	if (_card)
+	{
+		addChild(_card);
+		setContentSize(_card->getContentSize());
+	}
+
+	return true;
+}
+
+void SmallCard::setCardData(CardData _data)
+{
+	m_cardData = _data;
+}
+
+CardData SmallCard::getCardData()
+{
+	return m_cardData;
 }

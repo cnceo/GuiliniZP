@@ -60,6 +60,7 @@ public:
 	std::vector<ChiCard>	m_TempChiCardVec;			//放入可吃的牌
 	std::vector<CardData>	m_TempChiCardList;			//放入可吃的牌(只管A_A_a_a和A_A_a)
 	std::vector<int >		m_ChiCardVec[2];			//放入已经吃的普通牌 无胡数
+	std::vector<int >		m_ChiCardList[2];			//放入已经吃的牌（只管A_A_a_a和A_A_a）
 	//std::vector<ChiCard>    v_TempChiCardVec;			//第一个容器，显示第一层
 
 	std::vector<int >		m_ChiSpeclal[2];			//放入吃的特殊牌型  1 2 3  ， 2 7 10

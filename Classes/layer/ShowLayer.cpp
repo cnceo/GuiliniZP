@@ -216,7 +216,7 @@ void ShowLayer::createANewCard()
 	float height = m_NewCard->getContentSize().height;
 	m_NewCard->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, Vec2(0, height / 2)));
 
-	auto moveTo = MoveTo::create(0.3f, CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, height-38)));
+	auto moveTo = MoveTo::create(0.3f, CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, height-50)));
 	m_NewCard->runAction(moveTo);
 }
 
@@ -474,30 +474,43 @@ void ShowLayer::showChiCard()
 		_chiList[0] = m_GameLayer->t_Player[2].m_ChiCardVec[0];
 		_chiList[1] = m_GameLayer->t_Player[2].m_ChiCardVec[1];
 
-		if (_chiList[0].size() > 0)
+		for (int i = 0; i < 2; i++)
 		{
-			for (int i = 0; i < _chiList[0].size(); i++)
+			if (!_chiList[i].empty())
 			{
-				auto _card = ShowCard::create(0, _chiList[0][i]);
-				if (_card)
+				for (int j = 0; j < _chiList[i].size(); j++)
 				{
-					_card->setState(ShowCard::STATE::Chi);
-					addChild(_card);
-					m_tmpChiCardVec.pushBack(_card);
+					auto _card = ShowCard::create(i, _chiList[i][j]);
+					if (_card)
+					{
+						_card->setState(ShowCard::STATE::Chi);
+						addChild(_card);
+						m_tmpChiCardVec.pushBack(_card);
+					}
 				}
 			}
 		}
+	}
 
-		if (_chiList[1].size() > 0)
+	{
+		//A_A_a_a显示有问题
+		std::vector<int > _chiListA_A_a_a[2];
+		_chiListA_A_a_a[0] = m_GameLayer->t_Player[2].m_ChiCardList[0];
+		_chiListA_A_a_a[1] = m_GameLayer->t_Player[2].m_ChiCardList[1];
+
+		for (int i = 0; i < 2; i++)
 		{
-			for (int i = 0; i < _chiList[1].size(); i++)
+			if (!_chiListA_A_a_a[i].empty())
 			{
-				auto _card = ShowCard::create(1, _chiList[1][i]);
-				if (_card)
+				for (int j = 0; j < _chiListA_A_a_a[i].size(); j++)
 				{
-					_card->setState(ShowCard::STATE::Chi);
-					addChild(_card);
-					m_tmpChiCardVec.pushBack(_card);
+					auto _card = ShowCard::create(i, _chiListA_A_a_a[i][j]);
+					if (_card)
+					{
+						_card->setState(ShowCard::STATE::Chi);
+						addChild(_card);
+						m_tmpChiCardVec.pushBack(_card);
+					}
 				}
 			}
 		}
