@@ -5,6 +5,7 @@
 #include "utils/Constant.h"
 #include "utils/GetScore.h"
 #include "utils/GetLayer.h"
+#include "layerUtils/ToastLayer/ToastManger.h"
 
 ChiCardLayer::ChiCardLayer():
 _gameLayer(nullptr)
@@ -95,6 +96,7 @@ void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
 
 		if (_cardTag_0 >= 0)
 		{
+			int record = -1;
 			//先把新牌添加到手里，再删除
 			_gameLayer->t_Player[2].addCard(_gameLayer->m_newCard.m_Type, _gameLayer->m_newCard.m_Value);
 			for (auto &_scard : m_tmpChiCardList)
@@ -124,11 +126,68 @@ void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
 								GetLayer::getInstance()->getgameLayer()->refreshHuShu();
 							}
 						}
+
+						//给2，7，10记录胡数
+						if (record == -1)
+						{
+							record = _value;
+							log("***t = %d", record);
+						}
+						if (record == 2 || record == 7 || record == 10)
+						{
+							log("**2*t = %d", record);
+							if (record == 2 && (_value == 7 || _value == 10))
+							{
+								log("record == 2,%d", _value);
+								if (_type == 0)
+								{
+									GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 3);
+									GetLayer::getInstance()->getgameLayer()->refreshHuShu();
+								}
+								if (_type == 1)
+								{
+									GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 6);
+									GetLayer::getInstance()->getgameLayer()->refreshHuShu();
+								}
+								record = 0;
+							}
+							if (record == 7 && (_value == 2 || _value == 10))
+							{
+								log("record == 7,%d", _value);
+								if (_type == 0)
+								{
+									GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 3);
+									GetLayer::getInstance()->getgameLayer()->refreshHuShu();
+								}
+								if (_type == 1)
+								{
+									GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 6);
+									GetLayer::getInstance()->getgameLayer()->refreshHuShu();
+								}
+								record = 0;
+							}
+							if (record == 10 && (_value == 7 || _value == 12))
+							{
+								log("record == 10,%d", _value);
+								if (_type == 0)
+								{
+									GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 3);
+									GetLayer::getInstance()->getgameLayer()->refreshHuShu();
+								}
+								if (_type == 1)
+								{
+									GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 6);
+									GetLayer::getInstance()->getgameLayer()->refreshHuShu();
+								}
+								record = 0;
+							}
+						}
 					}
 				}
 			}
 			_gameLayer->createMyCardWall();
 			_eventDispatcher->dispatchCustomEvent(SHOW_CHICARD);
+
 			if (getParent())
 			{
 				_gameLayer->removeChildByName(CHOOSELAYER);

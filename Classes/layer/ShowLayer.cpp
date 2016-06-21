@@ -2,6 +2,7 @@
 #include "utils/CommonFunction.h"
 #include "utils/Constant.h"
 #include "GameLayer.h"
+#include "ShowCard.h"
 
 ShowLayer::ShowLayer():
 m_GameLayer(nullptr),
@@ -100,20 +101,7 @@ void ShowLayer::initData()
 
 void ShowLayer::initUI()
 {
-	/*float x = 200;
-	float y = 210;
-	int count = 0;
 
-	for (int i = 1; i <= 10;i++)
-	{
-		auto _card = createSmallCardSprite(0, i);
-		addChild(_card);
-		if (_card)
-		{
-			_card->setPosition(Point(x + 50 * count, y));
-		}
-		count++;
-	}*/
 }
 
 //创建长的牌card
@@ -247,7 +235,6 @@ void ShowLayer::showPengCard()
 			auto _card = ShowCard::create(0, _pengList[0][i]);
 			if (_card)
 			{
-				_card->setState(ShowCard::STATE::Peng);
 				addChild(_card);
 				m_tmpPengCardVec.pushBack(_card);
 			}
@@ -261,7 +248,6 @@ void ShowLayer::showPengCard()
 			auto _card = ShowCard::create(1, _pengList[1][i]);
 			if (_card)
 			{
-				_card->setState(ShowCard::STATE::Peng);
 				addChild(_card);
 				m_tmpPengCardVec.pushBack(_card);
 			}
@@ -307,7 +293,6 @@ void ShowLayer::showKaiduoCard()
 			auto _card = ShowCard::create(0, _kaiduoList[0][i]);
 			if (_card)
 			{
-				_card->setState(ShowCard::STATE::Kaiduo);
 				addChild(_card);
 				m_tmpKaiDuoCardVec.pushBack(_card);
 			}
@@ -321,7 +306,6 @@ void ShowLayer::showKaiduoCard()
 			auto _card = ShowCard::create(1, _kaiduoList[1][i]);
 			if (_card)
 			{
-				_card->setState(ShowCard::STATE::Kaiduo);
 				addChild(_card);
 				m_tmpKaiDuoCardVec.pushBack(_card);
 			}
@@ -366,7 +350,6 @@ void ShowLayer::showSaochuanCard()
 			auto _card = ShowCard::create(0, _saochuanList[0][i]);
 			if (_card)
 			{
-				_card->setState(ShowCard::STATE::Saochuan);
 				addChild(_card);
 				m_tmpSaoChuanCardVec.pushBack(_card);
 			}
@@ -380,7 +363,6 @@ void ShowLayer::showSaochuanCard()
 			auto _card = ShowCard::create(1, _saochuanList[1][i]);
 			if (_card)
 			{
-				_card->setState(ShowCard::STATE::Saochuan);
 				addChild(_card);
 				m_tmpSaoChuanCardVec.pushBack(_card);
 			}
@@ -424,7 +406,6 @@ void ShowLayer::showSaoCard()
 			auto _card = ShowCard::create(0, _saoList[0][i]);
 			if (_card)
 			{
-				_card->setState(ShowCard::STATE::Sao);
 				addChild(_card);
 				m_tmpSaoCardVec.pushBack(_card);
 			}
@@ -438,7 +419,6 @@ void ShowLayer::showSaoCard()
 			auto _card = ShowCard::create(1, _saoList[1][i]);
 			if (_card)
 			{
-				_card->setState(ShowCard::STATE::Sao);
 				addChild(_card);
 				m_tmpSaoCardVec.pushBack(_card);
 			}
@@ -485,7 +465,6 @@ void ShowLayer::showChiCard()
 					auto _card = ShowCard::create(i, _chiList[i][j]);
 					if (_card)
 					{
-						_card->setState(ShowCard::STATE::Chi);
 						addChild(_card);
 						m_tmpChiCardVec.pushBack(_card);
 					}
@@ -509,7 +488,6 @@ void ShowLayer::showChiCard()
 					auto _card = ShowCard::create(i, _chiListA_A_a_a[i][j]);
 					if (_card)
 					{
-						_card->setState(ShowCard::STATE::Chi);
 						addChild(_card);
 						m_tmpChiCardVec.pushBack(_card);
 					}
@@ -530,7 +508,6 @@ void ShowLayer::showChiCard()
 				auto _card = ShowCard::create(0, _chiSpecialList[0][i]);
 				if (_card)
 				{
-					_card->setState(ShowCard::STATE::Chi);
 					addChild(_card);
 					m_tmpChiCardVec.pushBack(_card);
 				}
@@ -544,7 +521,6 @@ void ShowLayer::showChiCard()
 				auto _card = ShowCard::create(1, _chiSpecialList[1][i]);
 				if (_card)
 				{
-					_card->setState(ShowCard::STATE::Chi);
 					addChild(_card);
 					m_tmpChiCardVec.pushBack(_card);
 				}
@@ -609,92 +585,4 @@ void ShowLayer::refrishCardPos()
 			}
 		}
 	}
-}
-//------------------------ShowCard类------------------------//
-
-ShowCard::ShowCard() :m_state(Default)
-{
-}
-
-ShowCard::~ShowCard()
-{
-}
-
-ShowCard* ShowCard::create(int p_Type, int p_Value)
-{
-	ShowCard *pRet = new(std::nothrow) ShowCard();
-	if (pRet && pRet->init(p_Type, p_Value))
-	{ 
-		pRet->autorelease(); 
-		return pRet; 
-	} else 
-	{ 
-		delete pRet; 
-		pRet = nullptr; 
-		return nullptr; 
-	} 
-	return nullptr;
-}
-
-bool ShowCard::init(int p_Type, int p_Value)
-{
-	if (!Sprite::init())
-	{
-		return false;
-	}
-
-	Sprite* _card = nullptr;
-
-	if (p_Type == 0)
-	{
-		_card = Sprite::create(StringUtils::format("xiaopai_x%0d.png", p_Value));
-	}
-	if (p_Type == 1)
-	{
-		_card = Sprite::create(StringUtils::format("xiaopai_d%0d.png", p_Value));
-	}
-
-	if (_card)
-	{
-		_card->setScale(0.7f);
-		addChild(_card);
-		this->setContentSize(_card->getContentSize());
-
-		auto listenerEvent = EventListenerTouchOneByOne::create();
-		listenerEvent->onTouchBegan = CC_CALLBACK_2(ShowCard::onTouchBegan, this);
-		listenerEvent->onTouchMoved = CC_CALLBACK_2(ShowCard::onTouchMoved, this);
-		listenerEvent->onTouchEnded = CC_CALLBACK_2(ShowCard::onTouchEnded, this);
-		_eventDispatcher->addEventListenerWithSceneGraphPriority(listenerEvent, this);
-	}
-	return true;
-}
-
-void ShowCard::onEnter()
-{
-	Sprite::onEnter();
-}
-
-void ShowCard::setState(STATE _state)
-{
-	m_state = _state;
-}
-
-ShowCard::STATE ShowCard::getState()
-{
-	return m_state;
-}
-
-bool ShowCard::onTouchBegan(Touch *touch, Event *unused_event)
-{
-	return true;
-}
-
-void ShowCard::onTouchMoved(Touch *touch, Event *unused_event)
-{
-
-}
-
-void ShowCard::onTouchEnded(Touch *touch, Event *unused_event)
-{
-
 }

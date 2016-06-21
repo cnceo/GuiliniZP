@@ -16,6 +16,8 @@
 #include "PlayerZeroState.h"
 #include "../AccountsLayer.h"
 #include "utils/GetScore.h"
+#include "ShowOneLayer.h"
+#include "utils/GetLayer.h"
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 
@@ -78,7 +80,11 @@ bool GameLayer::init()
 	initData();
 	initUI();
 
-	addChild(ShowLayer::create(this));
+	addChild(ShowLayer::create(this));		//自己显示操作的牌
+
+	auto _oneLayer = ShowOneLayer::create(this);
+	addChild(_oneLayer);	//下家显示
+	GetLayer::getInstance()->setOneLayer(_oneLayer);
 
 	UserDefault::getInstance()->setBoolForKey(ISFIRSTPLAY, false);	//是否第一次打牌
 	UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, true);	//只摸牌不打牌
@@ -279,6 +285,7 @@ bool GameLayer::checkHu()
 {
 	if (t_Player[2].checkHuPai(m_newCard.m_Type, m_newCard.m_Value))
 	{
+		createMyCardWall();
 		return true;
 	}
 	return false;
@@ -309,12 +316,12 @@ void GameLayer::doPengACard()
 	//测试
 	if (m_newCard.m_Type == 0)
 	{
-		GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 3); //修改胡数
+		GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 1); //修改胡数
 		refreshHuShu();		//刷新胡数
 	}
 	if (m_newCard.m_Type == 1)
 	{
-		GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 6); //修改胡数
+		GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 3); //修改胡数
 		refreshHuShu();		//刷新胡数
 	}
 }
@@ -441,6 +448,18 @@ bool GameLayer::checkSaochuan()
 
 	if (isAction)
 	{
+		//测试自己摸的牌 检测 扫穿
+		if (m_newCard.m_Type == 0)
+		{
+			GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 9); //修改胡数
+			refreshHuShu();		//刷新胡数
+		}
+		if (m_newCard.m_Type == 1)
+		{
+			GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 12); //修改胡数
+			refreshHuShu();		//刷新胡数
+		}
+
 		return true;
 	}
 	return false;
@@ -460,6 +479,19 @@ bool GameLayer::checkSao()
 
 		changeState(new PlayerTwoState());
 		setActionVisible(true);
+
+		//扫
+		if (m_newCard.m_Type == 0)
+		{
+			GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 3); //修改胡数
+			refreshHuShu();		//刷新胡数
+		}
+		if (m_newCard.m_Type == 1)
+		{
+			GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 6); //修改胡数
+			refreshHuShu();		//刷新胡数
+		}
+
 		return true;
 	}
 	return false;
@@ -528,6 +560,17 @@ bool GameLayer::checkKaiduo()
 	}
 	if (isAction)
 	{
+		//测试别人摸的牌，我检测 开舵
+		if (m_newCard.m_Type == 0)
+		{
+			GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 6); //修改胡数
+			refreshHuShu();		//刷新胡数
+		}
+		if (m_newCard.m_Type == 1)
+		{
+			GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 9); //修改胡数
+			refreshHuShu();		//刷新胡数
+		}
 		return true;
 	}
 	return false;
@@ -548,6 +591,17 @@ bool GameLayer::checkChongDuo()
 
 		isAction = true;
 		changeState(new PlayerOneState());
+
+		if (m_newCard.m_Type == 0)
+		{
+			GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 6); //修改胡数
+			refreshHuShu();		//刷新胡数
+		}
+		if (m_newCard.m_Type == 1)
+		{
+			GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 9); //修改胡数
+			refreshHuShu();		//刷新胡数
+		}
 	}
 	//扫穿还没处理好
 	if (t_Player[2].checkChongDuo_saoChuan(m_newCard.m_Type, m_newCard.m_Value))
@@ -558,6 +612,17 @@ bool GameLayer::checkChongDuo()
 
 		isAction = true;
 		changeState(new PlayerOneState());
+
+		if (m_newCard.m_Type == 0)
+		{
+			GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 9); //修改胡数
+			refreshHuShu();		//刷新胡数
+		}
+		if (m_newCard.m_Type == 1)
+		{
+			GetScore::getInstance()->setScore(GetScore::getInstance()->getScore() + 12); //修改胡数
+			refreshHuShu();		//刷新胡数
+		}
 	}
 
 	if (isAction)
@@ -812,21 +877,6 @@ void GameLayer::getANewCard()
 		{
 			m_dipai->setString(dipai_str + Value(t_newCard.m_CardNum).asString());
 		}
-	}
-	//检测胡牌
-	if (t_Player[2].checkHuPai(m_newCard.m_Type, m_newCard.m_Value))
-	{
-		/*ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
-		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
-		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
-		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
-		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
-		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
-		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
-		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
-		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));
-		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"胡牌了！"));*/
-		std::cout << "胡~~~~~~" << std::endl;
 	}
 }
 

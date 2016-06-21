@@ -1529,7 +1529,7 @@ bool	ZiPai::checkHuPai(int p_type, int p_value)
 
 	if (checkHu())	//若胡了
 	{
-		m_MyCard[p_type].push_back(p_value);//把那张能胡的牌放到手里
+		//m_MyCard[p_type].push_back(p_value);//把那张能胡的牌放到手里
 
 		int hushu = checkHushu();
 		UserDefault::getInstance()->setIntegerForKey("HUSHU", hushu);	//保存胡数

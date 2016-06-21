@@ -4,7 +4,8 @@
 GetLayer* GetLayer::_instance = nullptr;
 
 GetLayer::GetLayer():
-_gameLayer(nullptr)
+_gameLayer(nullptr),
+_oneLayer(nullptr)
 {
 }
 
@@ -46,6 +47,24 @@ GameLayer* GetLayer::getgameLayer()
 	if (_gameLayer)
 	{
 		return _gameLayer;
+	}
+	return nullptr;
+}
+
+void GetLayer::setOneLayer(ShowOneLayer* _sLayer)
+{
+	if (!_sLayer)
+	{
+		return;
+	}
+	_oneLayer = _sLayer;
+}
+
+ShowOneLayer* GetLayer::getOneLayer()
+{
+	if (_oneLayer)
+	{
+		return _oneLayer;
 	}
 	return nullptr;
 }

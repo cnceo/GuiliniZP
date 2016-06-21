@@ -104,6 +104,8 @@ void ChooseLayer::pengBtnCbk(Ref* psender)
 void ChooseLayer::huBtnCbk(Ref* psender)
 {
 	log("hu");
+	auto _newCard = GetLayer::getInstance()->getgameLayer()->m_newCard;
+	GetLayer::getInstance()->getgameLayer()->t_Player[2].addCard(_newCard.m_Type, _newCard.m_Value);
 	GetLayer::getInstance()->getgameLayer()->createMyCardWall();
 	close();
 }
