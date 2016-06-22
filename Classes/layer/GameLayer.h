@@ -115,5 +115,6 @@ private:
 	Label*		_note;					
 	Sprite*		_hand;
 	Label*		score;						//胡数
+
 };
 

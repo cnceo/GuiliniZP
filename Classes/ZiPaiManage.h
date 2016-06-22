@@ -28,7 +28,7 @@ public:
 	~ZiPaiManage();
 
 	void InitPai(int p_HZPaiNum = 0);
-
+	int getSize();	//底牌容器的大小
 	CardEx  GetAPai();
 private:
 

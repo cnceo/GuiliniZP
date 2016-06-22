@@ -26,6 +26,7 @@ using namespace cocos2d;
 #define SHOW_CHICARD		"showChiCard"		//显示吃的牌
 
 #define SHOW_CHICARDLAYER	"showChiCardLayer"	//显示吃层
+#define SHOW_RATIOLAYER     "showRatioLayer"	//显示番醒
 
 //层zorder
 

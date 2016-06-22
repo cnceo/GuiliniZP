@@ -38,6 +38,7 @@ bool	CardSprite::init(int type, int value)
 	initUI(type, value);
 
 	this->setState(CardSprite::CardState::ONTouch);		//都能触摸
+	this->setsortState(CardSprite::SortState::ONE_CARD);//默认单张牌
 
 	return true;
 }

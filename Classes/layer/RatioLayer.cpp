@@ -70,7 +70,7 @@ void RatioLayer:: AddUI()
 
 }
 
-void RatioLayer:: checkRatio()
+void RatioLayer::checkRatio()
 {
 	//起一张剩余的牌
 	//CardEx r_Card = _gameLayer->t_ZPManage.GetAPai();
@@ -90,6 +90,52 @@ void RatioLayer:: checkRatio()
 				ratioNum++;
 			}
 		}
+		//peng
+		for (int i = 0; i < _gameLayer->t_Player[2].m_PengCardVec[0].size(); i++)
+		{
+			int value = _gameLayer->t_Player[2].m_PengCardVec[0][i];
+			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			{
+				ratioNum++;
+			}
+		}
+		// iduo
+		for (int i = 0; i < _gameLayer->t_Player[2].m_KaiDuoCardVec[0].size(); i++)
+		{
+			int value = _gameLayer->t_Player[2].m_KaiDuoCardVec[0][i];
+			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			{
+				ratioNum++;
+			}
+		}
+		//m_SaoChuanCardVec[0]
+		for (int i = 0; i < _gameLayer->t_Player[2].m_SaoChuanCardVec[0].size(); i++)
+		{
+			int value = _gameLayer->t_Player[2].m_SaoChuanCardVec[0][i];
+			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			{
+				ratioNum++;
+			}
+		}
+		//m_SaoCardVec[0]
+		for (int i = 0; i < _gameLayer->t_Player[2].m_SaoCardVec[0].size(); i++)
+		{
+			int value = _gameLayer->t_Player[2].m_SaoCardVec[0][i];
+			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			{
+				ratioNum++;
+			}
+		}
+		//m_ChiCardVec[0]
+		for (int i = 0; i < _gameLayer->t_Player[2].m_ChiCardVec[0].size(); i++)
+		{
+			int value = _gameLayer->t_Player[2].m_ChiCardVec[0][i];
+			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			{
+				ratioNum++;
+			}
+		}
+
 	}
 	if (_card.m_Type == 1)
 	{
@@ -101,6 +147,52 @@ void RatioLayer:: checkRatio()
 				ratioNum++;
 			}
 		}
+		//peng
+		for (int i = 0; i < _gameLayer->t_Player[2].m_PengCardVec[1].size(); i++)
+		{
+			int value = _gameLayer->t_Player[2].m_PengCardVec[1][i];
+			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			{
+				ratioNum++;
+			}
+		}
+		// iduo
+		for (int i = 0; i < _gameLayer->t_Player[2].m_KaiDuoCardVec[1].size(); i++)
+		{
+			int value = _gameLayer->t_Player[2].m_KaiDuoCardVec[1][i];
+			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			{
+				ratioNum++;
+			}
+		}
+		//m_SaoChuanCardVec[0]
+		for (int i = 0; i < _gameLayer->t_Player[2].m_SaoChuanCardVec[1].size(); i++)
+		{
+			int value = _gameLayer->t_Player[2].m_SaoChuanCardVec[1][i];
+			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			{
+				ratioNum++;
+			}
+		}
+		//m_SaoCardVec[0]
+		for (int i = 0; i < _gameLayer->t_Player[2].m_SaoCardVec[1].size(); i++)
+		{
+			int value = _gameLayer->t_Player[2].m_SaoCardVec[1][i];
+			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			{
+				ratioNum++;
+			}
+		}
+		//m_ChiCardVec[0]
+		for (int i = 0; i < _gameLayer->t_Player[2].m_ChiCardVec[1].size(); i++)
+		{
+			int value = _gameLayer->t_Player[2].m_ChiCardVec[1][i];
+			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			{
+				ratioNum++;
+			}
+		}
+
 	}
 	count++;
 
@@ -114,6 +206,30 @@ void RatioLayer:: checkRatio()
 	{
 		log("****");
 		checkRatio();
+	}
+	else
+	{
+		//显示所有剩余底牌
+		int num = _gameLayer->t_ZPManage.getSize();
+		for (int i = 0; i < num; i++)
+		{
+			CardEx c = _gameLayer->t_ZPManage.GetAPai();
+			log("sheyu:%d", num);
+			if (c.m_NewCard.m_Type == 0)
+			{
+				CardSprite* _card = CardSprite::create(0, c.m_NewCard.m_Value);
+				_card->setPosition(CommonFunction::getVisibleAchor(0.4, 0.5, Vec2(50 * i, 0)));
+				addChild(_card);
+
+			}
+			if (c.m_NewCard.m_Type == 1)
+			{
+				CardSprite* _card = CardSprite::create(1, c.m_NewCard.m_Value);
+				_card->setPosition(CommonFunction::getVisibleAchor(0.4, 0.5, Vec2(50 * i, 0)));
+				addChild(_card);
+			}
+
+		}
 	}
 
 }

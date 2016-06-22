@@ -81,3 +81,8 @@ void  ZiPaiManage::XiPai()
 	srand((unsigned int)time(NULL));
 	random_shuffle(m_ZPVec.begin(), m_ZPVec.end());
 }
+
+int ZiPaiManage::getSize()
+{
+	return m_ZPVec.size();
+}

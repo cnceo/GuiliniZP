@@ -98,6 +98,7 @@ void ChooseLayer::pengBtnCbk(Ref* psender)
 	log("peng");
 	//close();
 	_eventDispatcher->dispatchCustomEvent(PLAYER_PENG);
+
 	close();
 }
 
@@ -107,6 +108,7 @@ void ChooseLayer::huBtnCbk(Ref* psender)
 	auto _newCard = GetLayer::getInstance()->getgameLayer()->m_newCard;
 	GetLayer::getInstance()->getgameLayer()->t_Player[2].addCard(_newCard.m_Type, _newCard.m_Value);
 	GetLayer::getInstance()->getgameLayer()->createMyCardWall();
+	_eventDispatcher->dispatchCustomEvent(SHOW_RATIOLAYER);
 	close();
 }
 
