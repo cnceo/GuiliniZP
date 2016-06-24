@@ -208,8 +208,7 @@ void GUILayer::playerBlink_0()	//上家
 	cout << "playerBlink_0" << endl;
 
 	_timecount->setPosition(icon_left->getPosition() + Vec2(100, 0));
-	_timecount->start(5, [](){log("0 timeout........"); });
-
+	_timecount->start(15, [](){log("0 timeout........"); });
 }
 
 void GUILayer::playerBlink_1()//下家
@@ -221,7 +220,7 @@ void GUILayer::playerBlink_1()//下家
 	cout << "playerBlink_1" << endl;
 
 	_timecount->setPosition(icon_right->getPosition() + Vec2(-100, 0));
-	_timecount->start(5, [](){log("1 timeout........"); });
+	_timecount->start(15, [](){log("1 timeout........"); });
 }
 
 void GUILayer::playerBlink_2()
@@ -233,5 +232,5 @@ void GUILayer::playerBlink_2()
 	cout << "playerBlink_2" << endl;
 	_timecount->setVisible(true);
 	_timecount->setPosition(icon_leftDown->getPosition() + Vec2(0,100));
-	_timecount->start(5, [](){log("2 timeout........"); });
+	_timecount->start(15, [](){log("2 timeout........"); });
 }

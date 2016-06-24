@@ -65,3 +65,11 @@ CardData*	CardSprite::getCardData()
 {
 	return &_cardData;
 }
+
+void CardSprite::setCardOpacity(GLubyte opacity)
+{
+	for (auto &_child:getChildren())
+	{
+		_child->setOpacity(opacity);
+	}
+}

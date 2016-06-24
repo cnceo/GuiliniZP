@@ -13,7 +13,7 @@ bool RotateMenu::init()
 	this->ignoreAnchorPointForPosition(false);
 	_selectedItem = nullptr;
 	Size winSize = Director::getInstance()->getWinSize();
-	this->setContentSize(winSize / 3 * 2 - Size(50,50));
+	this->setContentSize(winSize / 3 * 2 + Size(100,50));
 	this->setAnchorPoint(Vec2(0.5f, 0.5f));
 
 	auto listener = EventListenerTouchOneByOne::create();

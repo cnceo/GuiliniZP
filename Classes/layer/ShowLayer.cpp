@@ -150,9 +150,10 @@ Sprite* ShowLayer::createSmallCardSprite(int p_Type, int p_Value)
 
 void ShowLayer::createACard()
 {
+	int gameState = UserDefault::getInstance()->getIntegerForKey(GAMESTATE, 1);
 
-	int _type = m_GameLayer->PopPai[2].m_Type;
-	int _value = m_GameLayer->PopPai[2].m_Value;
+	int _type = m_GameLayer->PopPai.m_Type;
+	int _value = m_GameLayer->PopPai.m_Value;
 
 	if (_type < 0 || _type > 1 || _value <= 0 || _value > 10)
 	{
@@ -171,12 +172,39 @@ void ShowLayer::createACard()
 	m_ACard = createBigCardSprite(_type, _value);
 	addChild(m_ACard);
 
-	auto fadeOut = FadeOut::create(3.0f);
+	auto moveTo = MoveTo::create(0.3, CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 0)));
+
+	if (gameState == 0)
+	{
+		if (m_ACard)
+		{
+			m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftTop,Vec2::ZERO));
+			m_ACard->runAction(moveTo);
+		}
+	}
+	else if (gameState == 1)
+	{
+		if (m_ACard)
+		{
+			m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::RightTop, Vec2::ZERO));
+			m_ACard->runAction(moveTo);
+		}
+	}
+	else if (gameState == 2)
+	{
+		if (m_ACard)
+		{
+			m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::MidButtom, Vec2::ZERO));
+			m_ACard->runAction(moveTo);
+		}
+	}
+
+	/*auto fadeOut = FadeOut::create(3.0f);
 	if (m_ACard)
 	{
 		m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 0)));
 		m_ACard->runAction(fadeOut);
-	}
+	}*/
 }
 
 void ShowLayer::createANewCard()
@@ -479,20 +507,124 @@ void ShowLayer::showChiCard()
 		_chiListA_A_a_a[0] = m_GameLayer->t_Player[2].m_ChiCardList[0];
 		_chiListA_A_a_a[1] = m_GameLayer->t_Player[2].m_ChiCardList[1];
 
-		for (int i = 0; i < 2; i++)
+		/*for (int i = 0; i < 2; i++)
 		{
-			if (!_chiListA_A_a_a[i].empty())
+		if (!_chiListA_A_a_a[i].empty())
+		{
+		for (int j = 0; j < _chiListA_A_a_a[i].size(); j++)
+		{
+		auto _card = ShowCard::create(i, _chiListA_A_a_a[i][j]);
+		if (_card)
+		{
+		addChild(_card);
+		m_tmpChiCardVec.pushBack(_card);
+		}
+		}
+		}
+		}
+		}*/
+
+		int value = 0;
+		for (int i = 0; i < _chiListA_A_a_a[0].size(); i++)
+		{
+			if (i == 0)
 			{
-				for (int j = 0; j < _chiListA_A_a_a[i].size(); j++)
+				value = _chiListA_A_a_a[0][i];
+				auto _card = ShowCard::create(0, _chiListA_A_a_a[0][i]);//1 
+				if (_card)
 				{
-					auto _card = ShowCard::create(i, _chiListA_A_a_a[i][j]);
+					addChild(_card);
+					m_tmpChiCardVec.pushBack(_card);
+					m_GameLayer->t_Player[2].AAaaCardSprite.push_back(_card);
+				}
+				if (1 == _chiListA_A_a_a[0].size())
+				{
+					for (int j = 0; j < _chiListA_A_a_a[1].size(); j++)
+					{
+						if (_chiListA_A_a_a[1][j] == value)
+						{
+							auto _card = ShowCard::create(1, _chiListA_A_a_a[1][j]);//3 4 5 7
+							if (_card)
+							{
+								addChild(_card);
+								m_tmpChiCardVec.pushBack(_card);
+								m_GameLayer->t_Player[2].AAaaCardSprite.push_back(_card);
+							}
+						}
+					}//
+				}
+			}
+			else
+			{
+				value = _chiListA_A_a_a[0][i - 1];
+				if (value != _chiListA_A_a_a[0][i])
+				{
+					for (int j = 0; j < _chiListA_A_a_a[1].size(); j++)
+					{
+						if (_chiListA_A_a_a[1][j] == _chiListA_A_a_a[0][i - 1])
+						{
+							auto _card = ShowCard::create(1, _chiListA_A_a_a[1][j]);//3 4 5 7
+							if (_card)
+							{
+								addChild(_card);
+								m_tmpChiCardVec.pushBack(_card);
+								m_GameLayer->t_Player[2].AAaaCardSprite.push_back(_card);
+							}
+						}
+					}//
+					auto _card = ShowCard::create(0, _chiListA_A_a_a[0][i]);//6  8
 					if (_card)
 					{
 						addChild(_card);
 						m_tmpChiCardVec.pushBack(_card);
+						m_GameLayer->t_Player[2].AAaaCardSprite.push_back(_card);
+					}
+					if (i + 1 == _chiListA_A_a_a[0].size())  //shi fou shi xiaoxie lest
+					{
+						for (int j = 0; j < _chiListA_A_a_a[1].size(); j++)
+						{
+							if (_chiListA_A_a_a[1][j] == _chiListA_A_a_a[0][i])
+							{
+								auto _card = ShowCard::create(1, _chiListA_A_a_a[1][j]);//3 4 5 7
+								if (_card)
+								{
+									addChild(_card);
+									m_tmpChiCardVec.pushBack(_card);
+									m_GameLayer->t_Player[2].AAaaCardSprite.push_back(_card);
+								}
+							}
+						}//
 					}
 				}
+				else
+				{
+					auto _card = ShowCard::create(0, _chiListA_A_a_a[0][i]);//2 9
+					if (_card)
+					{
+						addChild(_card);
+						m_tmpChiCardVec.pushBack(_card);
+						m_GameLayer->t_Player[2].AAaaCardSprite.push_back(_card);
+					}
+					if (i + 1 == _chiListA_A_a_a[0].size())  //shi fou shi xiaoxie lest
+					{
+						for (int j = 0; j < _chiListA_A_a_a[1].size(); j++)
+						{
+							if (_chiListA_A_a_a[1][j] == _chiListA_A_a_a[0][i])
+							{
+								auto _card = ShowCard::create(1, _chiListA_A_a_a[1][j]);//3 4 5 7
+								if (_card)
+								{
+									addChild(_card);
+									m_tmpChiCardVec.pushBack(_card);
+									m_GameLayer->t_Player[2].AAaaCardSprite.push_back(_card);
+								}
+							}
+						}//
+					}
+				}
+
 			}
+
 		}
 	}
 

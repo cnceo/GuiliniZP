@@ -53,6 +53,8 @@ bool RatioLayer::init(GameLayer* _layer)
 void RatioLayer:: AddUI()
 {
 	//创建一个番醒label
+	auto layercolor = LayerColor::create(Color4B(0, 0, 0, 150));
+	addChild(layercolor, -1);
 
 	Label * label = Label::createWithTTF(CommonFunction::WStrToUTF8(L"翻醒:"), "fonts/Roboto-Medium.ttf", 30);
 	if (label)
@@ -231,5 +233,5 @@ void RatioLayer::checkRatio()
 
 		}
 	}
-
+	_eventDispatcher->dispatchCustomEvent(REPLACE_ACCOUNTS);
 }

@@ -58,6 +58,7 @@ public:
 	void removeMyCardWall();				//移除牌墙
 	void setCardState();
 	void refrishCardPos();					//更新位置
+	void setVisibleOneByOne();
 
 	virtual void update(float dt);
 
@@ -85,7 +86,7 @@ public:
 	bool checkSao();
 
 public:
-	CardData	PopPai[3];					//玩家出的牌
+	CardData	PopPai;					//玩家出的牌
 	CardData    m_newCard;					//玩家起的牌
 
 	ZiPai		t_Player[3];				//三个玩家(2是自己)
@@ -94,27 +95,25 @@ public:
 	std::vector<CardData>	m_TempChiList;	//所有可吃的牌(只管A_A_a_a和A_A_a)
 
 public:
-	bool m_isStartGame;
+	bool		m_isStartGame;
 	ZiPaiManage t_ZPManage;					//管理器
-
 	DrawNode*	m_line;						//创建线
 	CardSprite* m_TempMoveCard;		
-
 	Vec2 m_OldPos;							//原来坐标
-
 	Vector<CardSprite* > m_CardList;		//牌数组
+	GameState		m_GameState;
+	StateManager*	m_CurrState;
 
-	GameState m_GameState;
-	StateManager* m_CurrState;
 private:
-	Label* m_beilv;							//倍率标签
-	int _beilv;								//倍率
-	Label* m_dipai;							//底牌
-
-	DrawNode*	_line;						//创建线
+	Label*		m_beilv;					//倍率标签
+	int			_beilv;						//倍率
+	Label*		m_dipai;					//底牌
+	//DrawNode*	_line;						//创建线
 	Label*		_note;					
 	Sprite*		_hand;
 	Label*		score;						//胡数
-
+	bool		_needVisible;
+	float		_SumTime;
+	int			_cardCount;
 };
 

@@ -69,28 +69,19 @@ void ShowOneLayer::showPengCard()
 	_pengList[0] = m_GameLayer->t_Player[1].m_PengCardVec[0];
 	_pengList[1] = m_GameLayer->t_Player[1].m_PengCardVec[1];
 
-	if (_pengList[0].size()>0)
-	{
-		for (int i = 0; i < _pengList[0].size(); i++)
-		{
-			auto _card = ShowCard::create(0, _pengList[0][i]);
-			if (_card)
-			{
-				addChild(_card);
-				m_tmpPengCardVec.pushBack(_card);
-			}
-		}
-	}
 
-	if (_pengList[1].size()>0)
+	for (int i = 0; i < 2; i++)
 	{
-		for (int i = 0; i < _pengList[1].size(); i++)
+		if (!_pengList[i].empty())
 		{
-			auto _card = ShowCard::create(1, _pengList[1][i]);
-			if (_card)
+			for (int j = 0; j < _pengList[i].size(); j++)
 			{
-				addChild(_card);
-				m_tmpPengCardVec.pushBack(_card);
+				auto _card = ShowCard::create(i, _pengList[i][j]);
+				if (_card)
+				{
+					addChild(_card);
+					m_tmpPengCardVec.pushBack(_card);
+				}
 			}
 		}
 	}
@@ -123,7 +114,71 @@ void ShowOneLayer::showSaoCard()
 
 void ShowOneLayer::showChiCard()
 {
+	if (m_tmpChiCardVec.size()>0)
+	{
+		for (auto &_card : m_tmpChiCardVec)
+		{
+			if (_card->getParent())
+			{
+				_card->removeFromParent();
+			}
+		}
+		m_tmpChiCardVec.clear();
+	}
 
+	{
+		std::vector<int > _chiList[2];
+		_chiList[0] = m_GameLayer->t_Player[1].m_ChiCardVec[0];
+		_chiList[1] = m_GameLayer->t_Player[1].m_ChiCardVec[1];
+
+		for (int i = 0; i < 2; i++)
+		{
+			if (!_chiList[i].empty())
+			{
+				for (int j = 0; j < _chiList[i].size(); j++)
+				{
+					auto _card = ShowCard::create(i, _chiList[i][j]);
+					if (_card)
+					{
+						addChild(_card);
+						m_tmpChiCardVec.pushBack(_card);
+					}
+				}
+			}
+		}
+	}
+
+	{
+		std::vector<int > _chiSpecialList[2];
+		_chiSpecialList[0] = m_GameLayer->t_Player[1].m_ChiSpeclal[0];
+		_chiSpecialList[1] = m_GameLayer->t_Player[1].m_ChiSpeclal[1];
+
+		for (int i = 0; i < 2; i++)
+		{
+			if (!_chiSpecialList[i].empty())
+			{
+				for (int j = 0; j < _chiSpecialList[i].size(); j++)
+				{
+					auto _card = ShowCard::create(i, _chiSpecialList[i][j]);
+					if (_card)
+					{
+						addChild(_card);
+						m_tmpChiCardVec.pushBack(_card);
+					}
+				}
+			}
+		}
+	}
+
+	if (m_tmpChiCardVec.size()>0)
+	{
+		for (int i = 0; i < m_tmpChiCardVec.size(); i++)
+		{
+			int _height = m_tmpChiCardVec.at(i)->getContentSize().height;
+			m_tmpChiCardVec.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i / 3)*(_height - 8) + 50, i % 3 * (_height - 70) - 60)));
+		}
+	}
+	refrishCardPos();
 }
 
 void ShowOneLayer::refrishCardPos()
@@ -151,16 +206,19 @@ void ShowOneLayer::refrishCardPos()
 		{
 			auto _card = m_ThreeCardVec.at(i);
 			auto _height = _card->getContentSize().height;
-			_card->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i / 3)*(_height - 8) + 450, i % 3 * (_height - 70)+ 170)));
+			_card->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i / 3)*(_height - 8) + 400, i % 3 * (_height - 70)+ 150)));
 		}
 
 		if (!m_ThreeCardVec.empty())
 		{
-			for (int i = 0; i < m_FourCardVec.size(); i++)
+			if (!m_FourCardVec.empty())
 			{
-				auto _card = m_FourCardVec.at(i);
-				auto _height = _card->getContentSize().height;
-				_card->setPosition(CommonFunction::getVisibleAchor(Anchor::RightMid, Vec2((i / 4)*(_height - 8) + m_ThreeCardVec.back()->getPosition().x + _height, i % 4 * (_height - 70) - 30)));
+				for (int i = 0; i < m_FourCardVec.size(); i++)
+				{
+					auto _card = m_FourCardVec.at(i);
+					auto _height = _card->getContentSize().height;
+					_card->setPosition(CommonFunction::getVisibleAchor(Anchor::RightMid, Vec2((i / 4)*(_height - 8) + m_ThreeCardVec.back()->getPosition().x + _height, i % 4 * (_height - 70) - 30)));
+				}
 			}
 		}
 	}

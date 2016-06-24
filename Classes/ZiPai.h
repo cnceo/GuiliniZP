@@ -2,6 +2,8 @@
 #include"Win.h"
 #include <iostream>  
 #include <vector>  
+#include "layer/ShowCard.h"
+
 using namespace std;
 
 #include "cocos2d.h"
@@ -41,7 +43,6 @@ class ZiPai
 public:
 	ZiPai();
 	~ZiPai();
-
 public:
 	std::vector<int >		m_Not_Peng[2];				//放入可以碰但是没有碰的牌
 	std::vector<int >		m_Not_Chi[2];				//放入可以吃但是没有吃的牌(臭牌)
@@ -67,6 +68,8 @@ public:
 
 	std::vector<CardData >	m_TempKaiDuoCardVec;		//可开舵的牌
 	std::vector<int >		m_KaiDuoCardVec[2];			//放入已经开舵的牌
+
+	std::vector<ShowCard* >  AAaaCardSprite;
 
 public:
 

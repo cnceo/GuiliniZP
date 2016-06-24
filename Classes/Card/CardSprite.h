@@ -36,6 +36,7 @@ public:
 	CC_SYNTHESIZE(CardState, _state, State);
 	CC_SYNTHESIZE(SortState, _sortState, sortState);
 
+	void setCardOpacity(GLubyte opacity);
 public:
 	 CardData*	getCardData();
 

@@ -43,6 +43,7 @@ private:
 	bool check_Three_Diff_Card();
 	bool check_Two_card();
 	bool check_One_card();
+	void refrishCardPos();							//刷新位置
 
 	Vector<CardSprite* > _four_CardList[2];			//四张
 	Vector<CardSprite* > _three_Same_CardList[2];	//三张相同
@@ -55,4 +56,5 @@ private:
 	Vector<CardSprite* > _cardList;		//牌数组(总)
 	CardSprite* m_TempMoveCard;
 	Vec2 m_OldPos;
+	int m_OldZorder;
 };

@@ -26,5 +26,7 @@ private:
 	bool m_isCounting;				/*标记是否正在计时*/
 	std::function<void()> m_func;	/*回调函数*/
 	Label* m_timeLabel;
+
+	Sprite* _clock_sp;
 };
 

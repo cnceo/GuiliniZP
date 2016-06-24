@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include "cocos2d.h"
+#include "ui/UIScrollView.h"
+
 using namespace cocos2d;
 
 /*
@@ -28,5 +30,7 @@ public:
 private:
 	Label* m_goldLabel;
 	Label* m_diamLabel;
+
+	ui::ScrollView*	m_scrollView;
 };
 

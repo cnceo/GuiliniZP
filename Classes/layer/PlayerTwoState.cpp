@@ -16,7 +16,6 @@ PlayerTwoState::PlayerTwoState()
 	if (!UserDefault::getInstance()->getBoolForKey(ISFIRSTPLAY))
 	{
 		Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(PLAYERBLINK_2);
-
 		/*
 			false:庄家，第一次打牌，不摸牌
 			true:第二圈开始，摸牌
