@@ -11,6 +11,8 @@ class CardSprite;
 class CardEffect : public Layer
 {
 public:
+	CardEffect();
+	~CardEffect();
 
 	virtual bool init();
 	CREATE_FUNC(CardEffect);
@@ -19,6 +21,9 @@ public:
 	void midAction();
 	void rightActoin();
 	void leftAcrion();
+
+	void showDangdi();		//档低字体显示
+	void getDangdi();		//显示档低的牌
 
 private:
 	Vector<Sprite*> _cardList_1;
@@ -36,4 +41,6 @@ private:
 	bool _isActoin_1;
 	bool _isActoin_2;
 	bool _isActoin_3;
+
+	Label* _dangDi;
 };

@@ -6,7 +6,12 @@
 
 using namespace ui;
 
-GUILayer::GUILayer() : icon_left(nullptr), icon_right(nullptr), icon_leftDown(nullptr), _timecount(nullptr)
+GUILayer::GUILayer() : 
+icon_left(nullptr), 
+icon_right(nullptr),
+icon_leftDown(nullptr), 
+_light(nullptr),
+_timecount(nullptr)
 {
 	auto _listener_1 = EventListenerCustom::create(PLAYERBLINK_0, [=](EventCustom*event){
 		playerBlink_0();
@@ -89,6 +94,13 @@ void GUILayer::initUI()
 	_timecount->setVisible(false);
 	_timecount->setScale(0.7f);
 
+	_light = Sprite::create("icon_image/light.png");
+	if (_light)
+	{
+		_light->setScale(0.8f);
+		addChild(_light, -1);
+		_light->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftTop, Vec2(0, 640)));
+	}
 	showNameAndMoney();
 }
 
@@ -201,36 +213,56 @@ void GUILayer::showNameAndMoney()
 
 void GUILayer::playerBlink_0()	//上家
 {
-	if (!_timecount)
+	if (_timecount)
 	{
-		return;
+		_timecount->setPosition(icon_left->getPosition() + Vec2(100, 0));
+		_timecount->start(15, [](){log("0 timeout........"); });
 	}
-	cout << "playerBlink_0" << endl;
 
-	_timecount->setPosition(icon_left->getPosition() + Vec2(100, 0));
-	_timecount->start(15, [](){log("0 timeout........"); });
+	if (_light)
+	{
+		_light->setPosition(icon_left->getPosition());
+		auto fadeout = FadeOut::create(0.5f);
+		auto fadein = FadeIn::create(0.5f);
+		auto repeat = RepeatForever::create(Sequence::create(fadeout, fadein, nullptr));
+		_light->runAction(repeat);
+	}
 }
 
 void GUILayer::playerBlink_1()//下家
 {
-	if (!_timecount)
+	if (_timecount)
 	{
-		return;
+		_timecount->setPosition(icon_right->getPosition() + Vec2(-100, 0));
+		_timecount->start(15, [](){log("1 timeout........"); });
 	}
-	cout << "playerBlink_1" << endl;
 
-	_timecount->setPosition(icon_right->getPosition() + Vec2(-100, 0));
-	_timecount->start(15, [](){log("1 timeout........"); });
+	if (_light)
+	{
+		_light->setPosition(icon_right->getPosition());
+		auto fadeout = FadeOut::create(0.5f);
+		auto fadein = FadeIn::create(0.5f);
+		auto repeat = RepeatForever::create(Sequence::create(fadeout, fadein, nullptr));
+		_light->runAction(repeat);
+	}
+
 }
 
 void GUILayer::playerBlink_2()
 {
-	if (!_timecount)
+	if (_timecount)
 	{
-		return;
+		_timecount->setVisible(true);
+		_timecount->setPosition(icon_leftDown->getPosition() + Vec2(0, 100));
+		_timecount->start(15, [](){log("2 timeout........"); });
 	}
-	cout << "playerBlink_2" << endl;
-	_timecount->setVisible(true);
-	_timecount->setPosition(icon_leftDown->getPosition() + Vec2(0,100));
-	_timecount->start(15, [](){log("2 timeout........"); });
+
+	if (_light)
+	{
+		_light->setPosition(icon_leftDown->getPosition());
+		auto fadeout = FadeOut::create(0.5f);
+		auto fadein = FadeIn::create(0.5f);
+		auto repeat = RepeatForever::create(Sequence::create(fadeout, fadein, nullptr));
+		_light->runAction(repeat);
+	}
 }

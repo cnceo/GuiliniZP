@@ -53,36 +53,63 @@ void ChooseLayer::initUI()
 
 	 auto node = Node::create();
 	 addChild(node);
-	 node->setPosition(CommonFunction::getVisibleAchor(0.5,0.4,this,Vec2(150,0)));
+	 node->setPosition(CommonFunction::getVisibleAchor(0.6,0.5,this,Vec2(0,0)));
 	 node->setScale(0.7);
 
 	if (m_chi_btn)
 	{
+		m_chi_btn->setScale(0);
 		node->addChild(m_chi_btn);
 		m_chi_btn->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, node, Vec2(-20, 0)));
 		m_chi_btn->addClickEventListener(CC_CALLBACK_1(ChooseLayer::chiBtnCbk,this));
+
+		auto delay = DelayTime::create(0.1);
+		auto scaleTo = ScaleTo::create(0.2f, 1.0f);
+		auto ease = EaseBackOut::create(scaleTo);
+		auto seq = Sequence::create(delay, ease, nullptr);
+		m_chi_btn->runAction(seq);
 	}
 
 	if (m_peng_btn)
 	{
 		node->addChild(m_peng_btn);
-		m_peng_btn->setPosition(CommonFunction::getVisibleAchor(0.5,0.5,node,Vec2(100,0)));
+		m_peng_btn->setScale(0);
+		m_peng_btn->setPosition(CommonFunction::getVisibleAchor(0.5,0.5,node,Vec2(120,-100)));
 		m_peng_btn->addClickEventListener(CC_CALLBACK_1(ChooseLayer::pengBtnCbk, this));
+
+		auto delay = DelayTime::create(0.2);
+		auto scaleTo = ScaleTo::create(0.2f, 1.0f);
+		auto ease = EaseBackOut::create(scaleTo);
+		auto seq = Sequence::create(delay, ease, nullptr);
+		m_peng_btn->runAction(seq);
 	}
 
 	if (m_hu_btn)
 	{
 		node->addChild(m_hu_btn);
-		m_hu_btn->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, node, Vec2(220, 0)));
+		m_hu_btn->setScale(0);
+		m_hu_btn->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, node, Vec2(255, -100)));
 		m_hu_btn->addClickEventListener(CC_CALLBACK_1(ChooseLayer::huBtnCbk, this));
+
+		auto delay = DelayTime::create(0.3);
+		auto scaleTo = ScaleTo::create(0.2f, 1.0f);
+		auto ease = EaseBackOut::create(scaleTo);
+		auto seq = Sequence::create(delay, ease, nullptr);
+		m_hu_btn->runAction(seq);
 	}
 
 	if (m_close_btn)
 	{
 		node->addChild(m_close_btn);
-		m_close_btn->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, node, Vec2(320, 0)));
+		m_close_btn->setScale(0);
+		m_close_btn->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, node, Vec2(380, 0)));
 		m_close_btn->addClickEventListener(CC_CALLBACK_1(ChooseLayer::closeBtnCbk, this));
 
+		auto delay = DelayTime::create(0.4);
+		auto scaleTo = ScaleTo::create(0.2f, 1.2f);
+		auto ease = EaseBackOut::create(scaleTo);
+		auto seq = Sequence::create(delay, ease, nullptr);
+		m_close_btn->runAction(seq);
 	}
 }
 
@@ -108,6 +135,7 @@ void ChooseLayer::huBtnCbk(Ref* psender)
 	auto _newCard = GetLayer::getInstance()->getgameLayer()->m_newCard;
 	GetLayer::getInstance()->getgameLayer()->t_Player[2].addCard(_newCard.m_Type, _newCard.m_Value);
 	GetLayer::getInstance()->getgameLayer()->refrishCardPos();
+
 	_eventDispatcher->dispatchCustomEvent(SHOW_RATIOLAYER);
 	close();
 }

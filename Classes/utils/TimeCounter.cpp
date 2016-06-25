@@ -2,7 +2,7 @@
 
 TimeCounter::TimeCounter() :m_timeLabel(nullptr), _clock_sp(nullptr)
 {
-
+	
 }
 
 TimeCounter::~TimeCounter()
@@ -71,6 +71,12 @@ void TimeCounter::myupdate(float dt)
 			auto repeat = RepeatForever::create(seq);
 			_clock_sp->runAction(repeat);
 		}
+
+		//if (m_fCBTime <= 3)
+		//{
+		//	//在屏幕中间显示倒计时
+		//	std::cout << "时间少于三秒" << std::endl;
+		//}
 	}
 }
 

@@ -20,6 +20,8 @@ public:
 
 	virtual bool init(GameLayer* _layer);
 	static ShowLayer* create(GameLayer* _layer);
+	void flyToHand();			//档低的牌飞到手里
+
 private:
 
 	void initData();
@@ -29,8 +31,9 @@ private:
 	Sprite* createSmallCardSprite(int p_Type, int p_Value);
 
 	void createACard();			//玩家出的牌
-
 	void createANewCard();		//新摸的牌
+
+	void moveToQiPai();			//	飞到各自弃牌的地方
 
 private:
 	void showPengCard();		//显示碰的牌
@@ -43,6 +46,7 @@ private:
 private:
 	Sprite* m_ACard;
 	Sprite* m_NewCard;
+	Sprite* m_backCard;
 	GameLayer*	m_GameLayer;
 
 	Vector<ShowCard* > m_tmpPengCardVec;

@@ -2,6 +2,19 @@
 #include "Card/CardSprite.h"
 #include "utils/CommonFunction.h"
 #include "utils/Constant.h"
+#include "utils/GetLayer.h"
+
+#define GAMELAYER GetLayer::getInstance()->getgameLayer()
+
+CardEffect::CardEffect() :_dangDi(nullptr)
+{
+	
+}
+
+CardEffect::~CardEffect()
+{
+
+}
 
 bool CardEffect::init()
 {
@@ -69,6 +82,8 @@ bool CardEffect::init()
 	});
 	auto delay = DelayTime::create(1.0f);
 	this->runAction(Sequence::create(delay, callfunc, nullptr));
+
+	showDangdi();
 
 	return true;
 }
@@ -172,4 +187,37 @@ void CardEffect::leftAcrion()
 			_leftIndex = 0;
 		}
 	}
+}
+
+void CardEffect::showDangdi()
+{
+	_dangDi = Label::create(CommonFunction::WStrToUTF8(L"档底"),"fonts/DFYuanW7.ttf",80);
+	if (_dangDi)
+	{
+		addChild(_dangDi);
+		_dangDi->setPosition(CommonFunction::getVisibleAchor(0.2,0.5,Vec2(0,-40)));
+		_dangDi->setVisible(false);
+
+		auto delay = DelayTime::create(3.0f);
+		auto call_1 = CallFunc::create([=](){_dangDi->setVisible(true); });
+		auto scaleTo_1 = ScaleTo::create(0.5f,1.5f);
+		auto scaleTo_2 = ScaleTo::create(0.5f, 1.0f);
+		auto fadeout = FadeOut::create(0.3f);
+		auto call_3 = CallFunc::create([=](){getDangdi();});
+		auto seq = Sequence::create(delay, call_1, scaleTo_1, scaleTo_2, fadeout, call_3, nullptr);
+
+		_dangDi->runAction(seq);
+	}
+}
+
+void  CardEffect::getDangdi()
+{
+	auto delay = DelayTime::create(0.2f);
+	auto call_1 = CallFunc::create([=](){GAMELAYER->getANewCard();});
+	auto delay_1 = DelayTime::create(0.2f);
+	auto call_2 = CallFunc::create([=](){
+		GetLayer::getInstance()->getShowLayer()->flyToHand();
+	});
+	auto seq = Sequence::create(delay, call_1, delay_1,call_2, nullptr);
+	runAction(seq);
 }

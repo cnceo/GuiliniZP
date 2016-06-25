@@ -140,21 +140,21 @@ bool PlayerZeroState::zeroCheck()
 	{
 		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"上家碰"));
 		GAMELAYER->t_Player[0].doPengACard(GAMELAYER->m_newCard.m_Type, GAMELAYER->m_newCard.m_Value);
-		GetLayer::getInstance()->getOneLayer()->showPengCard();
+		GetLayer::getInstance()->getZeroLayer()->showPengCard();
 		return true;
 	}
 	else if (GAMELAYER->t_Player[0].checkChiACard2_7_10(GAMELAYER->m_newCard.m_Type, GAMELAYER->m_newCard.m_Value))
 	{
 		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"上家吃牌"));
 		GAMELAYER->t_Player[0].doChi2_7_10(GAMELAYER->m_newCard.m_Type, GAMELAYER->m_newCard.m_Value, 0);
-		GetLayer::getInstance()->getOneLayer()->showChiCard();
+		GetLayer::getInstance()->getZeroLayer()->showChiCard();
 		return true;
 	}
 	else if (GAMELAYER->t_Player[0].checkChiA_B_C(GAMELAYER->m_newCard.m_Type, GAMELAYER->m_newCard.m_Value))
 	{
 		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"上家吃牌"));
 		GAMELAYER->t_Player[0].doChiA_B_C(GAMELAYER->m_newCard.m_Type, GAMELAYER->m_newCard.m_Value, 0);
-		GetLayer::getInstance()->getOneLayer()->showChiCard();
+		GetLayer::getInstance()->getZeroLayer()->showChiCard();
 		return true;
 	}
 	return false;

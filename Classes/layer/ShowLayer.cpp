@@ -7,7 +7,8 @@
 ShowLayer::ShowLayer():
 m_GameLayer(nullptr),
 m_ACard(nullptr),
-m_NewCard(nullptr)
+m_NewCard(nullptr),
+m_backCard(nullptr)
 {
 	//显示卡牌
 	auto _listener_1 = EventListenerCustom::create(CREATE_CARD, [=](EventCustom*event){
@@ -170,32 +171,36 @@ void ShowLayer::createACard()
 	}
 
 	m_ACard = createBigCardSprite(_type, _value);
-	addChild(m_ACard);
-
-	auto moveTo = MoveTo::create(0.3, CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 0)));
-
-	if (gameState == 0)
+	if (m_ACard)
 	{
-		if (m_ACard)
+		addChild(m_ACard);
+		m_ACard->setScale(0.1f);
+		auto moveTo = MoveTo::create(0.3, CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 0)));
+		auto scaleTo = ScaleTo::create(0.3f,0.6f);
+		auto spawn = Spawn::create(moveTo, scaleTo,nullptr);
+		if (gameState == 0)
 		{
-			m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftTop,Vec2::ZERO));
-			m_ACard->runAction(moveTo);
+			if (m_ACard)
+			{
+				m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftTop, Vec2::ZERO));
+				m_ACard->runAction(spawn);
+			}
 		}
-	}
-	else if (gameState == 1)
-	{
-		if (m_ACard)
+		else if (gameState == 1)
 		{
-			m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::RightTop, Vec2::ZERO));
-			m_ACard->runAction(moveTo);
+			if (m_ACard)
+			{
+				m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::RightTop, Vec2::ZERO));
+				m_ACard->runAction(spawn);
+			}
 		}
-	}
-	else if (gameState == 2)
-	{
-		if (m_ACard)
+		else if (gameState == 2)
 		{
-			m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::MidButtom, Vec2::ZERO));
-			m_ACard->runAction(moveTo);
+			if (m_ACard)
+			{
+				m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::MidButtom, Vec2(0, 95)));
+				m_ACard->runAction(spawn);
+			}
 		}
 	}
 
@@ -205,6 +210,25 @@ void ShowLayer::createACard()
 		m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 0)));
 		m_ACard->runAction(fadeOut);
 	}*/
+}
+
+void ShowLayer::flyToHand()
+{
+	if (m_NewCard)
+	{
+		auto delay = DelayTime::create(1.0f);
+		auto move = MoveTo::create(0.3f,CommonFunction::getVisibleAchor(Anchor::MidButtom,Vec2(0,95)));
+		auto callfun = CallFunc::create([=](){
+			m_NewCard->setVisible(false);
+		});
+
+		auto callfun_1 = CallFunc::create([=](){
+			m_GameLayer->t_Player[2].addCard(m_GameLayer->m_newCard.m_Type, m_GameLayer->m_newCard.m_Value);
+			m_GameLayer->refrishCardPos();
+		});
+		auto seq = Sequence::create(delay, move, callfun, callfun_1, nullptr);
+		m_NewCard->runAction(seq);
+	}
 }
 
 void ShowLayer::createANewCard()
@@ -226,16 +250,38 @@ void ShowLayer::createANewCard()
 		}
 	}
 
+	if (m_backCard)
+	{
+		if (m_backCard->getParent())
+		{
+			m_backCard->removeFromParent();
+		}
+	}
+
+	m_backCard = Sprite::create("card_back.png");
+	if (m_backCard)
+	{
+		addChild(m_backCard,10);
+		m_backCard->setScaleX(0.75f);
+		m_backCard->setScaleY(0.8f);
+		float height = m_backCard->getContentSize().height;
+		m_backCard->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, Vec2(0, height / 2)));
+		auto moveTo = MoveTo::create(0.5f, CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, height - 50)));
+		auto fadeout = FadeOut::create(0.01);
+		auto seq = Sequence::create(moveTo,fadeout,nullptr);
+		m_backCard->runAction(seq);
+	}
+
 	m_NewCard = createBigCardSprite(_type, _value);
-	addChild(m_NewCard);
-
-	if (!m_NewCard)return;
-
-	float height = m_NewCard->getContentSize().height;
-	m_NewCard->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, Vec2(0, height / 2)));
-
-	auto moveTo = MoveTo::create(0.3f, CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, height-50)));
-	m_NewCard->runAction(moveTo);
+	if (m_NewCard)
+	{
+		m_NewCard->setVisible(true);
+		addChild(m_NewCard);
+		float height = m_NewCard->getContentSize().height;
+		m_NewCard->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, Vec2(0, height / 2)));
+		auto moveTo = MoveTo::create(0.5f, CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, height - 50)));
+		m_NewCard->runAction(moveTo);
+	}
 }
 
 void ShowLayer::showPengCard()
@@ -712,9 +758,14 @@ void ShowLayer::refrishCardPos()
 				auto _height = _card->getContentSize().height;
 				//if (_card->getState() == ShowCard::STATE::Kaiduo || _card->getState() == ShowCard::STATE::Saochuan)
 				{
-					_card->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i / 4)*(_height - 8) + m_ThreeCardVec.back()->getPosition().x + _height, i % 4 * (_height - 70) - 30)));
+					_card->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i / 4)*(_height - 8) + m_ThreeCardVec.back()->getPosition().x + _height / 2 + 15 , i % 4 * (_height - 70) - 30)));
 				}
 			}
 		}
 	}
+}
+
+void ShowLayer::moveToQiPai()
+{
+
 }

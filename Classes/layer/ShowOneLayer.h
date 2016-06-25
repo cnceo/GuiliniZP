@@ -32,6 +32,9 @@ public:
 
 	void refrishCardPos();		//更新位置
 
+public:
+	void showPlayCard();		//显示弃牌
+
 private:
 	Vector<ShowCard* > m_tmpPengCardVec;
 	Vector<ShowCard* > m_tmpKaiDuoCardVec;
@@ -42,4 +45,5 @@ private:
 	Vector<ShowCard* > m_ThreeCardVec;		//存三张牌
 	Vector<ShowCard* > m_FourCardVec;		//存四张牌
 
+	Vector<ShowCard*> m_playCardVec;		//弃牌
 };

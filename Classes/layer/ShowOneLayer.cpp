@@ -223,3 +223,8 @@ void ShowOneLayer::refrishCardPos()
 		}
 	}
 }
+
+void ShowOneLayer::showPlayCard()
+{
+
+}

@@ -27,14 +27,17 @@ PlayerTwoState::PlayerTwoState()
 		if (UserDefault::getInstance()->getBoolForKey(ISGETORPLAY))
 		{
 			//摸牌不打牌
-			auto callfunc = CallFunc::create([this](){
-				GAMELAYER->getANewCard();
+			auto callfunc = CallFunc::create([](){
 				Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(PLAYERBLINK_2);
+			});
 
+			auto callfunc_1 = CallFunc::create([this](){
+				GAMELAYER->getANewCard();
 				myCheck();
 			});
 			auto delayTime = DelayTime::create(1.5f);
-			auto seq = Sequence::create(delayTime, callfunc, nullptr);
+			auto delayTime_1 = DelayTime::create(0.8f);
+			auto seq = Sequence::create(delayTime, callfunc, delayTime_1, callfunc_1, nullptr);
 			GAMELAYER->runAction(seq);
 		}
 		else

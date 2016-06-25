@@ -68,7 +68,11 @@ _cardCount(0)
 
 	//REPLACE_ACCOUNTS //跳转到结算
 	auto _listener_6 = EventListenerCustom::create(REPLACE_ACCOUNTS, [=](EventCustom*event){
-		Director::getInstance()->replaceScene(TransitionFade::create(3, AccountsLayer::createScene()));
+		auto delayTime = DelayTime::create(3.0f);
+		auto callfunc = CallFunc::create([](){
+			Director::getInstance()->replaceScene(TransitionFade::create(0.5, AccountsLayer::createScene()));
+		});
+		this->runAction(Sequence::create(delayTime,callfunc,nullptr));
 	});
 
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_1, 1);
@@ -101,7 +105,9 @@ bool GameLayer::init()
 	initData();
 	initUI();
 
-	addChild(ShowLayer::create(this));		//自己显示操作的牌
+	auto showlayer = ShowLayer::create(this);
+	addChild(showlayer);		//自己显示操作的牌
+	GetLayer::getInstance()->setShowLayer(showlayer);
 
 	//下家显示
 	auto _oneLayer = ShowOneLayer::create(this);
@@ -115,27 +121,31 @@ bool GameLayer::init()
 
 	UserDefault::getInstance()->setBoolForKey(ISFIRSTPLAY, false);	//是否第一次打牌
 	UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, true);	//只摸牌不打牌
-	UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//我是否可以出牌（能否触摸）
+	UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, false);	//我是否可以出牌（能否触摸）
 	UserDefault::getInstance()->setBoolForKey(ISHZ, false);			//没有黄庄	
 	UserDefault::getInstance()->setIntegerForKey(GAMESTATE,2);		//设置当前状态(我)
 
 	changeState(new PlayerTwoState());
 
 	auto _delay_1 = DelayTime::create(1.0f);
-	auto _delay_2 = DelayTime::create(2.5f);
+	auto _delay_2 = DelayTime::create(5.5f);
 
 	auto _callfunc_1 = CallFunc::create([=](){
 	
 		UserDefault::getInstance()->setBoolForKey(ISFIRSTPLAY, false);
-		_eventDispatcher->dispatchCustomEvent(PLAYERBLINK_2);
 		xipai();
 		_needVisible = true;
 		//log("visible=%d", _needVisible?true:false);
 		//addChild(MyCardWall::create(this));
 	});
-	auto _callfunc_2 = CallFunc::create([=](){creatAction();});
-
-	auto _seq = Sequence::create(_delay_1, _callfunc_1, _delay_2, _callfunc_2, nullptr);
+	auto _callfunc_2 = CallFunc::create([=](){
+		creatAction();
+	});
+	auto _callfunc_3 = CallFunc::create([=](){
+		_eventDispatcher->dispatchCustomEvent(PLAYERBLINK_2);
+		UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);
+	});
+	auto _seq = Sequence::create(_delay_1, _callfunc_1, _delay_2, _callfunc_2, _callfunc_3, nullptr);
 	runAction(_seq);
 
 	addChild(CardEffect::create());
@@ -439,8 +449,9 @@ bool GameLayer::checkChi()
 
 void GameLayer::doChiACard()
 {
-	int num = UserDefault::getInstance()->getIntegerForKey(CHIWHAT,0);
 	/*
+	int num = UserDefault::getInstance()->getIntegerForKey(CHIWHAT,0);
+
 	t_Player[2].doChi1_2_3(m_newCard.m_Type, m_newCard.m_Value, num);
 	t_Player[2].doChi2_7_10(m_newCard.m_Type, m_newCard.m_Value, num);
 	t_Player[2].doChiA_B_C(m_newCard.m_Type, m_newCard.m_Value, num);
@@ -753,11 +764,11 @@ void GameLayer::onTouchEnded(Touch *touch, Event *unused_event)
 	{
 		m_line->clear();
 	}*/
+
 	if (!m_TempMoveCard)
 	{
 		return;
 	}
-
 	m_TempMoveCard->setLocalZOrder(CARD_ZORDER_1);
 
 	if (touch->getLocation().y > VISIBLESIZE.height / 2 - 50)
@@ -782,7 +793,6 @@ void GameLayer::onTouchEnded(Touch *touch, Event *unused_event)
 	
 		PopPai = t_Player[2].popCard;
 		_eventDispatcher->dispatchCustomEvent(CREATE_CARD);
-
 		UserDefault::getInstance()->setBoolForKey(ISFIRSTPLAY,true);
 		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, true);	//打完牌后我可以摸牌
 		UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, false);	//打完牌后我不能出牌
@@ -847,7 +857,7 @@ void GameLayer::initUI()
 		m_beilv->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, Vec2(-5, -m_beilv->getContentSize().height - 6)));
 	}
 	//底牌
-	auto dipai_str = CommonFunction::WStrToUTF8(L"底牌:19");
+	auto dipai_str = CommonFunction::WStrToUTF8(L"底牌:20");
 	m_dipai = Label::createWithTTF(dipai_str, "fonts/Roboto-Medium.ttf", 24);
 	if (m_dipai)
 	{
@@ -939,8 +949,8 @@ void GameLayer::xipai()
 		}
 	}
 
-	CardEx t_pai = t_ZPManage.GetAPai();	//档低牌
-	t_Player[2].addCard(t_pai.m_NewCard.m_Type, t_pai.m_NewCard.m_Value);
+	//CardEx t_pai = t_ZPManage.GetAPai();	//档低牌
+	//t_Player[2].addCard(t_pai.m_NewCard.m_Type, t_pai.m_NewCard.m_Value);
 
 	logAllCard();
 	createMyCardWall();
@@ -1190,12 +1200,13 @@ void GameLayer::creatAction()
 		 _hand->setPosition(Vec2(850, 150)); //开始位置
 		 addChild(_hand);
 		//move 到 930，340
-		MoveTo* move = MoveTo::create(0.5, Vec2(930, 300));
+		 auto delay = DelayTime::create(0.2);
+		MoveTo* move = MoveTo::create(0.8, Vec2(930, 300));
 		//让动作永久
 		_hand->runAction(RepeatForever::create(Sequence::create(move, CallFunc::create([&]{
 
 			_hand->setPosition(Vec2(850, 150));
-		}), move, NULL)));
+		}), delay, move, NULL)));
 	}
 }
 

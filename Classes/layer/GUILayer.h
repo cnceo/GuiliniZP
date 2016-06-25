@@ -31,5 +31,7 @@ private:
 	Sprite* icon_leftDown;
 	Sprite* icon_right;
 	TimeCounter* _timecount;
+
+	Sprite* _light;
 };
 

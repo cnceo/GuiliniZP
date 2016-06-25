@@ -29,6 +29,7 @@ PlayerOneState::PlayerOneState()
 	UserDefault::getInstance()->setIntegerForKey(GAMESTATE, 1);
 	if (oneCheck())
 	{
+		Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(PLAYERBLINK_1);
 		GAMELAYER->t_Player[1].delACard(0);
 		GAMELAYER->PopPai = GAMELAYER->t_Player[1].popCard;
 

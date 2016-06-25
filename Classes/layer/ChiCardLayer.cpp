@@ -99,6 +99,8 @@ void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
 			int record = -1;
 			//先把新牌添加到手里，再删除
 			_gameLayer->t_Player[2].addCard(_gameLayer->m_newCard.m_Type, _gameLayer->m_newCard.m_Value);
+			ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我吃牌！"));
+
 			for (auto &_scard : m_tmpChiCardList)
 			{
 				if (_scard->getTag() / 3 == _cardTag_0)
@@ -111,7 +113,6 @@ void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
 						_gameLayer->t_Player[2].m_ChiCardVec[_type].push_back(_value);			//连续的
 						//log("___size =%d", _gameLayer->t_Player[2].m_ChiCardVec[_type].size());
 						_gameLayer->t_Player[2].delACard(_type, _value);
-
 						//修改123的胡数
 						if (_value == 1)
 						{
@@ -225,6 +226,8 @@ void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
 		if (_cardTag_1 >= 0)
 		{
 			_gameLayer->t_Player[2].addCard(_gameLayer->m_newCard.m_Type, _gameLayer->m_newCard.m_Value);
+			ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我吃牌！"));
+
 			for (auto &_scard : m_tmpChiCardVec)
 			{
 				if (_scard->getTag() / 3 == _cardTag_1)
@@ -237,7 +240,6 @@ void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
 						_gameLayer->t_Player[2].m_ChiCardList[_type].push_back(_value);
 						//log("type__=%d,size___ =%d", _type, _gameLayer->t_Player[2].m_ChiCardList[_type].size());	//A_A_a_a
 						_gameLayer->t_Player[2].delACard(_type, _value);
-
 					}
 				}
 			}

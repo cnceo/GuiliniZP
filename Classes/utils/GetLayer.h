@@ -3,6 +3,7 @@
 #include "../layer/GameLayer.h"
 #include "../layer/ShowOneLayer.h"
 #include "../layer/ShowZeroLayer.h"
+#include "../layer/ShowLayer.h"
 
 class GetLayer
 {
@@ -20,6 +21,9 @@ public:
 	void setZeroLayer(ShowZeroLayer* _sLayer);
 	ShowZeroLayer* getZeroLayer();
 
+	void setShowLayer(ShowLayer* _sLayer);
+	ShowLayer* getShowLayer();
+
 private:
 	GetLayer();
 	~GetLayer();
@@ -27,4 +31,6 @@ private:
 	GameLayer* _gameLayer;
 	ShowOneLayer* _oneLayer;
 	ShowZeroLayer* _zeroLayer;
+	ShowLayer* _showLayer;
+
 };
