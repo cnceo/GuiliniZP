@@ -9,12 +9,16 @@ m_peng_btn(nullptr),
 m_hu_btn(nullptr),
 m_close_btn(nullptr)
 {
-	
+	auto _listener_1 = EventListenerCustom::create(TIMEOUT_CLOSE, [=](EventCustom*event){
+		timeOutClose();
+	});
+	_eventDispatcher->addEventListenerWithFixedPriority(_listener_1, 1);
+
 }
 
 ChooseLayer::~ChooseLayer()
 {
-
+	_eventDispatcher->removeCustomEventListeners(TIMEOUT_CLOSE);
 }
 
 bool ChooseLayer::init()
@@ -63,7 +67,7 @@ void ChooseLayer::initUI()
 		m_chi_btn->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, node, Vec2(-20, 0)));
 		m_chi_btn->addClickEventListener(CC_CALLBACK_1(ChooseLayer::chiBtnCbk,this));
 
-		auto delay = DelayTime::create(0.1);
+		auto delay = DelayTime::create(0.5);
 		auto scaleTo = ScaleTo::create(0.2f, 1.0f);
 		auto ease = EaseBackOut::create(scaleTo);
 		auto seq = Sequence::create(delay, ease, nullptr);
@@ -77,7 +81,7 @@ void ChooseLayer::initUI()
 		m_peng_btn->setPosition(CommonFunction::getVisibleAchor(0.5,0.5,node,Vec2(120,-100)));
 		m_peng_btn->addClickEventListener(CC_CALLBACK_1(ChooseLayer::pengBtnCbk, this));
 
-		auto delay = DelayTime::create(0.2);
+		auto delay = DelayTime::create(0.6f);
 		auto scaleTo = ScaleTo::create(0.2f, 1.0f);
 		auto ease = EaseBackOut::create(scaleTo);
 		auto seq = Sequence::create(delay, ease, nullptr);
@@ -91,7 +95,7 @@ void ChooseLayer::initUI()
 		m_hu_btn->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, node, Vec2(255, -100)));
 		m_hu_btn->addClickEventListener(CC_CALLBACK_1(ChooseLayer::huBtnCbk, this));
 
-		auto delay = DelayTime::create(0.3);
+		auto delay = DelayTime::create(0.7f);
 		auto scaleTo = ScaleTo::create(0.2f, 1.0f);
 		auto ease = EaseBackOut::create(scaleTo);
 		auto seq = Sequence::create(delay, ease, nullptr);
@@ -105,7 +109,7 @@ void ChooseLayer::initUI()
 		m_close_btn->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, node, Vec2(380, 0)));
 		m_close_btn->addClickEventListener(CC_CALLBACK_1(ChooseLayer::closeBtnCbk, this));
 
-		auto delay = DelayTime::create(0.4);
+		auto delay = DelayTime::create(0.8f);
 		auto scaleTo = ScaleTo::create(0.2f, 1.2f);
 		auto ease = EaseBackOut::create(scaleTo);
 		auto seq = Sequence::create(delay, ease, nullptr);
@@ -195,4 +199,11 @@ void ChooseLayer::close()
 	{
 		this->removeFromParent();
 	}
+}
+//15秒倒计时后没有操作就过
+void ChooseLayer::timeOutClose()
+{
+	log("time is out ,close chooseLayer");
+	_eventDispatcher->dispatchCustomEvent(CLOSE_CHOOSELAYER);
+	close();
 }

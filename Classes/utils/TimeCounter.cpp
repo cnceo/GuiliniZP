@@ -1,4 +1,5 @@
 ﻿#include "TimeCounter.h"
+#include "utils/Constant.h"
 
 TimeCounter::TimeCounter() :m_timeLabel(nullptr), _clock_sp(nullptr)
 {
@@ -24,12 +25,6 @@ bool TimeCounter::init()
 	 if (_clock_sp)
 	{
 		 addChild(_clock_sp);
-		/*auto rotate_1 = RotateTo::create(0.25f, -45);
-		auto rotate_2 = RotateTo::create(0.25f, 45);
-
-		auto seq = Sequence::create(rotate_1, rotate_2, nullptr);
-		auto repeat = RepeatForever::create(seq);
-		clock_sp->runAction(repeat);*/
 	}
 	m_timeLabel = Label::createWithBMFont("fonts/baishe.fnt", "10",TextHAlignment::LEFT, 0,Vec2::ZERO);
 	if (m_timeLabel)
@@ -72,11 +67,12 @@ void TimeCounter::myupdate(float dt)
 			_clock_sp->runAction(repeat);
 		}
 
-		//if (m_fCBTime <= 3)
-		//{
+		if (m_fCBTime == 3)
+		{
 		//	//在屏幕中间显示倒计时
-		//	std::cout << "时间少于三秒" << std::endl;
-		//}
+			std::cout << "时间少于三秒" << std::endl;
+			//_eventDispatcher->dispatchCustomEvent(SHOW_TIMECOUNT);
+		}
 	}
 }
 

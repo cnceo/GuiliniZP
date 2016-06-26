@@ -6,14 +6,19 @@
 
 #define GAMELAYER GetLayer::getInstance()->getgameLayer()
 
-CardEffect::CardEffect() :_dangDi(nullptr)
+CardEffect::CardEffect():
+_dangDi(nullptr), 
+_timeCount(nullptr)
 {
-	
+	auto _listener_1 = EventListenerCustom::create(SHOW_TIMECOUNT, [=](EventCustom*event){
+		showTimeCount();
+	});
+	_eventDispatcher->addEventListenerWithFixedPriority(_listener_1, 1);
 }
 
 CardEffect::~CardEffect()
 {
-
+	_eventDispatcher->removeCustomEventListeners(SHOW_TIMECOUNT);
 }
 
 bool CardEffect::init()
@@ -31,8 +36,6 @@ bool CardEffect::init()
 	_SumTime_3 = 0;
 
 	_isActoin_1 = false;
-
-
 	_isActoin_2 = false;
 	_isActoin_3 = false;
 
@@ -84,7 +87,6 @@ bool CardEffect::init()
 	this->runAction(Sequence::create(delay, callfunc, nullptr));
 
 	showDangdi();
-
 	return true;
 }
 
@@ -201,7 +203,7 @@ void CardEffect::showDangdi()
 		auto delay = DelayTime::create(3.0f);
 		auto call_1 = CallFunc::create([=](){_dangDi->setVisible(true); });
 		auto scaleTo_1 = ScaleTo::create(0.5f,1.5f);
-		auto scaleTo_2 = ScaleTo::create(0.5f, 1.0f);
+		auto scaleTo_2 = ScaleTo::create(0.3f, 1.0f);
 		auto fadeout = FadeOut::create(0.3f);
 		auto call_3 = CallFunc::create([=](){getDangdi();});
 		auto seq = Sequence::create(delay, call_1, scaleTo_1, scaleTo_2, fadeout, call_3, nullptr);
@@ -220,4 +222,48 @@ void  CardEffect::getDangdi()
 	});
 	auto seq = Sequence::create(delay, call_1, delay_1,call_2, nullptr);
 	runAction(seq);
+}
+
+void CardEffect::showTimeCount()
+{
+	schedule(schedule_selector(CardEffect::refrishTimeCount), 1.0f);
+
+	_timeCt = 3;
+	_timeCount = Label::createWithTTF(Value(_timeCt).asString(),"fonts/DFYuanW7.ttf",80);
+
+	if (_timeCount)
+	{
+		addChild(_timeCount);
+		_timeCount->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(-100,70)));
+
+		auto ease_1 = EaseSineOut::create(ScaleTo::create(0.3f, 2.0f));
+		auto ease_2 = EaseSineOut::create(ScaleTo::create(0.1f, 1.0f));
+		auto seq = Sequence::create(ease_1, ease_2, nullptr);
+		_timeCount->runAction(seq);
+	}
+}
+
+void CardEffect::refrishTimeCount(float dt)
+{
+	_timeCt--;
+	if (_timeCt <= 0 )
+	{
+		if (_timeCount)
+		{
+			_timeCount->setVisible(false);
+			_timeCount->removeFromParent();
+			_timeCount = nullptr;
+		}
+		unschedule(schedule_selector(CardEffect::refrishTimeCount));
+		return;
+	}
+
+	if (_timeCount)
+	{
+		_timeCount->setString(Value(_timeCt).asString());
+		auto ease_1 = EaseSineOut::create(ScaleTo::create(0.3f, 2.0f));
+		auto ease_2 = EaseSineOut::create(ScaleTo::create(0.1f, 1.0f));
+		auto seq = Sequence::create(ease_1, ease_2, nullptr);
+		_timeCount->runAction(seq);
+	}
 }

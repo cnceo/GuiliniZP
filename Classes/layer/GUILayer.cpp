@@ -3,8 +3,12 @@
 #include "utils/Constant.h"
 #include "utils/TimeCounter.h"
 #include "ui/UIText.h"
+#include "utils/GetLayer.h"
+#include "PlayerOneState.h"
 
 using namespace ui;
+
+#define GAMELAYER 	GetLayer::getInstance()->getgameLayer()
 
 GUILayer::GUILayer() : 
 icon_left(nullptr), 
@@ -216,7 +220,17 @@ void GUILayer::playerBlink_0()	//上家
 	if (_timecount)
 	{
 		_timecount->setPosition(icon_left->getPosition() + Vec2(100, 0));
-		_timecount->start(15, [](){log("0 timeout........"); });
+		_timecount->start(15, [=](){
+			if (GAMELAYER->getChildByName(CHOOSELAYER))
+			{
+				Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(TIMEOUT_CLOSE);
+				if (GAMELAYER->getChildByName(CHICARDLAYER))
+				{
+					GAMELAYER->removeChildByName(CHICARDLAYER);
+				}
+			}
+			log("0 timeout........"); 
+		});
 	}
 
 	if (_light)
@@ -234,7 +248,19 @@ void GUILayer::playerBlink_1()//下家
 	if (_timecount)
 	{
 		_timecount->setPosition(icon_right->getPosition() + Vec2(-100, 0));
-		_timecount->start(15, [](){log("1 timeout........"); });
+		_timecount->start(15, [=](){
+			
+			if (GAMELAYER->getChildByName(CHOOSELAYER))
+			{
+				Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(TIMEOUT_CLOSE);
+				if (GAMELAYER->getChildByName(CHICARDLAYER))
+				{
+					GAMELAYER->removeChildByName(CHICARDLAYER);
+				}
+			}
+			log("1 timeout........"); 
+		
+		});
 	}
 
 	if (_light)
@@ -254,7 +280,49 @@ void GUILayer::playerBlink_2()
 	{
 		_timecount->setVisible(true);
 		_timecount->setPosition(icon_leftDown->getPosition() + Vec2(0, 100));
-		_timecount->start(15, [](){log("2 timeout........"); });
+		_timecount->start(15, [=](){
+			
+			//若是我吃牌或碰牌，默认过
+			if (!UserDefault::getInstance()->getBoolForKey(ISFIRSTPLAY))
+			{
+				//第一次打牌  若过了15秒自动出一张牌
+				GAMELAYER->t_Player[2].delACard(0);
+				GAMELAYER->refrishCardPos();
+				GAMELAYER->PopPai = GAMELAYER->t_Player[2].popCard;
+				Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(CREATE_CARD);
+				UserDefault::getInstance()->setBoolForKey(ISFIRSTPLAY, true);
+				UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, true);	//打完牌后我可以摸牌
+				UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, false);	//打完牌后我不能出牌
+				GAMELAYER->changeState(new PlayerOneState());
+				GAMELAYER->setActionVisible(false);
+			}
+			else
+			{
+				if (!UserDefault::getInstance()->getBoolForKey(ISGETORPLAY))
+				{
+					//若是我打牌 默认出一张牌
+					GAMELAYER->t_Player[2].delACard(0);
+					GAMELAYER->refrishCardPos();
+					GAMELAYER->PopPai = GAMELAYER->t_Player[2].popCard;
+					Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(CREATE_CARD);
+					UserDefault::getInstance()->setBoolForKey(ISFIRSTPLAY, true);
+					UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, true);	//打完牌后我可以摸牌
+					UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, false);	//打完牌后我不能出牌
+					GAMELAYER->changeState(new PlayerOneState());
+					GAMELAYER->setActionVisible(false);
+				}
+			}
+
+			if (GAMELAYER->getChildByName(CHOOSELAYER))
+			{
+				Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(TIMEOUT_CLOSE);
+				if (GAMELAYER->getChildByName(CHICARDLAYER))
+				{
+					GAMELAYER->removeChildByName(CHICARDLAYER);
+				}
+			}
+			log("2 timeout........"); 
+		});
 	}
 
 	if (_light)

@@ -36,6 +36,7 @@ private:
 	void closeBtnCbk(Ref* psender);
 
 	void close();
+	void timeOutClose();		//15秒倒计时后没有操作就过
 
 private:
 	Button* m_chi_btn;

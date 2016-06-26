@@ -463,7 +463,9 @@ void GameLayer::doChiACard()
 void GameLayer::showChiCardLayer()
 {
 	//显示吃的牌层
-	addChild(ChiCardLayer::create(this));
+	auto chiCardLayer = ChiCardLayer::create(this);
+	chiCardLayer->setName(CHICARDLAYER);
+	addChild(chiCardLayer);
 }
 
 bool GameLayer::checkSaochuan()
@@ -1196,17 +1198,16 @@ void GameLayer::creatAction()
 	 _hand = Sprite::create("finger.png");
 	 if (_hand)
 	{
+		 addChild(_hand);
 		 _hand->setAnchorPoint(Vec2(0, 0));
 		 _hand->setPosition(Vec2(850, 150)); //开始位置
-		 addChild(_hand);
-		//move 到 930，340
-		 auto delay = DelayTime::create(0.2);
+		 auto delay = DelayTime::create(0.1);
+		 auto callf = CallFunc::create([=]{
+			 _hand->setPosition(Vec2(850, 150));
+		 });
 		MoveTo* move = MoveTo::create(0.8, Vec2(930, 300));
-		//让动作永久
-		_hand->runAction(RepeatForever::create(Sequence::create(move, CallFunc::create([&]{
-
-			_hand->setPosition(Vec2(850, 150));
-		}), delay, move, NULL)));
+		auto ease = EaseSineOut::create(move);
+		_hand->runAction(RepeatForever::create(Sequence::create(delay, ease, callf, ease, nullptr)));
 	}
 }
 

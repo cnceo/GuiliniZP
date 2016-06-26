@@ -25,6 +25,8 @@ public:
 	void showDangdi();		//档低字体显示
 	void getDangdi();		//显示档低的牌
 
+	void showTimeCount();	//显示倒计时
+	void refrishTimeCount(float dt);
 private:
 	Vector<Sprite*> _cardList_1;
 	Vector<Sprite*> _cardList_2;
@@ -33,6 +35,7 @@ private:
 	int _midIndex;
 	int _leftIndex;
 	int _ritIndex;
+	int _timeCt;
 
 	float _SumTime_1;
 	float _SumTime_2;
@@ -43,4 +46,5 @@ private:
 	bool _isActoin_3;
 
 	Label* _dangDi;
+	Label* _timeCount;
 };

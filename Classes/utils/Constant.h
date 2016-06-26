@@ -17,7 +17,8 @@ using namespace cocos2d;
 #define PLAYER_PENG			"pengACard"			//我碰
 #define PLAYER_CHI			"chiACard"			//我吃
 #define CLOSE_CHOOSELAYER	"closeChooseLayer"	//关闭选择层
-#define CHOOSELAYER			"chooseLayer"
+#define CHOOSELAYER			"chooseLayer"		//选择层
+#define CHICARDLAYER		"chiCardLayer"		//可吃的牌层
 
 #define SHOW_PENGCARD		"showPengCard"		//显示碰的牌
 #define SHOW_KAIDUOCARD		"showKaiduoCard"	//显示开舵的牌
@@ -27,7 +28,10 @@ using namespace cocos2d;
 
 #define SHOW_CHICARDLAYER	"showChiCardLayer"	//显示吃层
 #define SHOW_RATIOLAYER     "showRatioLayer"	//显示番醒
-#define REPLACE_ACCOUNTS    "replaceAccounts"	//跳转到结算			
+#define REPLACE_ACCOUNTS    "replaceAccounts"	//跳转到结算	
+
+#define TIMEOUT_CLOSE		"timeoutClose"		//时间超过15秒自动过
+#define SHOW_TIMECOUNT		"showTimeCount"		//屏幕中间 显示倒计时
 
 //层zorder
 
