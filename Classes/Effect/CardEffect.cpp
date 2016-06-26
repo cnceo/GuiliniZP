@@ -13,12 +13,18 @@ _timeCount(nullptr)
 	auto _listener_1 = EventListenerCustom::create(SHOW_TIMECOUNT, [=](EventCustom*event){
 		showTimeCount();
 	});
+
+	auto _listener_2 = EventListenerCustom::create(HIDE_TIMECOUNT, [=](EventCustom*event){
+		hideTimeCount();
+	});
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_1, 1);
+	_eventDispatcher->addEventListenerWithFixedPriority(_listener_2, 1);
 }
 
 CardEffect::~CardEffect()
 {
 	_eventDispatcher->removeCustomEventListeners(SHOW_TIMECOUNT);
+	_eventDispatcher->removeCustomEventListeners(HIDE_TIMECOUNT);
 }
 
 bool CardEffect::init()
@@ -118,7 +124,7 @@ void CardEffect::update(float dt)
 	if (_isActoin_1)
 	{
 		_SumTime_1 += dt;
-		if (_SumTime_1 > 0.07)
+		if (_SumTime_1 > 0.10)
 		{
 			midAction();
 			_SumTime_1 = 0;
@@ -128,7 +134,7 @@ void CardEffect::update(float dt)
 	if (_isActoin_2)
 	{
 		_SumTime_2 += dt;
-		if (_SumTime_2 > 0.07)
+		if (_SumTime_2 > 0.10)
 		{
 			rightActoin();
 			_SumTime_2 = 0;
@@ -138,7 +144,7 @@ void CardEffect::update(float dt)
 	if (_isActoin_3)
 	{
 		_SumTime_3 += dt;
-		if (_SumTime_3 > 0.07)
+		if (_SumTime_3 > 0.10)
 		{
 			leftAcrion();
 			_SumTime_3 = 0;
@@ -193,7 +199,8 @@ void CardEffect::leftAcrion()
 
 void CardEffect::showDangdi()
 {
-	_dangDi = Label::create(CommonFunction::WStrToUTF8(L"档底"),"fonts/DFYuanW7.ttf",80);
+	//_dangDi = Label::create(CommonFunction::WStrToUTF8(L"档底"),"fonts/DFYuanW7.ttf",80);
+	_dangDi = Sprite::create("dangdi.png");
 	if (_dangDi)
 	{
 		addChild(_dangDi);
@@ -229,10 +236,12 @@ void CardEffect::showTimeCount()
 	schedule(schedule_selector(CardEffect::refrishTimeCount), 1.0f);
 
 	_timeCt = 3;
-	_timeCount = Label::createWithTTF(Value(_timeCt).asString(),"fonts/DFYuanW7.ttf",80);
-
+	_timeCount = Label::createWithBMFont("fonts/baishe.fnt", Value(_timeCt).asString(), TextHAlignment::LEFT,0,Vec2::ZERO);
 	if (_timeCount)
 	{
+		_timeCount->setColor(Color3B::GREEN);
+		_timeCount->setVisible(true);
+		_timeCount->setSystemFontSize(80);
 		addChild(_timeCount);
 		_timeCount->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(-100,70)));
 
@@ -265,5 +274,13 @@ void CardEffect::refrishTimeCount(float dt)
 		auto ease_2 = EaseSineOut::create(ScaleTo::create(0.1f, 1.0f));
 		auto seq = Sequence::create(ease_1, ease_2, nullptr);
 		_timeCount->runAction(seq);
+	}
+}
+
+void CardEffect::hideTimeCount()
+{
+	if (_timeCount)
+	{
+		_timeCount->setVisible(false);
 	}
 }

@@ -62,8 +62,12 @@ _cardCount(0)
 	});
 
 	auto _listener_5 = EventListenerCustom::create(SHOW_RATIOLAYER, [=](EventCustom*event){
-		RatioLayer* ratiolayer = RatioLayer::create(this);
-		addChild(ratiolayer);
+		auto delayTime = DelayTime::create(1.0f);
+		auto callfunc = CallFunc::create([=]{
+			RatioLayer* ratiolayer = RatioLayer::create(this);
+			addChild(ratiolayer);
+		});
+		this->runAction(Sequence::create(delayTime, callfunc, nullptr));
 	});
 
 	//REPLACE_ACCOUNTS //跳转到结算
@@ -357,6 +361,10 @@ void GameLayer::doPengACard()
 	t_Player[2].doPengACard(m_newCard.m_Type, m_newCard.m_Value);
 	ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我碰！！！"));
 
+		//特效
+	string str = "peng.png";
+	addEffect(str);
+
 	UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//碰完后我打牌
 	UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
 	changeState(new PlayerTwoState());								//碰完后我打牌
@@ -468,6 +476,29 @@ void GameLayer::showChiCardLayer()
 	addChild(chiCardLayer);
 }
 
+void GameLayer::addEffect(string str)
+{
+	auto image = Sprite::create(str);
+	if (image)
+	{
+		image->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 0)));
+		addChild(image,2);
+
+		auto scaleTo = ScaleTo::create(0.5f, 2.0);
+		auto delayTime = DelayTime::create(0.5f);
+		auto fadeOut = FadeOut::create(0.5f);
+
+		auto spa = Spawn::create(fadeOut, scaleTo, nullptr);
+		auto callFun = CallFunc::create([=]{
+			image->removeFromParent();
+		});
+
+		auto seq = Sequence::create(scaleTo, delayTime, spa, callFun, nullptr);
+		image->runAction(seq);
+		
+	}
+}
+
 bool GameLayer::checkSaochuan()
 {
 	//自己摸的牌 检测
@@ -477,6 +508,11 @@ bool GameLayer::checkSaochuan()
 		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"起手牌扫穿！！！"));
 		t_Player[2].doSaoChuanACard(m_newCard.m_Type, m_newCard.m_Value);
 		refrishCardPos();
+
+		//特效
+		string str = "gold.png";
+		addEffect(str);
+
 		_eventDispatcher->dispatchCustomEvent(SHOW_SAOCHUANCARD);
 		isAction = true;
 
@@ -491,6 +527,11 @@ bool GameLayer::checkSaochuan()
 		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"扫的扫穿！！！"));
 		t_Player[2].doSao_SaoChuan(m_newCard.m_Type, m_newCard.m_Value);
 		refrishCardPos();
+
+				//特效
+		string str = "gold.png";
+		addEffect(str);
+
 		_eventDispatcher->dispatchCustomEvent(SHOW_SAOCHUANCARD);
 		isAction = true;
 
@@ -526,6 +567,11 @@ bool GameLayer::checkSao()
 		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"扫！！！"));
 		t_Player[2].doSaoACard(m_newCard.m_Type, m_newCard.m_Value);
 		refrishCardPos();
+
+		//特效
+		string str = "gold.png";
+		addEffect(str);
+
 		_eventDispatcher->dispatchCustomEvent(SHOW_SAOCARD);
 
 		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//扫完后我打牌
@@ -582,6 +628,11 @@ bool GameLayer::checkKaiduo()
 		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"起手牌开舵！！！"));
 		t_Player[2].doKaiDuo(m_newCard.m_Type, m_newCard.m_Value);
 		refrishCardPos();
+
+				//特效
+		string str = "gold.png";
+		addEffect(str);
+
 		_eventDispatcher->dispatchCustomEvent(SHOW_KAIDUOCARD);
 		isAction = true;
 		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//开舵后我打牌
@@ -594,6 +645,11 @@ bool GameLayer::checkKaiduo()
 		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"扫的开舵！！！"));
 		t_Player[2].doSao_KaiDuo(m_newCard.m_Type, m_newCard.m_Value);
 		refrishCardPos();
+
+				//特效
+		string str = "gold.png";
+		addEffect(str);
+
 		_eventDispatcher->dispatchCustomEvent(SHOW_KAIDUOCARD);
 		isAction = true;
 		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//开舵后我打牌
@@ -606,6 +662,11 @@ bool GameLayer::checkKaiduo()
 		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"碰的开舵！！！"));
 		t_Player[2].doPeng_kaiDuo(m_newCard.m_Type, m_newCard.m_Value);
 		refrishCardPos();
+
+				//特效
+		string str = "gold.png";
+		addEffect(str);
+
 		_eventDispatcher->dispatchCustomEvent(SHOW_KAIDUOCARD);
 		isAction = true;
 		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//开舵后我打牌
@@ -641,6 +702,11 @@ bool GameLayer::checkChongDuo()
 		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"!!开舵的重舵！！！"));
 		t_Player[2].doChongDuo_kaiDuo(m_newCard.m_Type, m_newCard.m_Value);
 		refrishCardPos();
+
+				//特效
+		string str = "gold.png";
+		addEffect(str);
+
 		_eventDispatcher->dispatchCustomEvent(SHOW_KAIDUOCARD);
 
 		isAction = true;
@@ -663,6 +729,10 @@ bool GameLayer::checkChongDuo()
 		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"扫穿的重舵！！！"));
 		t_Player[2].doChongDuo_saoChuan(m_newCard.m_Type, m_newCard.m_Value);
 		refrishCardPos();
+
+		//特效
+		string str = "gold.png";
+		addEffect(str);
 
 		isAction = true;
 		changeState(new PlayerOneState());
@@ -775,35 +845,39 @@ void GameLayer::onTouchEnded(Touch *touch, Event *unused_event)
 
 	if (touch->getLocation().y > VISIBLESIZE.height / 2 - 50)
 	{
-		int _type = m_TempMoveCard->getCardData()->m_Type;
-		int _value = m_TempMoveCard->getCardData()->m_Value;
-		
-		if (_type == 0)
-		{
-			cout << "打了张：小"  << _value << endl;
-			ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我打了张小") + Value(_value).asString());
-		}
-		else
-		{
-			cout << "打了张：大" << _value << endl;
-			ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我打了张大") + Value(_value).asString());
-		}
+			//打牌不摸牌
+			_eventDispatcher->removeCustomEventListeners(HIDE_TIMECOUNT);
+			int _type = m_TempMoveCard->getCardData()->m_Type;
+			int _value = m_TempMoveCard->getCardData()->m_Value;
 
-		t_Player[2].delACard(_type, _value);
+			if (_type == 0)
+			{
+				cout << "打了张：小" << _value << endl;
+				ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我打了张小") + Value(_value).asString());
+			}
+			else
+			{
+				cout << "打了张：大" << _value << endl;
+				ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我打了张大") + Value(_value).asString());
+			}
 
-		refrishCardPos();
-	
-		PopPai = t_Player[2].popCard;
-		_eventDispatcher->dispatchCustomEvent(CREATE_CARD);
-		UserDefault::getInstance()->setBoolForKey(ISFIRSTPLAY,true);
-		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, true);	//打完牌后我可以摸牌
-		UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, false);	//打完牌后我不能出牌
-		changeState(new PlayerOneState());
-		setActionVisible(false);
+			t_Player[2].delACard(_type, _value);
+
+			refrishCardPos();
+
+			PopPai = t_Player[2].popCard;
+			_eventDispatcher->dispatchCustomEvent(CREATE_CARD);
+			UserDefault::getInstance()->setBoolForKey(ISFIRSTPLAY, true);
+			UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, true);	//打完牌后我可以摸牌
+			UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, false);	//打完牌后我不能出牌
+			changeState(new PlayerOneState());
+			setActionVisible(false);
 	}
 	else
 	{
-		m_TempMoveCard->setPosition(m_OldPos);
+		auto moveTo = MoveTo::create(0.2, m_OldPos);
+		auto ease = EaseSineOut::create(moveTo);
+		m_TempMoveCard->runAction(ease);
 	}
 
 	if (m_TempMoveCard)
@@ -906,6 +980,10 @@ void GameLayer::getANewCard()
 
 	if (t_newCard.m_CardNum <= 0)
 	{
+			//特效
+		string str = "huangzhuang.png";
+		addEffect(str);
+		
 		cout << "黄庄" << endl;
 		UserDefault::getInstance()->setBoolForKey(ISHZ, true);			//黄庄	
 

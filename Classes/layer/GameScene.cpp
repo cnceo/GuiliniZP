@@ -57,7 +57,17 @@ void GameScene::onKeyReleased(EventKeyboard::KeyCode keycode, Event* event)
 		{
 			if (keycode == EventKeyboard::KeyCode::KEY_BACK)  //返回
 			{
-				addChild(BackLayer::create(), 100);
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+
+				JniMethodInfo info;
+				bool ret = JniHelper::getStaticMethodInfo(info, "org/cocos2dx/cpp/AppActivity", "exitGame", "()V");
+				if (ret)
+				{
+					jobject jobj = info.env->CallStaticObjectMethod(info.classID, info.methodID);
+				}
+#else
+				//Director::getInstance()->end();
+#endif
 			}
 		}
 	}

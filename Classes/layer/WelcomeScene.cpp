@@ -4,6 +4,10 @@
 #include "GameScene.h"
 #include "utils/Constant.h"
 #include "layerUtils/RotateMenu.h"
+#include "Menu/BagLayer.h"
+#include "Menu/MissionLayer.h"
+#include "Menu/SettingLayer.h"
+#include "Menu/ShopLayer.h"
 
 using namespace ui;
 
@@ -137,6 +141,19 @@ void WelcomeScene::initUI()
 		mission_btn->setPosition(CommonFunction::getVisibleAchor(0, 0, _node, Vec2(-75, 0)));
 		bag_btn->setPosition(CommonFunction::getVisibleAchor(0, 0, _node, Vec2(15, 0)));
 		setting_btn->setPosition(CommonFunction::getVisibleAchor(0, 0, _node, Vec2(100, 0)));
+
+		shop_btn->addClickEventListener([this](Ref*){
+			addChild(ShopLayer::create());
+		});
+		mission_btn->addClickEventListener([this](Ref*){
+			addChild(MissionLayer::create());
+		});
+		bag_btn->addClickEventListener([this](Ref*){
+			addChild(BagLayer::create());
+		});
+		setting_btn->addClickEventListener([this](Ref*){
+			addChild(SettingLayer::create());
+		});
 	}
 
 	//左上角
@@ -148,17 +165,8 @@ void WelcomeScene::initUI()
 		hero_icon->setPosition(CommonFunction::getVisibleAchor(0, 1, Vec2(_height , -_height / 2)));
 	}
 
-	auto gold_sp = Sprite::create("hall/blab_conit.png");
-	auto diam_sp = Sprite::create("hall/blab_diam.png");
-
-	if (gold_sp && diam_sp && hero_icon)
-	{
-		hero_icon->addChild(gold_sp);
-		hero_icon->addChild(diam_sp);
-
-		gold_sp->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, hero_icon, Vec2(75, 20)));
-		diam_sp->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, hero_icon, Vec2(75, -20)));
-	}
+	auto coin_sp = Sprite::create("menu/sp_coin.png");
+	auto diam_sp = Sprite::create("menu/sp_diam.png");
 
 	auto gold_bg = Sprite::create("hall/square.png");
 	auto diam_bg = Sprite::create("hall/square.png");
@@ -168,8 +176,17 @@ void WelcomeScene::initUI()
 		hero_icon->addChild(gold_bg);
 		hero_icon->addChild(diam_bg);
 
-		gold_bg->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, hero_icon, Vec2(200, 20)));
-		diam_bg->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, hero_icon, Vec2(200, -20)));
+		gold_bg->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, hero_icon, Vec2(120, 10)));
+		diam_bg->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, hero_icon, Vec2(280, 10)));
+
+		if (coin_sp && diam_sp)
+		{
+			gold_bg->addChild(coin_sp);
+			diam_bg->addChild(diam_sp);
+
+			coin_sp->setPosition(CommonFunction::getVisibleAchor(0, 0.5, gold_bg, Vec2(20, 0)));
+			diam_sp->setPosition(CommonFunction::getVisibleAchor(0, 0.5, diam_bg, Vec2(20, 0)));
+		}
 	}
 
 	m_goldLabel = Label::createWithTTF("2000","fonts/Roboto-Medium.ttf",32);
@@ -179,8 +196,8 @@ void WelcomeScene::initUI()
 		gold_bg->addChild(m_goldLabel);
 		diam_bg->addChild(m_diamLabel);
 
-		m_goldLabel->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, gold_bg, Vec2(0, 0)));
-		m_diamLabel->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, diam_bg, Vec2(0, 0)));
+		m_goldLabel->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, gold_bg, Vec2(20, 0)));
+		m_diamLabel->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, diam_bg, Vec2(20, 0)));
 	}
 
 	auto start_btn = Button::create("hall/quick_start.png");

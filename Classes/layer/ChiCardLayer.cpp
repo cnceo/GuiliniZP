@@ -100,7 +100,7 @@ void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
 			//先把新牌添加到手里，再删除
 			_gameLayer->t_Player[2].addCard(_gameLayer->m_newCard.m_Type, _gameLayer->m_newCard.m_Value);
 			ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我吃牌！"));
-
+			GetLayer::getInstance()->getgameLayer()->addEffect("chi.png");
 			for (auto &_scard : m_tmpChiCardList)
 			{
 				if (_scard->getTag() / 3 == _cardTag_0)
@@ -227,6 +227,7 @@ void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
 		{
 			_gameLayer->t_Player[2].addCard(_gameLayer->m_newCard.m_Type, _gameLayer->m_newCard.m_Value);
 			ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我吃牌！"));
+			GetLayer::getInstance()->getgameLayer()->addEffect("chi.png");
 
 			for (auto &_scard : m_tmpChiCardVec)
 			{
@@ -269,15 +270,22 @@ void ChiCardLayer::initData()
 
 	if (closeBtn)
 	{
+		closeBtn->setScale(0.8);
 		addChild(closeBtn);
-		closeBtn->setScale(0.5f);
-		closeBtn->setPosition(CommonFunction::getVisibleAchor(Anchor::Center,Vec2(340,155)));
+		closeBtn->setPosition(CommonFunction::getVisibleAchor(Anchor::Center,Vec2(360,190)));
 		closeBtn->addClickEventListener([=](Ref* pSender){
 			if (getParent())
 			{
 				removeFromParent();
 			}
 		});
+	}
+
+	auto bg_sp = Sprite::create("chi_kuang.png");
+	if (bg_sp)
+	{
+		addChild(bg_sp);
+		bg_sp->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(270, 60)));
 	}
 }
 

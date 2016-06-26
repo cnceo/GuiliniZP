@@ -2,13 +2,14 @@
 #include "utils/CommonFunction.h"
 #include "ZiPai.h"
 #include "utils/Constant.h"
+#include "utils/GetScore.h"
 
 int RatioLayer::count = 0;
 
 RatioLayer::RatioLayer():
-ratio(nullptr),
 _gameLayer(nullptr),
-ratioNum(0)
+ratioNum(0),
+runNumber(nullptr)
 {
 
 }
@@ -63,12 +64,14 @@ void RatioLayer:: AddUI()
 		addChild(label);
 	}
 
-	ratio = Label::createWithTTF(" ", "fonts/Roboto-Medium.ttf", 45);
-	if (ratio)
+	runNumber = RunNumLabel::create(CommonFunction::getString(0), "fonts/baishe.fnt", 0.2f, 0, TextHAlignment::LEFT, Vec2::ZERO);
+	if (runNumber)
 	{
-		ratio->setPosition(CommonFunction::getVisibleAchor(1, 0.5,label, Vec2(+15, 0)));
-		label->addChild(ratio);
+		runNumber->setAnchorPoint(Vec2(0, 0.5));
+		runNumber->setPosition(CommonFunction::getVisibleAchor(1, 0.5, label, Vec2(+15, 0)));
+		label->addChild(runNumber);
 	}
+
 
 }
 
@@ -78,6 +81,7 @@ void RatioLayer::checkRatio()
 	//CardEx r_Card = _gameLayer->t_ZPManage.GetAPai();
 	_gameLayer->getANewCard();
 	auto _card = _gameLayer->m_newCard;
+	GetScore::getInstance()->showCardList.push_back(_card);
 	_eventDispatcher->dispatchCustomEvent(NEW_CARD);
 	//_gameLayer->m_newCard = r_Card;
 	//获得胡牌用户手里的牌墙
@@ -199,7 +203,9 @@ void RatioLayer::checkRatio()
 	count++;
 
 	//刷新一下ratioLabel
-	ratio->setString(Value(ratioNum).asString());
+	runNumber->setString(Value(ratioNum).asString());
+	GetScore::getInstance()->setFanXin(ratioNum);
+	/*runNumber_1->setString(Value(ratioNum).asString());*/
 
 	log("ratio = %d", ratioNum);
 	log("count = %d", count);
@@ -216,6 +222,7 @@ void RatioLayer::checkRatio()
 		for (int i = 0; i < num; i++)
 		{
 			CardEx c = _gameLayer->t_ZPManage.GetAPai();
+			GetScore::getInstance()->showCardList.push_back(c.m_NewCard);
 			log("sheyu:%d", num);
 			if (c.m_NewCard.m_Type == 0)
 			{

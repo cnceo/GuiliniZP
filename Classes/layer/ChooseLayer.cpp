@@ -121,6 +121,8 @@ void ChooseLayer::chiBtnCbk(Ref* psender)
 {
 	log("chi");
 	_eventDispatcher->dispatchCustomEvent(SHOW_CHICARDLAYER);
+	_eventDispatcher->dispatchCustomEvent(HIDE_TIMECOUNT);
+
 	//close();
 }
 
@@ -129,6 +131,7 @@ void ChooseLayer::pengBtnCbk(Ref* psender)
 	log("peng");
 	//close();
 	_eventDispatcher->dispatchCustomEvent(PLAYER_PENG);
+	_eventDispatcher->dispatchCustomEvent(HIDE_TIMECOUNT);
 
 	close();
 }
@@ -140,7 +143,12 @@ void ChooseLayer::huBtnCbk(Ref* psender)
 	GetLayer::getInstance()->getgameLayer()->t_Player[2].addCard(_newCard.m_Type, _newCard.m_Value);
 	GetLayer::getInstance()->getgameLayer()->refrishCardPos();
 
+	string str = "hu.png";
+	GetLayer::getInstance()->getgameLayer()->addEffect(str);
+
 	_eventDispatcher->dispatchCustomEvent(SHOW_RATIOLAYER);
+	_eventDispatcher->dispatchCustomEvent(HIDE_TIMECOUNT);
+
 	close();
 }
 
@@ -148,6 +156,8 @@ void ChooseLayer::closeBtnCbk(Ref* psender)
 {
 	log("close");
 	_eventDispatcher->dispatchCustomEvent(CLOSE_CHOOSELAYER);
+	_eventDispatcher->dispatchCustomEvent(HIDE_TIMECOUNT);
+
 	close();
 }
 

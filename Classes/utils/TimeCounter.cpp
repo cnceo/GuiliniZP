@@ -71,7 +71,7 @@ void TimeCounter::myupdate(float dt)
 		{
 		//	//在屏幕中间显示倒计时
 			std::cout << "时间少于三秒" << std::endl;
-			//_eventDispatcher->dispatchCustomEvent(SHOW_TIMECOUNT);
+			_eventDispatcher->dispatchCustomEvent(SHOW_TIMECOUNT);
 		}
 	}
 }

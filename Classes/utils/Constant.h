@@ -32,6 +32,7 @@ using namespace cocos2d;
 
 #define TIMEOUT_CLOSE		"timeoutClose"		//时间超过15秒自动过
 #define SHOW_TIMECOUNT		"showTimeCount"		//屏幕中间 显示倒计时
+#define HIDE_TIMECOUNT		"hideTimeCount"		//隐藏倒计时
 
 //层zorder
 

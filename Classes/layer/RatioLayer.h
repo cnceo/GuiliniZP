@@ -4,6 +4,8 @@
 #include "ZiPaiManage.h"
 #include "layer/GameLayer.h"
 
+#include "utils/RunNumLabel.h"
+
 using namespace cocos2d;
 
 /*
@@ -25,12 +27,11 @@ public:
 	void checkRatio();
 
 private:
-
-	Label* ratio;
-
 	GameLayer* _gameLayer;
 
 	int ratioNum;
 
 	static int count;
+
+	RunNumLabel* runNumber;
 };

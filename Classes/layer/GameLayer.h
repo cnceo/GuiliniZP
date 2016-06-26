@@ -66,6 +66,9 @@ public:
 	void creatAction();
 	void setActionVisible(bool _visible);
 	void refreshHuShu();					//刷新胡数label
+
+		//特效，吃碰胡。。。
+	void addEffect(string str);
 public:
 	//我自己检测
 

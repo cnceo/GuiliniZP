@@ -5,7 +5,8 @@
 
 MyCardWall::MyCardWall():
 m_GameLayer(nullptr),
-m_TempMoveCard(nullptr)
+m_TempMoveCard(nullptr),
+count(0)
 {
 
 }
@@ -87,7 +88,7 @@ void MyCardWall::createCardWall()
 	{
 		for (int i = 0; i < m_GameLayer->t_Player[2].m_MyCard[0].size(); i++)
 		{
-			CardSprite* _card = CardSprite::create(0, m_GameLayer->t_Player[2].m_MyCard[0][i]);
+			ShortCardSprite* _card = ShortCardSprite::create(0, m_GameLayer->t_Player[2].m_MyCard[0][i]);
 			addChild(_card);
 			if (_card)
 			{
@@ -99,7 +100,7 @@ void MyCardWall::createCardWall()
 	{
 		for (int i = 0; i < m_GameLayer->t_Player[2].m_MyCard[1].size(); i++)
 		{
-			CardSprite* _card = CardSprite::create(1, m_GameLayer->t_Player[2].m_MyCard[1][i]);
+			ShortCardSprite* _card = ShortCardSprite::create(1, m_GameLayer->t_Player[2].m_MyCard[1][i]);
 			addChild(_card);
 			if (_card)
 			{
@@ -108,14 +109,16 @@ void MyCardWall::createCardWall()
 		}
 	}
 
-	float _width = _cardList.at(0)->getContentSize().width;
-	int _leftSize = 21 - _cardList.size();
+
 
 	if (!_cardList.empty())
 	{
+		float _width = _cardList.at(0)->getContentSize().width;
+		int _leftSize = 21 - _cardList.size();
+
 		for (int i = 0; i < _cardList.size(); ++i)
 		{
-			_cardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, 0, Vec2(45 * i + 180 + _leftSize * (45 / 2), 0)));
+			_cardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, 0, Vec2(_width * i + 30 + _leftSize * (45 / 2), 0)));
 		}
 		//int _middle = _cardList.size() / 2;
 		//_cardList.at(_middle)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 30)));
@@ -130,7 +133,7 @@ bool MyCardWall::onTouchBegan(Touch *touch, Event *unused_event)
 {
 	for (auto iter = _cardList.begin(); iter != _cardList.end(); ++iter)
 	{
-		CardSprite* _card = static_cast<CardSprite*>(*iter);
+		ShortCardSprite* _card = static_cast<ShortCardSprite*>(*iter);
 		Point locationInNode = _card->convertToNodeSpace(touch->getLocation());
 
 		Size s = _card->getContentSize();
@@ -143,31 +146,31 @@ bool MyCardWall::onTouchBegan(Touch *touch, Event *unused_event)
 			m_OldZorder = _card->getLocalZOrder();
 			m_TempMoveCard->setLocalZOrder(CARD_ZORDER_2);
 
-			if (_card->getsortState() == CardSprite::SortState::FOUR_CARD)
+			if (_card->getsortState() == ShortCardSprite::SortState::FOUR_CARD)
 			{
 				std::cout << "四张一样" << std::endl;
 			}
-			else if (_card->getsortState() == CardSprite::SortState::THREE_SAME_CARD)
+			else if (_card->getsortState() == ShortCardSprite::SortState::THREE_SAME_CARD)
 			{
 				std::cout << "三张一样" << std::endl;
 			}
-			else if (_card->getsortState() == CardSprite::SortState::THREE_DIFF_CARD)
+			else if (_card->getsortState() == ShortCardSprite::SortState::THREE_DIFF_CARD)
 			{
 				std::cout << "三张不同" << std::endl;
 
 			}
-			else if (_card->getsortState() == CardSprite::SortState::TWO_CARD)
+			else if (_card->getsortState() == ShortCardSprite::SortState::TWO_CARD)
 			{
 				std::cout << "两张一样" << std::endl;
 
 			}
-			else if (_card->getsortState() == CardSprite::SortState::ONE_CARD)
+			else if (_card->getsortState() == ShortCardSprite::SortState::ONE_CARD)
 			{
 				std::cout << "单张" << std::endl;
 
 			}
 
-			/*if (_card->getState() == CardSprite::CardState::ONTouch)
+			/*if (_card->getState() == ShortCardSprite::CardState::ONTouch)
 			{
 				return true;
 			}
@@ -231,8 +234,8 @@ void MyCardWall::onTouchEnded(Touch *touch, Event *unused_event)
 
 void MyCardWall::setCardState()
 {
-	vector<CardSprite*> _tempList;
-	vector<CardSprite*> _temp_0;
+	vector<ShortCardSprite*> _tempList;
+	vector<ShortCardSprite*> _temp_0;
 
 	for (auto& _card : _cardList)
 	{
@@ -302,7 +305,7 @@ void MyCardWall::setCardState()
 			{
 				if (_tcard->getCardData()->m_Value == _card->getCardData()->m_Value)
 				{
-					_card->setState(CardSprite::CardState::OFFTouch);
+					_card->setState(ShortCardSprite::CardState::OFFTouch);
 				}
 			}
 		}
@@ -324,21 +327,112 @@ void MyCardWall::setSortState()
 
 void MyCardWall::refrishCardPos()
 {
-	float _width = _cardList.at(0)->getContentSize().width;
+	int count1 = 0;
+	if (_cardList.empty())
+	{
+		return;
+	}
+
+	int _width = _cardList.at(0)->getContentSize().width;
 	auto _height = _cardList.at(0)->getContentSize().height;
 	int _leftSize = 21 - _cardList.size();
-	
+
+	//单张
+	if (!_one_CardList[0].empty())
+	{
+		for (int i = 0; i < _one_CardList[0].size(); i++)
+		{
+			if (i%1 == 0)
+			{
+				count1++;
+			}
+			log("cout1:%d", count1);
+			_one_CardList[0].at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2(_width * i + 30 + _leftSize * (_width / 2), 0))); ///*+ _leftSize * (_width / 2)*/
+			//_cardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, 0, Vec2(_width * i + 30 + _leftSize * (45 / 2), 0)));
+			log("1_width * count1:%d", _width * count1);
+		}
+		//count--;
+	}
+	//对子
+	if (!_two_CardList[0].empty())
+	{
+		for (int i = 0; i < _two_CardList[0].size(); i++)
+		{
+			if (!_one_CardList[0].empty())
+			{
+				//有单张牌的  放在单张牌后面
+				_two_CardList[0].at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, 0, Vec2((i / 2)*(_width - 28) + _one_CardList[0].back()->getPositionX() + _width /2 - 1, i % 2 * (_height))));
+				
+			}
+			else
+			{
+				//没有单张牌的 放在离左边180的地方(NO)
+				_two_CardList[0].at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, 0, Vec2((i / 2)*(_width - 28) + 30, i % 2 * (_height))));
+			}
+			
+			if ((i%2) == 0)
+			{
+				count1++;
+			}
+			//log("cout2:%d", count1);
+			//log("i%2:%d", i % 2);
+			//_two_CardList[0].at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2( (_width * count1)+30, i % 2 * (_height))));
+			//log("2_width * count1:%d", _width * count1);
+			
+		}
+		//
+	}
+	//三张 有对子的 放对子后面，没有对子的放单张后面，没有单张的，放离左边180的地方
+
+	/*for (int i = 0; i < 6;i++)
+	{
+		auto card = ShortCardSprite::create(0,3);
+		addChild(card);
+		_three_Same_CardList[0].pushBack(card);
+	}*/
+
+	if (!_three_Same_CardList[0].empty())
+	{
+		for (int i = 0; i < _three_Same_CardList[0].size(); i++)
+		{
+			//if (_two_CardList[0].size()>0)
+			//{
+			//	//verCard.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i / 4)*(_height - 8) + (35 * count) + 100, i % 4 * (_height - 70) + 177)));
+
+			//	//有对子的 放对子后面
+			//	_three_Same_CardList[0].at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i / 3)*(_width) + _two_CardList[0].back()->getPosition().x - _width, i % 3 * (_height))));
+			//}
+			//else if (_one_CardList[0].size()>0)
+			//{
+			//	//有单张牌的  放在单张牌后面
+			//	_three_Same_CardList[0].at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, 0, Vec2((i / 3)*(_width)+_one_CardList[0].back()->getPosition().x - _width, i % 3 * (_height))));
+			//}
+			//else
+			//{
+			//	//没有单张牌的 放在离左边30的地方
+			//	_three_Same_CardList[0].at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, 0, Vec2((i / 3)*(_width) + 30, i % 3 * (_height))));
+			//}
+			if ((i%3) == 0)
+			{
+				count1++;
+			}
+			log("cout3:%d", count1);
+			log("i%3:%d", i % 3);
+			/*_three_Same_CardList[0].at(i)->setAnchorPoint(Vec2(0,0));*/
+			_three_Same_CardList[0].at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2(_width/2  * count1 + _width + _leftSize * (_width / 4), i % 3 * (_height))));
+			log("3_width * count1:%d", _width * count1);
+		}
+	}
+
+	/*
 	if (!_cardList.empty())
 	{
 		for (int i = 0; i < _cardList.size(); ++i)
 		{
-
-
 			//_cardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, 0, Vec2(45 * i + 180 + _leftSize * (45 / 2), 0)));
 			if (_cardList.at(i)->getsortState() == CardSprite::SortState::FOUR_CARD)
 			{
 				//_card->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i / 4)*(_height - 8) + m_ThreeCardVec.back()->getPosition().x + _height, i % 4 * (_height - 70) - 30)));
-
 				//_cardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, 0, Vec2((i / 4)*(_height - 8) + 180 + _leftSize * (45 / 2), i % 4 * (_height - 70) - 30)));
 				//_cardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, 0, Vec2(45 * i + 180 + _leftSize * (45 / 2), 0)));
 			}
@@ -360,14 +454,13 @@ void MyCardWall::refrishCardPos()
 			}
 		}
 	}
-	
-
+	*/
 }
 
 bool MyCardWall::check_Four_Card()
 {
-	vector<CardSprite*> _tempList;
-	vector<CardSprite*> _tempVec[2];
+	vector<ShortCardSprite*> _tempList;
+	vector<ShortCardSprite*> _tempVec[2];
 
 	_four_CardList[0].clear();
 	_four_CardList[1].clear();
@@ -437,7 +530,7 @@ bool MyCardWall::check_Four_Card()
 			{
 				if (_tcard->getCardData()->m_Value == _card->getCardData()->m_Value)
 				{
-					_card->setsortState(CardSprite::SortState::FOUR_CARD);
+					_card->setsortState(ShortCardSprite::SortState::FOUR_CARD);
 					_four_CardList[0].pushBack(_card);
 				}
 			}
@@ -452,7 +545,7 @@ bool MyCardWall::check_Four_Card()
 			{
 				if (_tcard->getCardData()->m_Value == _card->getCardData()->m_Value)
 				{
-					_card->setsortState(CardSprite::SortState::FOUR_CARD);
+					_card->setsortState(ShortCardSprite::SortState::FOUR_CARD);
 					_four_CardList[1].pushBack(_card);
 				}
 			}
@@ -466,8 +559,8 @@ bool MyCardWall::check_Four_Card()
 
 bool MyCardWall::check_Three_Same_Card()
 {
-	vector<CardSprite*> _tempList;
-	vector<CardSprite*> _tempVec[2];
+	vector<ShortCardSprite*> _tempList;
+	vector<ShortCardSprite*> _tempVec[2];
 
 	_three_Same_CardList[0].clear();
 	_three_Same_CardList[1].clear();
@@ -537,12 +630,12 @@ bool MyCardWall::check_Three_Same_Card()
 			{
 				if (_tcard->getCardData()->m_Value == _card->getCardData()->m_Value)
 				{
-					if (_card->getsortState() == CardSprite::SortState::TWO_CARD ||
-						_card->getsortState() == CardSprite::SortState::FOUR_CARD)
+					if (_card->getsortState() == ShortCardSprite::SortState::TWO_CARD ||
+						_card->getsortState() == ShortCardSprite::SortState::FOUR_CARD)
 					{
 						continue;
 					}
-						_card->setsortState(CardSprite::SortState::THREE_SAME_CARD);
+					_card->setsortState(ShortCardSprite::SortState::THREE_SAME_CARD);
 						_three_Same_CardList[0].pushBack(_card);
 				}
 			}
@@ -557,12 +650,12 @@ bool MyCardWall::check_Three_Same_Card()
 			{
 				if (_tcard->getCardData()->m_Value == _card->getCardData()->m_Value)
 				{
-					if (_card->getsortState() == CardSprite::SortState::TWO_CARD ||
-						_card->getsortState() == CardSprite::SortState::FOUR_CARD)
+					if (_card->getsortState() == ShortCardSprite::SortState::TWO_CARD ||
+						_card->getsortState() == ShortCardSprite::SortState::FOUR_CARD)
 					{
 						continue;
 					}
-					_card->setsortState(CardSprite::SortState::THREE_SAME_CARD);
+					_card->setsortState(ShortCardSprite::SortState::THREE_SAME_CARD);
 					_three_Same_CardList[1].pushBack(_card);
 				}
 			}
@@ -582,8 +675,8 @@ bool MyCardWall::check_Three_Diff_Card()
 
 bool MyCardWall::check_Two_card()
 {
-	vector<CardSprite*> _tempList;
-	vector<CardSprite*> _tempVec[2];
+	vector<ShortCardSprite*> _tempList;
+	vector<ShortCardSprite*> _tempVec[2];
 
 	_two_CardList[0].clear();
 	_two_CardList[1].clear();
@@ -653,12 +746,12 @@ bool MyCardWall::check_Two_card()
 			{
 				if (_tcard->getCardData()->m_Value == _card->getCardData()->m_Value)
 				{
-					if (_card->getsortState() == CardSprite::SortState::FOUR_CARD ||
-						_card->getsortState() == CardSprite::SortState::THREE_SAME_CARD)
+					if (_card->getsortState() == ShortCardSprite::SortState::FOUR_CARD ||
+						_card->getsortState() == ShortCardSprite::SortState::THREE_SAME_CARD)
 					{
 						continue;
 					}
-					_card->setsortState(CardSprite::SortState::TWO_CARD);
+					_card->setsortState(ShortCardSprite::SortState::TWO_CARD);
 					_two_CardList[0].pushBack(_card);
 				}
 			}
@@ -673,12 +766,12 @@ bool MyCardWall::check_Two_card()
 			{
 				if (_tcard->getCardData()->m_Value == _card->getCardData()->m_Value)
 				{
-					if (_card->getsortState() == CardSprite::SortState::FOUR_CARD ||
-						_card->getsortState() == CardSprite::SortState::THREE_SAME_CARD)
+					if (_card->getsortState() == ShortCardSprite::SortState::FOUR_CARD ||
+						_card->getsortState() == ShortCardSprite::SortState::THREE_SAME_CARD)
 					{
 						continue;
 					}
-					_card->setsortState(CardSprite::SortState::TWO_CARD);
+					_card->setsortState(ShortCardSprite::SortState::TWO_CARD);
 					_two_CardList[1].pushBack(_card);
 				}
 			}
@@ -699,7 +792,7 @@ bool MyCardWall::check_One_card()
 	{
 		if (_card->getCardData()->m_Type == 0)
 		{
-			if (_card->getsortState() == CardSprite::SortState::ONE_CARD)
+			if (_card->getsortState() == ShortCardSprite::SortState::ONE_CARD)
 			{
 				_one_CardList[0].pushBack(_card);
 			}
@@ -707,9 +800,9 @@ bool MyCardWall::check_One_card()
 
 		if (_card->getCardData()->m_Type == 1)
 		{
-			if (_card->getsortState() == CardSprite::SortState::ONE_CARD)
+			if (_card->getsortState() == ShortCardSprite::SortState::ONE_CARD)
 			{
-				_one_CardList[0].pushBack(_card);
+				_one_CardList[1].pushBack(_card);
 			}
 		}
 	}

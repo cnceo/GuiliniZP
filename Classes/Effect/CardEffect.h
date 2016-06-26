@@ -27,6 +27,8 @@ public:
 
 	void showTimeCount();	//显示倒计时
 	void refrishTimeCount(float dt);
+	void hideTimeCount();
+
 private:
 	Vector<Sprite*> _cardList_1;
 	Vector<Sprite*> _cardList_2;
@@ -45,6 +47,6 @@ private:
 	bool _isActoin_2;
 	bool _isActoin_3;
 
-	Label* _dangDi;
+	Sprite* _dangDi;
 	Label* _timeCount;
 };

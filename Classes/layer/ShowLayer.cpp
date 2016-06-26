@@ -767,5 +767,16 @@ void ShowLayer::refrishCardPos()
 
 void ShowLayer::moveToQiPai()
 {
+	if (UserDefault::getInstance()->getIntegerForKey(GAMESTATE) == 0)
+	{
+		//auto moveTo = MoveTo::create();
+	}
+	else if (UserDefault::getInstance()->getIntegerForKey(GAMESTATE) == 1)
+	{
 
+	}
+	else if (UserDefault::getInstance()->getIntegerForKey(GAMESTATE) == 2)
+	{
+
+	}
 }
