@@ -206,12 +206,12 @@ void MyCardWall::onTouchEnded(Touch *touch, Event *unused_event)
 		if (_type == 0)
 		{
 			cout << "打了张：小" << _value << endl;
-			ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我打了张小") + Value(_value).asString());
+			//ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我打了张小") + Value(_value).asString());
 		}
 		else
 		{
 			cout << "打了张：大" << _value << endl;
-			ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我打了张大") + Value(_value).asString());
+			//ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我打了张大") + Value(_value).asString());
 		}
 
 		m_GameLayer->t_Player[2].delACard(_type, _value);

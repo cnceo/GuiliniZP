@@ -33,6 +33,10 @@ public:
 	//显示赢家胡牌牌型
 	void showWinCard(int player);
 
+	void addAAaaUI(vector<int> ver[2]);
+	
+	void showMyCardWall(vector<int> ver[2]);
+
 	void showThreeVer( vector<int> ver[2], vector<ShowCard*> verCard);
 	void showFourVer( vector<int> ver[2], vector<ShowCard*> verCard);
 	void showThreeCardVer(vector<ShowCard*> verCard);
@@ -42,6 +46,10 @@ public:
 	void AddLabel();
 	//添加winui
 	void addWinUI();
+
+	//添加按钮特效
+	RepeatForever* MyPathFun(float controlX, float controlY, float w);
+	ParticleSystem* particleInit();
 	
 public:
 
@@ -52,5 +60,8 @@ private:
 	std::vector<Sprite*> SpriteVec;
 
 	static int count;
+
+	vector<ShowCard* > m_ThreeCardSprite;//three card
+	vector<ShowCard* > m_FourCardSprite;//four card
 };
 

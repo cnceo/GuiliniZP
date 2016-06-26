@@ -143,7 +143,7 @@ void ChooseLayer::huBtnCbk(Ref* psender)
 	GetLayer::getInstance()->getgameLayer()->t_Player[2].addCard(_newCard.m_Type, _newCard.m_Value);
 	GetLayer::getInstance()->getgameLayer()->refrishCardPos();
 
-	string str = "hu.png";
+	string str = "effect/hu.png";
 	GetLayer::getInstance()->getgameLayer()->addEffect(str);
 
 	_eventDispatcher->dispatchCustomEvent(SHOW_RATIOLAYER);

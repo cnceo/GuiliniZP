@@ -37,7 +37,7 @@ PlayerOneState::PlayerOneState()
 
 		auto _callf_1 = CallFunc::create([](){
 			Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(CREATE_CARD);
-			ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"下家打一张牌"));
+			//ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"下家打一张牌"));
 		});
 
 		auto _callf_2 = CallFunc::create([](){
@@ -129,7 +129,7 @@ bool PlayerOneState::oneCheck()
 	*/	
 	if (GAMELAYER->t_Player[1].checkPengACard(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
 	{
-		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"下家碰"));
+		//ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"下家碰"));
 		GAMELAYER->t_Player[1].doPengACard(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value);
 		//下家显示碰的牌
 		GetLayer::getInstance()->getOneLayer()->showPengCard();	//做到这里
@@ -137,7 +137,7 @@ bool PlayerOneState::oneCheck()
 	}
 	else if (GAMELAYER->t_Player[1].checkChiACard2_7_10(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
 	{
-		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"下家吃牌"));
+		//ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"下家吃牌"));
 		GAMELAYER->t_Player[1].doChi2_7_10(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value,0);
 		GetLayer::getInstance()->getOneLayer()->showChiCard();
 		return true;
@@ -145,7 +145,7 @@ bool PlayerOneState::oneCheck()
 
 	}else if (GAMELAYER->t_Player[1].checkChiA_B_C(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
 	{
-		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"下家吃牌"));
+		//ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"下家吃牌"));
 		GAMELAYER->t_Player[1].doChiA_B_C(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value,0);
 		GetLayer::getInstance()->getOneLayer()->showChiCard();
 		return true;

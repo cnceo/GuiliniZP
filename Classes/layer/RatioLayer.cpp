@@ -3,13 +3,17 @@
 #include "ZiPai.h"
 #include "utils/Constant.h"
 #include "utils/GetScore.h"
+#include "utils/GetLayer.h"
 
 int RatioLayer::count = 0;
 
 RatioLayer::RatioLayer():
 _gameLayer(nullptr),
 ratioNum(0),
-runNumber(nullptr)
+runNumber(nullptr),
+_needVisible(false),
+_SumTime(0),
+_cardCount(0)
 {
 
 }
@@ -42,6 +46,7 @@ bool RatioLayer::init(GameLayer* _layer)
 		return false;
 	}
 
+	scheduleUpdate();
 	_gameLayer = _layer;
 
 	AddUI();
@@ -227,18 +232,76 @@ void RatioLayer::checkRatio()
 			if (c.m_NewCard.m_Type == 0)
 			{
 				CardSprite* _card = CardSprite::create(0, c.m_NewCard.m_Value);
-				_card->setPosition(CommonFunction::getVisibleAchor(0.4, 0.5, Vec2(50 * i, 0)));
+				/*_card->setPosition(CommonFunction::getVisibleAchor(0.4, 0.5, Vec2(50 * i, 0)));*/
 				addChild(_card);
+				m_CardList.push_back(_card);
 
 			}
 			if (c.m_NewCard.m_Type == 1)
 			{
 				CardSprite* _card = CardSprite::create(1, c.m_NewCard.m_Value);
-				_card->setPosition(CommonFunction::getVisibleAchor(0.4, 0.5, Vec2(50 * i, 0)));
+			/*	_card->setPosition(CommonFunction::getVisibleAchor(0.4, 0.5, Vec2(50 * i, 0)));*/
 				addChild(_card);
+				m_CardList.push_back(_card);
 			}
-
 		}
+		showAllCard();
 	}
 	_eventDispatcher->dispatchCustomEvent(REPLACE_ACCOUNTS);
+}
+
+void RatioLayer::showAllCard()
+{
+	float _width = m_CardList.at(0)->getContentSize().width;
+	int _leftSize = 21 - m_CardList.size();
+
+	if (!m_CardList.empty())
+	{
+		for (int i = 0; i < m_CardList.size(); ++i)
+		{
+			if (m_CardList.at(i))
+			{
+				m_CardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2(45 * i + 130 + _leftSize * (45 / 2),0)));
+				//m_CardList.at(i)->setVisible(false);
+				m_CardList.at(i)->setCardOpacity(0);//
+				
+			}
+		}
+
+		_needVisible = true;
+	}
+}
+
+void RatioLayer:: update(float dt)
+{
+	log("update");
+	if (_needVisible)
+	{
+		_SumTime += dt;
+		if (_SumTime > 0.07)
+		{
+			setVisibleOneByOne();		//一行行显示
+			_SumTime = 0;
+		}
+	}
+}
+
+void RatioLayer::setVisibleOneByOne()
+{
+	if (_cardCount < m_CardList.size())
+	{
+		if (m_CardList.at(_cardCount))
+		{
+			for (auto &_child : m_CardList.at(_cardCount)->getChildren())
+			{
+				_child->runAction(FadeIn::create(0.2));
+			}
+		}
+		_cardCount++;
+	}
+	else
+	{
+		_needVisible = false;
+		_cardCount = 0;
+	}
 }
