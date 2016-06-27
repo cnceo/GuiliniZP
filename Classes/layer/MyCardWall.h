@@ -45,7 +45,7 @@ private:
 	bool check_One_card();
 	void refrishCardPos();							//刷新位置
 
-	Vector<ShortCardSprite* > _four_CardList[2];			//四张
+	Vector<ShortCardSprite* > _four_CardList[2];		//四张
 	Vector<ShortCardSprite* > _three_Same_CardList[2];	//三张相同
 	Vector<ShortCardSprite* > _three_Diff_CardList[2];	//三张不同	(没有检测，就相当于单张好了)
 	Vector<ShortCardSprite* > _two_CardList[2];			//两张

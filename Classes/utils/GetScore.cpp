@@ -114,3 +114,9 @@ int GetScore::getBeiShu()
 	int num = getHuDuo() + getZiMo() + getFanXin() + getTianHu() + getDiHu() + getSanLongWuK();
 	return num;
 }
+
+int GetScore::getMoney()
+{
+	int money = getBeiShu() * 1000;
+	return money;
+}

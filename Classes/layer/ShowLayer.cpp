@@ -45,6 +45,11 @@ m_backCard(nullptr)
 		showChiCard();
 	});
 
+	//显示弃牌
+	auto _listener_8 = EventListenerCustom::create(SHOW_QIPAI, [=](EventCustom*event){
+		moveToQiPai();
+	});
+
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_1, 1);
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_2, 1);
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_3, 1);
@@ -52,6 +57,7 @@ m_backCard(nullptr)
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_5, 1);
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_6, 1);
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_7, 1);
+	_eventDispatcher->addEventListenerWithFixedPriority(_listener_8, 1);
 }
 
 ShowLayer::~ShowLayer()
@@ -63,6 +69,7 @@ ShowLayer::~ShowLayer()
 	_eventDispatcher->removeCustomEventListeners(SHOW_SAOCHUANCARD);
 	_eventDispatcher->removeCustomEventListeners(SHOW_SAOCARD);
 	_eventDispatcher->removeCustomEventListeners(SHOW_CHICARD);
+	_eventDispatcher->removeCustomEventListeners(SHOW_QIPAI);
 }
 
 ShowLayer* ShowLayer::create(GameLayer* _layer)
@@ -178,12 +185,19 @@ void ShowLayer::createACard()
 		auto moveTo = MoveTo::create(0.3, CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 0)));
 		auto scaleTo = ScaleTo::create(0.3f,0.6f);
 		auto spawn = Spawn::create(moveTo, scaleTo,nullptr);
+
+		auto delay = DelayTime::create(1.0f);
+		auto callfunc = CallFunc::create([=](){
+			m_ACard->setVisible(false);
+		});
+		auto seq = Sequence::create(spawn,delay,callfunc,nullptr);
+
 		if (gameState == 0)
 		{
 			if (m_ACard)
 			{
 				m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftTop, Vec2::ZERO));
-				m_ACard->runAction(spawn);
+				m_ACard->runAction(seq);
 			}
 		}
 		else if (gameState == 1)
@@ -191,7 +205,7 @@ void ShowLayer::createACard()
 			if (m_ACard)
 			{
 				m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::RightTop, Vec2::ZERO));
-				m_ACard->runAction(spawn);
+				m_ACard->runAction(seq);
 			}
 		}
 		else if (gameState == 2)
@@ -199,16 +213,21 @@ void ShowLayer::createACard()
 			if (m_ACard)
 			{
 				m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::MidButtom, Vec2(0, 95)));
-				m_ACard->runAction(spawn);
+				m_ACard->runAction(seq);
 			}
 		}
 	}
 
-	/*auto fadeOut = FadeOut::create(3.0f);
+	//auto fadeOut = FadeOut::create(3.0f);
+	/*auto callfunc = CallFunc::create([=](){
+		m_ACard->setVisible(false);
+	});
+	auto delay = DelayTime::create(1.0f);
+	auto seq = Sequence::create(delay,callfunc,nullptr);
 	if (m_ACard)
 	{
 		m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 0)));
-		m_ACard->runAction(fadeOut);
+		m_ACard->runAction(seq);
 	}*/
 }
 
@@ -262,8 +281,8 @@ void ShowLayer::createANewCard()
 	if (m_backCard)
 	{
 		addChild(m_backCard,10);
-		m_backCard->setScaleX(0.75f);
-		m_backCard->setScaleY(0.8f);
+		m_backCard->setScaleX(0.7f);
+		m_backCard->setScaleY(0.7f);
 		float height = m_backCard->getContentSize().height;
 		m_backCard->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, Vec2(0, height / 2)));
 		auto moveTo = MoveTo::create(0.5f, CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, height - 50)));
@@ -275,6 +294,7 @@ void ShowLayer::createANewCard()
 	m_NewCard = createBigCardSprite(_type, _value);
 	if (m_NewCard)
 	{
+		m_NewCard->setScale(0.6f);
 		m_NewCard->setVisible(true);
 		addChild(m_NewCard);
 		float height = m_NewCard->getContentSize().height;
@@ -767,16 +787,89 @@ void ShowLayer::refrishCardPos()
 
 void ShowLayer::moveToQiPai()
 {
-	if (UserDefault::getInstance()->getIntegerForKey(GAMESTATE) == 0)
+	/*if (!m_TwoQipai.empty())
 	{
-		//auto moveTo = MoveTo::create();
+		m_TwoQipai.clear();
 	}
-	else if (UserDefault::getInstance()->getIntegerForKey(GAMESTATE) == 1)
+
+	if (!m_ZeroQipai.empty())
+	{
+		m_ZeroQipai.clear();
+	}
+
+	if (!m_OneQipai.empty())
+	{
+		m_OneQipai.clear();
+	}*/
+	
+	if (UserDefault::getInstance()->getIntegerForKey(GAMESTATE) == 0)		//下家操作
+	{
+		/*auto moveTo = MoveTo::create(0.5f, CommonFunction::getVisibleAchor(Anchor::RightMid, Vec2(-250, 70)));
+		auto ease = EaseSineOut::create(moveTo);
+		auto scaleTo = ScaleTo::create(0.5f, 0.1f);
+		auto spawn = Spawn::create(ease, scaleTo, nullptr);
+
+		auto callfunc = CallFunc::create([=](){
+			m_NewCard->setVisible(false);
+		});
+		auto seq = Sequence::create(spawn, callfunc, nullptr);
+		if (m_NewCard)
+		{
+			m_NewCard->runAction(seq);
+		}
+
+		int _type = m_GameLayer->m_newCard.m_Type;
+		int _value = m_GameLayer->m_newCard.m_Value;
+		auto _card = ShowCard::create(_type, _value);
+		if (_card)
+		{
+			addChild(_card);
+			m_OneQipai.pushBack(_card);
+		}
+
+		for (int i = 0; i < m_OneQipai.size(); i++)
+		{
+			float width = m_OneQipai.at(i)->getContentSize().width;
+			m_OneQipai.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i % 4)*(width - 14) + 300, 50)));
+		}*/
+	}
+	else if (UserDefault::getInstance()->getIntegerForKey(GAMESTATE) == 2)	//上家操作
 	{
 
 	}
-	else if (UserDefault::getInstance()->getIntegerForKey(GAMESTATE) == 2)
+	else if (UserDefault::getInstance()->getIntegerForKey(GAMESTATE) == 1)  //我自己操作
 	{
+		
+		auto moveTo = MoveTo::create(0.5f,CommonFunction::getVisibleAchor(Anchor::RightMid,Vec2(-250,-70)));
+		auto ease = EaseSineOut::create(moveTo);
+		auto scaleTo = ScaleTo::create(0.5f,0.1f);
+		auto spawn = Spawn::create(ease, scaleTo,nullptr);
 
+		auto callfunc = CallFunc::create([=](){
+			m_NewCard->setVisible(false);
+		});
+		auto seq = Sequence::create(spawn, callfunc, nullptr);
+		if (m_NewCard)
+		{
+			m_NewCard->runAction(seq);
+		}
+		
+		int _type = m_GameLayer->m_newCard.m_Type;
+		int _value = m_GameLayer->m_newCard.m_Value;
+		auto _card = ShowCard::create(_type, _value);
+		if (_card)
+		{
+			addChild(_card);
+			CommonFunction::setNodeOpacity(_card,0);
+			m_TwoQipai.pushBack(_card);
+		}
+		
+	}
+
+	for (int i = 0; i < m_TwoQipai.size();i++)
+	{
+		float width = m_TwoQipai.at(i)->getContentSize().width;
+		m_TwoQipai.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i)*(width - 14) + 300, -50 )));
+		CommonFunction::nodeFadeIn(m_TwoQipai.at(i), 0.5f);
 	}
 }

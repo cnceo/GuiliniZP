@@ -38,6 +38,8 @@ public:
 
 	vector<CardData> showCardList; //要显示的底牌
 
+	int getMoney();
+
 private:
 	GetScore();
 	~GetScore();

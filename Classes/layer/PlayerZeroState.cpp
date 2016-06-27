@@ -53,6 +53,7 @@ PlayerZeroState::PlayerZeroState()
 				GAMELAYER->changeState(new PlayerTwoState());
 			});
 			GAMELAYER->runAction(Sequence::create(delay, _callf, nullptr));
+			//Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(SHOW_QIPAI);
 
 		}
 

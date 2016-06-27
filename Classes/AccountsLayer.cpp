@@ -70,6 +70,7 @@ bool AccountsLayer::init()
 	}
 
 	addUI();
+
 	return true;
 }
 
@@ -173,6 +174,9 @@ void AccountsLayer::addUI()
 		//AddLabel();
 		//addWinUI();
 
+		addHZUI(icon_left);
+		addHZUI(icon_leftDown);
+		addHZUI(icon_right);
 	}
 	else
 	{
@@ -192,7 +196,7 @@ void AccountsLayer::addWinUI()
 	if (m_win)
 	{
 		m_win->setAnchorPoint(Vec2(0, 0.5));
-		m_win->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid,Vec2(0,-90)));
+		m_win->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2(0, -90)));
 		addChild(m_win);
 		auto win = Sprite::create("account/zi_win.png");
 		if (win)
@@ -200,6 +204,22 @@ void AccountsLayer::addWinUI()
 			win->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, m_win, Vec2(0, 0)));
 			win->setScale(1.5);
 			m_win->addChild(win);
+			auto add = Label::createWithTTF("+ ", "fonts/Roboto-Medium.ttf", 60);
+			if (add)
+			{
+				add->setColor(Color3B::YELLOW);
+				add->setAnchorPoint(Vec2(0, 0.5));
+				add->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, win, Vec2(30, 15)));
+				win->addChild(add);
+			}
+			auto money = Label::createWithBMFont("fonts/huangshe.fnt", Value(GetScore::getInstance()->getMoney()).asString(), TextHAlignment::LEFT, 0, Vec2::ZERO);
+			if (money)
+			{
+				money->setAnchorPoint(Vec2(0, 0.7));
+				money->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, add, Vec2(20, 0)));
+				add->addChild(money);
+			}
+
 		}
 		auto icon_left = Sprite::create("icon_image/icon_girl_1.png");
 		if (icon_left)
@@ -220,6 +240,21 @@ void AccountsLayer::addWinUI()
 		{
 			los->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, m_los_1, Vec2(0, 0)));
 			m_los_1->addChild(los);
+			auto add = Label::createWithTTF("- ", "fonts/Roboto-Medium.ttf", 60);
+			if (add)
+			{
+				add->setAnchorPoint(Vec2(0, 0.5));
+				add->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, los, Vec2(50, 0)));
+				los->addChild(add);
+			}
+			auto money = Label::createWithBMFont("fonts/baishe.fnt", Value(GetScore::getInstance()->getMoney() / 2).asString(), TextHAlignment::LEFT, 0, Vec2::ZERO);
+			if (money)
+			{
+				money->setAnchorPoint(Vec2(0, 0.7));
+				money->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, add, Vec2(20, 0)));
+				add->addChild(money);
+
+			}
 		}
 		auto icon_right = Sprite::create("icon_image/icon_boy_1.png");
 		if (icon_right)
@@ -240,6 +275,21 @@ void AccountsLayer::addWinUI()
 		{
 			los->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, m_los_2, Vec2(0, 0)));
 			m_los_2->addChild(los);
+			auto add = Label::createWithTTF("- ", "fonts/Roboto-Medium.ttf", 60);
+			if (add)
+			{
+				add->setAnchorPoint(Vec2(0, 0.5));
+				add->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, los, Vec2(50, 0)));
+				los->addChild(add);
+			}
+			auto money = Label::createWithBMFont("fonts/baishe.fnt", Value(GetScore::getInstance()->getMoney() / 2).asString(), TextHAlignment::LEFT, 0, Vec2::ZERO);
+			if (money)
+			{
+				money->setAnchorPoint(Vec2(0, 0.7));
+				money->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, add, Vec2(20, 0)));
+				add->addChild(money);
+
+			}
 		}
 		auto icon_leftDown = Sprite::create("icon_image/icon_girl_2.png");
 		if (icon_leftDown)
@@ -340,7 +390,7 @@ void  AccountsLayer::showDiPai(Node* node)
 }
 
 //显示赢家胡牌牌型
-void AccountsLayer::showWinCard( int player)
+void AccountsLayer::showWinCard(int player)
 {
 	//GetLayer::getInstance()->getgameLayer()->t_Player[player]
 	vector<ShowCard*> m_PengCardSprite;  //碰牌m_PengCardVec[0]
@@ -350,22 +400,73 @@ void AccountsLayer::showWinCard( int player)
 	vector<ShowCard* > m_tmpChiCardSprite;	//m_ChiCardVec[0]
 	vector<ShowCard* > m_ChiSpeclalSprite;//m_ChiSpeclal[2]
 
-	showThreeVer(GetLayer::getInstance()->getgameLayer()->t_Player[player].m_PengCardVec, m_PengCardSprite); 
-	showThreeVer( GetLayer::getInstance()->getgameLayer()->t_Player[player].m_SaoCardVec, m_tmpSaoCardSprite);
-	showThreeVer( GetLayer::getInstance()->getgameLayer()->t_Player[player].m_ChiCardVec, m_tmpChiCardSprite);
-	showFourVer( GetLayer::getInstance()->getgameLayer()->t_Player[player].m_KaiDuoCardVec, m_KaiDuoCardSprite);
-	showFourVer( GetLayer::getInstance()->getgameLayer()->t_Player[player].m_SaoChuanCardVec, m_tmpSaoChuanCardSprite);
+	showThreeVer(GetLayer::getInstance()->getgameLayer()->t_Player[player].m_PengCardVec, m_PengCardSprite);
+	showThreeVer(GetLayer::getInstance()->getgameLayer()->t_Player[player].m_SaoCardVec, m_tmpSaoCardSprite);
+	showThreeVer(GetLayer::getInstance()->getgameLayer()->t_Player[player].m_ChiCardVec, m_tmpChiCardSprite);
+	showFourVer(GetLayer::getInstance()->getgameLayer()->t_Player[player].m_KaiDuoCardVec, m_KaiDuoCardSprite);
+	showFourVer(GetLayer::getInstance()->getgameLayer()->t_Player[player].m_SaoChuanCardVec, m_tmpSaoChuanCardSprite);
 	showFourVer(GetLayer::getInstance()->getgameLayer()->t_Player[player].m_ChiSpeclal, m_ChiSpeclalSprite);
 
 	addAAaaUI(GetLayer::getInstance()->getgameLayer()->t_Player[player].m_ChiCardList);
 
-	/*showMyCardWall(GetLayer::getInstance()->getgameLayer()->t_Player[player].m_MyCard);*/
+	//showMyCardWall(GetLayer::getInstance()->getgameLayer()->t_Player[player].m_MyCard);
 
-	showThreeCardVer(m_ThreeCardSprite);
-	showFourCardVer(m_FourCardSprite);
+	if (!m_FourCardSprite.empty())
+	{
+		showFourCardVer(m_FourCardSprite);
+	}
+	if (!m_ThreeCardSprite.empty())
+	{
+		showThreeCardVer(m_ThreeCardSprite);
+	}
+	//if (!m_TowCardSprite.empty())
+	//{
+	//	showTowCardVer(m_TowCardSprite);
+	//}
+	//if (!m_OneCardSprite.empty())
+	//{
+	//	/*	showOneCardVer(m_OneCardSprite);*/
+	//}
+
+	log("m_TowCardSprite:%d", m_TowCardSprite.size());
+
 
 	count = 0;
 
+}
+
+void  AccountsLayer::showTowCardVer(vector<ShowCard*> verCard)
+{
+	if (verCard.size() > 0)
+	{
+
+		log("count2:%d", count);
+		for (int i = 0; i < verCard.size(); i++)
+		{
+			if (i % 2 == 0)
+			{
+				count++;
+			}
+			int _height = verCard.at(i)->getContentSize().height;
+			verCard.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i / 2)*(_height - 8) + (5 * count) + 100, i % 2 * (_height - 70) + 125)));
+		}
+	}
+}
+void AccountsLayer::showOneCardVer(vector<ShowCard*> verCard)
+{
+	if (verCard.size() > 0)
+	{
+		for (int i = 0; i < verCard.size(); i++)
+		{
+			if ((i % 3) == 0)
+			{
+				count++;
+			}
+			int _height = verCard.at(i)->getContentSize().height;
+			verCard.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2((i / 3)*(_height - 8) + (5 * count) + 100, i % 3 * (_height - 70) + 150)));
+
+		}
+	}
 }
 
 void AccountsLayer::addAAaaUI(vector<int> ver[2])
@@ -582,392 +683,281 @@ void  AccountsLayer::showFourCardVer(vector<ShowCard*> verCard)
 		}
 	}
 }
-
 ////一定要优化
-//void AccountsLayer::showMyCardWall(vector<int> ver[2])
-//{
-//	//vector<int> mycard[2];
-//	//for (int i = 0; i < ver[0].size(); i++)
-//	//{
-//	//	mycard[0].push_back(ver[0][i]);
-//	//}
-//	//for (int i = 0; i < ver[1].size(); i++)
-//	//{
-//	//	mycard[1].push_back(ver[1][i]);
-//	//}
-//
-//	vector<int> Card_4[2];
-//	vector<int> Card_3[2];
-//	vector<int> Card_2[2];
-//	vector<int> Card_1[2];
-//
-//	if (ver[0].size() > 0)
-//	{
-//		for (int i = 0; i < ver[0].size();)
-//		{
-//			i++;  //i = 5
-//			if (ver[0][i] == ver[0][i - 1])//(1,0) (5,4)
-//			{
-//				i++; //2
-//				//shuangzhang
-//				if (ver[0][i] == ver[0][i - 1]) //(2,1)
-//				{
-//					//sanzhuang
-//					i++; // 3
-//					if (ver[0][i] == ver[0][i - 1]) //(3,2)
-//					{
-//						//sizhang
-//						i++; //4
-//						Card_4[0].push_back(ver[0][i - 1]); //3
-//						Card_4[0].push_back(ver[0][i - 2]);//2
-//						Card_4[0].push_back(ver[0][i - 3]);//1
-//						Card_4[0].push_back(ver[0][i - 4]);//0
-//
-//					}
-//					else
-//					{
-//						//sanzahnag //i=3
-//						Card_3[0].push_back(ver[0][i - 1]); // 2
-//						Card_3[0].push_back(ver[0][i - 2]); //1
-//						Card_3[0].push_back(ver[0][i - 3]); //0
-//					}
-//				}
-//				else
-//				{
-//					//liangz // i =2
-//					Card_2[0].push_back(ver[0][i - 1]); // 1
-//					Card_2[0].push_back(ver[0][i - 2]); // 0
-//				}
-//
-//			}
-//			else
-//			{
-//				//danzhang //i = 1
-//				Card_1[0].push_back(ver[0][i - 1]); // 0
-//			}
-//		}
-//	}
-//	if (ver[1].size()>0)
-//	{
-//		for (int i = 0; i < ver[1].size();)
-//		{
-//			i++;  //i = 5
-//			if (ver[1][i] == ver[1][i - 1])//(1,0) (5,4)
-//			{
-//				i++; //2
-//				//shuangzhang
-//				if (ver[1][i] == ver[1][i - 1]) //(2,1)
-//				{
-//					//sanzhuang
-//					i++; // 3
-//					if (ver[1][i] == ver[1][i - 1]) //(3,2)
-//					{
-//						//sizhang
-//						i++; //4
-//						Card_4[1].push_back(ver[1][i - 1]); //3
-//						Card_4[1].push_back(ver[1][i - 2]);//2
-//						Card_4[1].push_back(ver[1][i - 3]);//1
-//						Card_4[1].push_back(ver[1][i - 4]);//0
-//
-//					}
-//					else
-//					{
-//						//sanzahnag //i=3
-//						Card_3[1].push_back(ver[1][i - 1]); // 2
-//						Card_3[1].push_back(ver[1][i - 2]); //1
-//						Card_3[1].push_back(ver[1][i - 3]); //0
-//					}
-//				}
-//				else
-//				{
-//					//liangz // i =2
-//					Card_2[1].push_back(ver[1][i - 1]); // 1
-//					Card_2[1].push_back(ver[1][i - 2]); // 0
-//				}
-//
-//			}
-//			else
-//			{
-//				//danzhang //i = 1
-//				Card_1[1].push_back(ver[1][i - 1]); // 0
-//			}
-//		}
-//	}
-//	//crest card
-//	if (Card_4[0].size() > 0)
-//	{
-//		for (int i = 0; i < Card_4[0].size(); i++)
-//		{
-//			auto _card = ShowCard::create(0, Card_4[0][i]);
-//			if (_card)
-//			{
-//				addChild(_card);
-//				m_FourCardSprite.push_back(_card);
-//			}
-//		}
-//
-//	}
-//	if (Card_4[1].size() > 0)
-//	{
-//		for (int i = 0; i < Card_4[1].size(); i++)
-//		{
-//			auto _card = ShowCard::create(1, Card_4[1][i]);
-//			if (_card)
-//			{
-//				addChild(_card);
-//				m_FourCardSprite.push_back(_card);
-//			}
-//		}
-//	}
-//	if (Card_3[0].size() > 0)
-//	{
-//		for (int i = 0; i < Card_3[0].size(); i++)
-//		{
-//			auto _card = ShowCard::create(0, Card_3[1][i]);
-//			if (_card)
-//			{
-//				addChild(_card);
-//				m_ThreeCardSprite.push_back(_card);
-//			}
-//		}
-//	}
-//	if (Card_3[1].size() > 0)
-//	{
-//		for (int i = 0; i < Card_3[1].size(); i++)
-//		{
-//			auto _card = ShowCard::create(1, Card_3[1][i]);
-//			if (_card)
-//			{
-//				addChild(_card);
-//				m_ThreeCardSprite.push_back(_card);
-//			}
-//		}
-//	}
-//
-//	//liangzhang
-//	if (Card_2[0].size())
-//	{
-//		for (int i = 0; i < Card_2[0].size(); i++)
-//		{
-//			auto _card = ShowCard::create(0, Card_2[0][i]);
-//			if (_card)
-//			{
-//				addChild(_card);
-//				m_ThreeCardSprite.push_back(_card);
-//			}
-//			if (i%2 == 1)
-//			{
-//				for ( auto iter = Card_1[1].begin(); iter != Card_1[1].end(); )
-//				{
-//					if (*iter == Card_2[0][i])
-//					{
-//						auto _card = ShowCard::create(1, *iter);
-//						if (_card)
-//						{
-//							addChild(_card);
-//							m_ThreeCardSprite.push_back(_card);
-//						}
-//						iter = Card_1[0].erase(iter);
-//					}
-//					else
-//					{
-//						iter++;
-//					}
-//				}
-//			}
-//		}
-//	}
-//	if (Card_2[1].size())
-//	{
-//		for (int i = 0; i < Card_2[1].size(); i++)
-//		{
-//			auto _card = ShowCard::create(1, Card_2[1][i]);
-//			if (_card)
-//			{
-//				addChild(_card);
-//				m_ThreeCardSprite.push_back(_card);
-//			}
-//			if (i % 2 == 1)
-//			{
-//				for (auto iter = Card_1[0].begin(); iter != Card_1[0].end();)
-//				{
-//					if (*iter == Card_2[1][i])
-//					{
-//						auto _card_1 = ShowCard::create(0, *iter);
-//						if (_card_1)
-//						{
-//							addChild(_card_1);
-//							 m_ThreeCardSprite.push_back(_card_1);
-//						}
-//						iter = Card_1[0].erase(iter);
-//					}
-//					else
-//					{
-//						iter++;
-//					}
-//				}
-//			}
-//		}
-//	}
-//
-//	//shunzi 2 7 10 
-//	if (Card_1[0].size() > 0)
-//	{
-//		for (auto iter = Card_1[0].begin(); iter!=Card_1[0].end();)
-//		{
-//			if (*iter == 2 || *iter == 7 || *iter == 10)
-//			{
-//				if (*iter == 2)
-//				{
-//					for (auto it_7 = Card_1[0].begin(); it_7 != Card_1[0].end();)
-//					{
-//						if (*it_7 == 7 )
-//						{
-//							for (auto it = Card_1[0].begin(); it != Card_1[0].end();)
-//							{
-//								if (*it == 10)
-//								{
-//									auto _card_1 = ShowCard::create(0, (*iter));
-//									if (_card_1)
-//									{
-//										addChild(_card_1);
-//										m_ThreeCardSprite.push_back(_card_1);
-//									}
-//									auto _card_2 = ShowCard::create(0, (*it_7));
-//									if (_card_2)
-//									{
-//										addChild(_card_2);
-//										m_ThreeCardSprite.push_back(_card_2);
-//									}
-//									auto _card_2 = ShowCard::create(0, (*it));
-//									if (_card_2)
-//									{
-//										addChild(_card_2);
-//										m_ThreeCardSprite.push_back(_card_2);
-//									}
-//									iter = Card_1[0].erase(iter);
-//									it_7 = Card_1[0].erase(it_7);
-//									it = Card_1[0].erase(it);
-//								}
-//								else
-//								{
-//									it++;
-//								}
-//							}
-//						}
-//						else
-//						{
-//							it_7++;
-//						}
-//					}
-//				}
-//				else
-//				{
-//					iter++;
-//				}
-//			}
-//
-//		}
-//	}
-//	if (Card_1[1].size() > 0)
-//	{
-//		for (auto iter = Card_1[1].begin(); iter != Card_1[1].end;)
-//		{
-//			if (*iter == 2 || *iter == 7 || *iter == 10)
-//			{
-//				if (*iter == 2)
-//				{
-//					for (auto it_7 = Card_1[1].begin(); it_7 != Card_1[1].end();)
-//					{
-//						if (*it_7 == 7)
-//						{
-//							for (auto it_10 = Card_1[1].begin(); it_10 != Card_1[1].end();)
-//							{
-//								if (*it_10 == 10)
-//								{
-//									auto _card_1 = ShowCard::create(0, *iter);
-//									if (_card_1)
-//									{
-//										addChild(_card_1);
-//										m_ThreeCardSprite.push_back(_card_1);
-//									}
-//									auto _card_2 = ShowCard::create(0, *it_7);
-//									if (_card_2)
-//									{
-//										addChild(_card_2);
-//										m_ThreeCardSprite.push_back(_card_2);
-//									}
-//									auto _card_3 = ShowCard::create(0, *it_10);
-//									if (_card_3)
-//									{
-//										addChild(_card_3);
-//										m_ThreeCardSprite.push_back(_card_3);
-//									}
-//									iter = Card_1[0].erase(iter);
-//									it_7 = Card_1[0].erase(it_7);
-//									it_10 = Card_1[0].erase(it_10);
-//								}
-//								else
-//								{
-//									it_10++;
-//								}
-//							}
-//						}
-//						else
-//						{
-//							it_7++;
-//						}
-//					}
-//				}
-//				else
-//				{
-//					iter++;
-//				}
-//			}
-//
-//		}
-//	}
-//	for (int k = 0; k < 2; k++)
-//	{
-//		if (Card_1[k].size() > 0)
-//		{
-//			for (int i = 0; i < Card_1[k].size(); i++)
-//			{
-//				if (i + 2 != Card_1[k].size() - 1)
-//				{
-//					if (Card_1[k][i] == (Card_1[k][i + 1] - 1) && Card_1[k][i] == (Card_1[k][i + 2] - 2))
-//					{
-//						auto _card_1 = ShowCard::create(k, Card_1[k][i]);
-//						if (_card_1)
-//						{
-//							addChild(_card_1);
-//							m_ThreeCardSprite.push_back(_card_1);
-//							i++;
-//						}
-//						auto _card_2 = ShowCard::create(k, Card_1[k][i]);
-//						if (_card_2)
-//						{
-//							addChild(_card_2);
-//							m_ThreeCardSprite.push_back(_card_2);
-//							i++;
-//						}
-//						auto _card_3 = ShowCard::create(k, Card_1[k][i]);
-//						if (_card_3)
-//						{
-//							addChild(_card_3);
-//							m_ThreeCardSprite.push_back(_card_3);
-//						}
-//
-//					}
-//				}
-//				
-//			}
-//			
-//		}
-//	}
-//
-//}
+void AccountsLayer::showMyCardWall(vector<int> ver[2])
+{
+	vector<int> mycard[2];
+	if (ver[0].size() > 0)
+	{
+		for (int i = 0; i < ver[0].size(); i++)
+		{
+			mycard[0].push_back(ver[0][i]);
+		}
+	}
+	if (ver[1].size() > 0)
+	{
+		for (int i = 0; i < ver[1].size(); i++)
+		{
+			mycard[1].push_back(ver[1][i]);
+		}
+	}
 
+	vector<int> Card_4[2];
+	vector<int> Card_3[2];
+	vector<int> Card_2[2];
+	vector<int> Card_1[2];
+
+	if (ver[0].size() > 0)
+	{
+		for (int k = 0; k < ver[0].size(); k++)
+		{
+			int count = 0;
+			for (int y = 0; y < mycard[0].size(); y++)
+			{
+				if (ver[0][k] == mycard[0][y])
+				{
+					count++;
+				}
+				else
+				{
+					continue;
+				}
+			}
+			if (count == 4)
+			{
+				Card_4[0].push_back(ver[0][k]);
+			}if (count == 3)
+			{
+				Card_3[0].push_back(ver[0][k]);
+			}
+			if (count == 2)
+			{
+				Card_2[0].push_back(ver[0][k]);
+			}
+			if (count == 1)
+			{
+				Card_1[0].push_back(ver[0][k]);
+			}
+		}
+	}
+	if (ver[1].size() > 0)
+	{
+		for (int k = 0; k < ver[1].size(); k++)
+		{
+			int count = 0;
+			for (int y = 0; y < mycard[1].size(); y++)
+			{
+				if (ver[1][k] == mycard[1][y])
+				{
+					count++;
+				}
+				else
+				{
+					continue;
+				}
+			}
+			if (count == 4)
+			{
+				Card_4[1].push_back(ver[1][k]);
+			}if (count == 3)
+			{
+				Card_3[1].push_back(ver[1][k]);
+			}
+			if (count == 2)
+			{
+				Card_2[1].push_back(ver[1][k]);
+			}
+			if (count == 1)
+			{
+				Card_1[1].push_back(ver[1][k]);
+			}
+		}
+	}
+
+	//crest card
+	if (Card_4[0].size() > 0)
+	{
+		for (int i = 0; i < Card_4[0].size(); i++)
+		{
+			auto _card = ShowCard::create(0, Card_4[0][i]);
+			if (_card)
+			{
+				addChild(_card);
+				m_FourCardSprite.push_back(_card);
+			}
+		}
+
+	}
+	if (Card_4[1].size() > 0)
+	{
+		for (int i = 0; i < Card_4[1].size(); i++)
+		{
+			auto _card = ShowCard::create(1, Card_4[1][i]);
+			if (_card)
+			{
+				addChild(_card);
+				m_FourCardSprite.push_back(_card);
+			}
+		}
+	}
+
+	if (Card_3[0].size() > 0)
+	{
+		for (int i = 0; i < Card_3[0].size(); i++)
+		{
+			auto _card = ShowCard::create(0, Card_3[1][i]);
+			if (_card)
+			{
+				addChild(_card);
+				m_ThreeCardSprite.push_back(_card);
+			}
+		}
+	}
+	if (Card_3[1].size() > 0)
+	{
+		for (int i = 0; i < Card_3[1].size(); i++)
+		{
+			auto _card = ShowCard::create(1, Card_3[1][i]);
+			if (_card)
+			{
+				addChild(_card);
+				m_ThreeCardSprite.push_back(_card);
+			}
+		}
+	}
+	////liangzhang
+	if (Card_2[0].size() > 0)
+	{
+		for (int i = 0; i < Card_2[0].size(); i++)
+		{
+			auto _card_1 = ShowCard::create(0, Card_2[0][i]);
+			if (_card_1)
+			{
+				addChild(_card_1);
+				/*m_ThreeCardSprite.push_back(_card_1);*/
+			}
+			i++;
+			auto _card_2 = ShowCard::create(0, Card_2[0][i]);
+			if (_card_2)
+			{
+				addChild(_card_2);
+				/*m_ThreeCardSprite.push_back(_card_2);*/
+			}
+			bool isTow = true;
+			if (i % 2 == 1)
+			{
+				if (Card_1[1].size() > 0)
+				{
+					for (auto iter = Card_1[1].begin(); iter != Card_1[1].end();)
+					{
+						if (*iter == Card_2[0][i])
+						{
+							auto _card = ShowCard::create(1, *iter);
+							if (_card)
+							{
+								addChild(_card);
+								m_ThreeCardSprite.push_back(_card_1);
+								m_ThreeCardSprite.push_back(_card_2);
+								m_ThreeCardSprite.push_back(_card);
+							}
+							isTow = false;
+							iter = Card_1[1].erase(iter);
+						}
+						else
+						{
+							iter++;
+
+						}
+					}
+				}
+
+			}
+			if (isTow)
+			{
+				m_TowCardSprite.push_back(_card_1);
+				m_TowCardSprite.push_back(_card_2);
+			}
+
+		}
+	}
+	if (Card_2[1].size() > 0)
+	{
+		for (int i = 0; i < Card_2[1].size(); i++) //0123 //0
+		{
+			auto _card_1 = ShowCard::create(1, Card_2[1][i]); //0  
+			if (_card_1)
+			{
+				addChild(_card_1);
+				/*m_ThreeCardSprite.push_back(_card_1);*/
+			}
+			i++;
+			auto _card_2 = ShowCard::create(1, Card_2[1][i]); //1 3
+			if (_card_2)
+			{
+				addChild(_card_2);
+				/*m_ThreeCardSprite.push_back(_card_2);*/
+			}
+			bool isTow = true;
+			if (i % 2 == 1)
+			{
+				if (Card_1[0].size() > 0)
+				{
+					for (auto iter = Card_1[0].begin(); iter != Card_1[0].end();)
+					{
+						if (*iter == Card_2[1][i])
+						{
+							auto _card = ShowCard::create(0, *iter);
+							if (_card)
+							{
+								addChild(_card);
+								m_ThreeCardSprite.push_back(_card_1);
+								m_ThreeCardSprite.push_back(_card_2);
+								m_ThreeCardSprite.push_back(_card);
+							}
+							isTow = false;
+							iter = Card_1[0].erase(iter);
+						}
+						else
+						{
+							iter++;
+						}
+					}
+				}
+
+			}
+			if (isTow)
+			{
+				m_TowCardSprite.push_back(_card_1);
+				m_TowCardSprite.push_back(_card_2);
+			}
+		}
+	}
+	if (Card_1[0].size() > 0)
+	{
+		for (int j = 0; j < Card_1[0].size(); j++)
+		{
+			auto _card = ShowCard::create(0, Card_1[0][j]);
+			if (_card)
+			{
+				addChild(_card);
+				m_OneCardSprite.push_back(_card);
+			}
+		}
+	}
+	if (Card_1[0].size() > 0)
+	{
+		for (int j = 0; j < Card_1[0].size(); j++)
+		{
+			auto _card = ShowCard::create(0, Card_1[0][j]);
+			if (_card)
+			{
+				addChild(_card);
+				m_OneCardSprite.push_back(_card);
+			}
+		}
+	}
+
+}
 
 RepeatForever* AccountsLayer::MyPathFun(float controlX, float controlY, float w)
 {
@@ -1057,4 +1047,24 @@ ParticleSystem* AccountsLayer::particleInit()
 	_emitter->setBlendAdditive(false);
 
 	return _emitter;
+}
+
+void AccountsLayer::addHZUI(Node* node)
+{
+	auto add = Label::createWithTTF("+ ", "fonts/Roboto-Medium.ttf", 60);
+	if (add)
+	{
+		/*add->setColor(Color3B::YELLOW);*/
+		add->setAnchorPoint(Vec2(0, 0.5));
+		add->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, node, Vec2(50, 5)));
+		node->addChild(add);
+	}
+	auto money = Label::createWithBMFont("fonts/baishe.fnt", "0", TextHAlignment::LEFT, 0, Vec2::ZERO);
+	if (money)
+	{
+		money->setAnchorPoint(Vec2(0, 0.7));
+		money->setPosition(CommonFunction::getVisibleAchor(0.5, 0.5, add, Vec2(20, 0)));
+		add->addChild(money);
+	}
+
 }

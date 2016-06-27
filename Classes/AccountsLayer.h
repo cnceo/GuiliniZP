@@ -50,7 +50,11 @@ public:
 	//添加按钮特效
 	RepeatForever* MyPathFun(float controlX, float controlY, float w);
 	ParticleSystem* particleInit();
-	
+
+	void addHZUI(Node* node);
+	void showTowCardVer(vector<ShowCard*> verCard);
+	void showOneCardVer(vector<ShowCard*> verCard);
+
 public:
 
 	void quiteCallback(Ref* sender);
@@ -63,5 +67,8 @@ private:
 
 	vector<ShowCard* > m_ThreeCardSprite;//three card
 	vector<ShowCard* > m_FourCardSprite;//four card
+
+	vector<ShowCard* > m_TowCardSprite;//tow card
+	vector<ShowCard* > m_OneCardSprite;//one card
 };
 

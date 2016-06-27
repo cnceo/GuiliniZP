@@ -115,6 +115,7 @@ void PlayerTwoState::myCheck()
 	}
 	else
 	{
+		//Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(SHOW_QIPAI);
 		GAMELAYER->changeState(new PlayerOneState());
 	}
 }

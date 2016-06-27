@@ -63,6 +63,8 @@ PlayerOneState::PlayerOneState()
 		auto delayTime = DelayTime::create(1.5f);
 		auto seq = Sequence::create(delayTime, callfunc, delayTime->clone(), callfunc_1, nullptr);
 		GAMELAYER->runAction(seq);
+		//Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(SHOW_QIPAI);
+
 	}
 }
 

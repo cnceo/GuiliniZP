@@ -161,7 +161,7 @@ void GameLayer::update(float dt)
 	if (_needVisible)
 	{
 		_SumTime += dt;
-		if (_SumTime > 0.07)
+		if (_SumTime > 0.10)
 		{
 			setVisibleOneByOne();		//一行行显示
 			_SumTime = 0;
@@ -485,19 +485,63 @@ void GameLayer::addEffect(string str)
 		addChild(image,2);
 		image->setScale(0.5f);
 		
-		auto scaleTo = ScaleTo::create(0.5f, 1.2f);
+		auto scaleTo = ScaleTo::create(0.3f, 1.0f);
 		auto ease = EaseSineOut::create(scaleTo);
-		auto delayTime = DelayTime::create(0.5f);
-		auto fadeOut = FadeOut::create(0.5f);
+		auto delayTime = DelayTime::create(0.3f);
+		auto fadeOut = FadeOut::create(0.3f);
 
 		auto spa = Spawn::create(fadeOut, ease, nullptr);
 		auto callFun = CallFunc::create([=]{
 			image->removeFromParent();
 		});
-
 		auto seq = Sequence::create(ease, delayTime, spa, callFun, nullptr);
 		image->runAction(seq);
-		
+	}
+}
+
+void GameLayer::addOneEffect(string str)
+{
+	auto image = Sprite::create(str);
+	if (image)
+	{
+		image->setPosition(CommonFunction::getVisibleAchor(Anchor::RightTop, Vec2(-150, -220)));
+		addChild(image, 2);
+		image->setScale(0.5f);
+
+		auto scaleTo = ScaleTo::create(0.3f, 1.0f);
+		auto ease = EaseSineOut::create(scaleTo);
+		auto delayTime = DelayTime::create(0.3f);
+		auto fadeOut = FadeOut::create(0.3f);
+
+		auto spa = Spawn::create(fadeOut, ease, nullptr);
+		auto callFun = CallFunc::create([=]{
+			image->removeFromParent();
+		});
+		auto seq = Sequence::create(ease, delayTime, spa, callFun, nullptr);
+		image->runAction(seq);
+	}
+}
+
+void GameLayer::addZeroEffect(string str)
+{
+	auto image = Sprite::create(str);
+	if (image)
+	{
+		image->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftTop, Vec2(150, -150)));
+		addChild(image, 2);
+		image->setScale(0.5f);
+
+		auto scaleTo = ScaleTo::create(0.3f, 1.0f);
+		auto ease = EaseSineOut::create(scaleTo);
+		auto delayTime = DelayTime::create(0.3f);
+		auto fadeOut = FadeOut::create(0.3f);
+
+		auto spa = Spawn::create(fadeOut, ease, nullptr);
+		auto callFun = CallFunc::create([=]{
+			image->removeFromParent();
+		});
+		auto seq = Sequence::create(ease, delayTime, spa, callFun, nullptr);
+		image->runAction(seq);
 	}
 }
 
@@ -902,6 +946,13 @@ void GameLayer::initUI()
 		bg_sp->setPosition(CommonFunction::getVisibleAchor(Anchor::Center,this,Vec2::ZERO));
 	}
 
+	auto paidui = Sprite::create("paidui.png");
+	if (paidui)
+	{
+		paidui->setPosition(CommonFunction::getVisibleAchor(Anchor::Center,Vec2(0,150)));
+		addChild(paidui);
+	}
+
 	auto back_btn = Button::create("backBtn.png");
 	if (back_btn)
 	{
@@ -989,7 +1040,13 @@ void GameLayer::getANewCard()
 		cout << "黄庄" << endl;
 		UserDefault::getInstance()->setBoolForKey(ISHZ, true);			//黄庄	
 
-		Director::getInstance()->replaceScene(TransitionFade::create(0.5f, AccountsLayer::createScene()));
+		auto delay = DelayTime::create(3.0f);
+		auto clallfunc = CallFunc::create([](){
+			Director::getInstance()->replaceScene(TransitionFade::create(0.5f, AccountsLayer::createScene()));
+
+		});
+		auto seq = Sequence::create(delay, clallfunc,nullptr);
+		this->runAction(seq);
 		return;
 	}
 

@@ -69,6 +69,9 @@ public:
 
 		//特效，吃碰胡。。。
 	void addEffect(string str);
+	void addOneEffect(string str);
+	void addZeroEffect(string str);
+
 public:
 	//我自己检测
 

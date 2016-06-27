@@ -157,6 +157,7 @@ void ChooseLayer::closeBtnCbk(Ref* psender)
 	log("close");
 	_eventDispatcher->dispatchCustomEvent(CLOSE_CHOOSELAYER);
 	_eventDispatcher->dispatchCustomEvent(HIDE_TIMECOUNT);
+	//_eventDispatcher->dispatchCustomEvent(SHOW_QIPAI);
 
 	close();
 }

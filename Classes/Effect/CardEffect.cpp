@@ -47,7 +47,7 @@ bool CardEffect::init()
 
 	scheduleUpdate();
 
-	for (int i = 0; i < 15;i++)
+	for (int i = 0; i < 16;i++)
 	{
 		auto _card_1 = Sprite::create("card_back.png");
 		if (_card_1)
@@ -124,7 +124,7 @@ void CardEffect::update(float dt)
 	if (_isActoin_1)
 	{
 		_SumTime_1 += dt;
-		if (_SumTime_1 > 0.10)
+		if (_SumTime_1 > 0.11)
 		{
 			midAction();
 			_SumTime_1 = 0;
@@ -134,7 +134,7 @@ void CardEffect::update(float dt)
 	if (_isActoin_2)
 	{
 		_SumTime_2 += dt;
-		if (_SumTime_2 > 0.10)
+		if (_SumTime_2 > 0.11)
 		{
 			rightActoin();
 			_SumTime_2 = 0;
@@ -144,7 +144,7 @@ void CardEffect::update(float dt)
 	if (_isActoin_3)
 	{
 		_SumTime_3 += dt;
-		if (_SumTime_3 > 0.10)
+		if (_SumTime_3 > 0.11)
 		{
 			leftAcrion();
 			_SumTime_3 = 0;
@@ -239,7 +239,7 @@ void CardEffect::showTimeCount()
 	_timeCount = Label::createWithBMFont("fonts/baishe.fnt", Value(_timeCt).asString(), TextHAlignment::LEFT,0,Vec2::ZERO);
 	if (_timeCount)
 	{
-		_timeCount->setColor(Color3B::GREEN);
+		_timeCount->setColor(Color3B::WHITE);
 		_timeCount->setVisible(true);
 		_timeCount->setSystemFontSize(80);
 		addChild(_timeCount);

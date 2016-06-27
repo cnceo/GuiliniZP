@@ -252,11 +252,15 @@ void RatioLayer::checkRatio()
 
 void RatioLayer::showAllCard()
 {
-	float _width = m_CardList.at(0)->getContentSize().width;
-	int _leftSize = 21 - m_CardList.size();
-
+	if (m_CardList.empty())
+	{
+		return;
+	}
 	if (!m_CardList.empty())
 	{
+		float _width = m_CardList.at(0)->getContentSize().width;
+		int _leftSize = 21 - m_CardList.size();
+
 		for (int i = 0; i < m_CardList.size(); ++i)
 		{
 			if (m_CardList.at(i))

@@ -57,5 +57,11 @@ private:
 
 	Vector<ShowCard* > m_ThreeCardVec;		//存三张牌
 	Vector<ShowCard* > m_FourCardVec;		//存四张牌
+
+private:
+	Vector<ShowCard* > m_TwoQipai;		//我的弃牌
+	Vector<ShowCard* > m_ZeroQipai;		//上家弃牌
+	Vector<ShowCard* > m_OneQipai;		//下家弃牌
+
 };
 

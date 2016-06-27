@@ -21,7 +21,7 @@ bool MissionLayer::init()
 
 void MissionLayer::initUI()
 {
-	auto bg_sp = Sprite::create("menu/menu_bg.png");
+	auto bg_sp = Sprite::create("menu/mission_bg.png");
 	if (bg_sp)
 	{
 		bg_sp->setTag(99);

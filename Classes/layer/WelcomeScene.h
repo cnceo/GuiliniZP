@@ -22,6 +22,8 @@ public:
 	virtual void onEnter();
 
 	virtual void onKeyReleased(EventKeyboard::KeyCode keycode, Event* event);
+	RepeatForever* MyPathFun(float controlX, float controlY, float w);
+	ParticleSystem* particleInit();
 
 public:
 	void initUI();

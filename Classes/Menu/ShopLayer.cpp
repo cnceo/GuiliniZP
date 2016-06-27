@@ -22,7 +22,7 @@ bool ShopLayer::init()
 
 void ShopLayer::initUI()
 {
-	auto bg_sp = Sprite::create("menu/menu_bg.png");
+	auto bg_sp = Sprite::create("menu/shop_bg.png");
 	if (bg_sp)
 	{
 		bg_sp->setTag(99);
@@ -35,7 +35,7 @@ void ShopLayer::initUI()
 		bg_sp->addChild(bag_sp);
 		bag_sp->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, bg_sp, Vec2(0, -bag_sp->getContentSize().height)));
 	}
-
+	/*
 	auto good_sp_1 = Sprite::create("menu/eyeGlass.png");
 	auto good_sp_2 = Sprite::create("menu/eyeGlass.png");
 	auto good_sp_3 = Sprite::create("menu/eyeGlass.png");
@@ -49,7 +49,7 @@ void ShopLayer::initUI()
 
 		good_sp_1->addChild(good_sp_3);
 		good_sp_3->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, good_sp_1, Vec2(-good_sp_2->getContentSize().width - 20, 0)));
-	}
+	}*/
 
 	auto close_btn = ui::Button::create("backBtn.png");
 	if (close_btn && bg_sp)
