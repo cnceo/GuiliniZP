@@ -7,6 +7,7 @@
 #include "layerUtils/ToastLayer/ToastManger.h"
 #include "utils/CommonFunction.h"
 #include "PlayerZeroState.h"
+#include "PlayerTwoState.h"
 
 USING_NS_CC;
 #define GAMELAYER  GetLayer::getInstance()->getgameLayer()
@@ -19,7 +20,7 @@ PlayerOneState::PlayerOneState()
 	/*
 	
 		下家检测我打的牌
-		若有牌型，做动作，打一张牌
+		若有牌型，做动作，打一张牌，（再我检测）
 		若无牌型，摸一张牌
 		
 		上家只检测我打的牌
@@ -39,16 +40,20 @@ PlayerOneState::PlayerOneState()
 			Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(CREATE_CARD);
 			//ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"下家打一张牌"));
 		});
+			auto _callf_2 = CallFunc::create([](){
+				GAMELAYER->changeState(new PlayerZeroState());
+			});
+			auto delay = DelayTime::create(1.5f);
+			GAMELAYER->runAction(Sequence::create(delay, _callf_1, nullptr));
 
-		auto _callf_2 = CallFunc::create([](){
-			GAMELAYER->changeState(new PlayerZeroState());
-		});
-
-		auto delay = DelayTime::create(1.5f);
-
-		GAMELAYER->runAction(Sequence::create(delay, _callf_1, _callf_2, nullptr));
-
-		std::cout << "下家打一张牌" << std::endl;
+			//我检测，若有牌型则我出牌 再下家检测
+			if (myCheckOnePop())
+			{
+			}
+			else
+			{
+				GAMELAYER->runAction(Sequence::create(delay, _callf_2, nullptr));
+			}
 	}
 	else
 	{
@@ -189,4 +194,41 @@ void PlayerOneState::zeroCheck()
 		GetLayer::getInstance()->getZeroLayer()->showChiCard();
 	}
 	*/
+}
+
+bool PlayerOneState::myCheckOnePop()
+{
+	if (GAMELAYER->t_Player[2].checkKaiduoACard(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
+	{
+		//ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我手里牌开舵"));
+		GAMELAYER->t_Player[2].doKaiDuo(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value);
+
+		GAMELAYER->refrishCardPos();
+		//特效
+		string str = "effect/kaiduo.png";
+		GAMELAYER->addEffect(str);
+
+		Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(SHOW_KAIDUOCARD);
+		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//开舵后我打牌
+		UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
+		GAMELAYER->changeState(new PlayerTwoState());
+
+		return true;
+	}
+	else if (GAMELAYER->t_Player[2].checkPengACard(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
+	{
+		//ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"下家打牌我能碰"));
+		//需要延迟1.5秒
+		auto delay = DelayTime::create(1.5f);
+		auto callfunc = CallFunc::create([](){
+			auto chooseLayer = ChooseLayer::create();
+			GAMELAYER->addChild(chooseLayer);
+			chooseLayer->setBtnEnable(2);
+			chooseLayer->setName(CHOOSELAYER);
+		});
+		auto seq = Sequence::create(delay,callfunc,nullptr);
+		GAMELAYER->runAction(seq);
+		return true;
+	}
+	return false;
 }

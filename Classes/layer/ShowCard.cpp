@@ -1,6 +1,7 @@
 ﻿#include "ShowCard.h"
 
-ShowCard::ShowCard()
+ShowCard::ShowCard():
+_issao(NO)
 {
 }
 
@@ -71,4 +72,28 @@ void ShowCard::onTouchMoved(Touch *touch, Event *unused_event)
 void ShowCard::onTouchEnded(Touch *touch, Event *unused_event)
 {
 
+}
+
+void ShowCard::setCardState(ISSAO _state)
+{
+	_issao = _state;
+}
+
+ShowCard::ISSAO ShowCard::getCardState()
+{
+	return _issao;
+}
+
+void ShowCard::turnToBack()
+{
+	auto state = getCardState();
+	if (state == ISSAO::YES)
+	{
+		auto card_back = Sprite::create("smallCardBack.png");
+		if (card_back)
+		{
+			card_back->setScale(0.7f);
+			addChild(card_back, 10);
+		}
+	}
 }

@@ -32,7 +32,7 @@ public:
 
 	//获得胡舵数
 	int getHuDuo();
-
+	void setHuDuo(int num);
 	//
 	int getBeiShu();
 
@@ -53,5 +53,7 @@ private:
 	int ziMo;
 	int  diHu;
 	int  sanLongWuK;
+
+	int huDuo;
 
 };

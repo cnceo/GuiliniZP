@@ -10,6 +10,12 @@ class ShowCard : public Sprite
 {
 public:
 
+	enum ISSAO
+	{
+		YES,
+		NO
+	};
+
 	ShowCard();
 	~ShowCard();
 	static ShowCard* create(int p_Type, int p_Value);
@@ -18,4 +24,11 @@ public:
 	virtual bool onTouchBegan(Touch *touch, Event *unused_event);
 	virtual void onTouchMoved(Touch *touch, Event *unused_event);
 	virtual void onTouchEnded(Touch *touch, Event *unused_event);
+
+	void setCardState(ISSAO _state);
+	ISSAO getCardState();
+	void turnToBack();
+
+private:
+	ISSAO _issao;
 };

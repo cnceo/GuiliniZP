@@ -22,6 +22,7 @@
 #include "RatioLayer.h"
 #include "MyCardWall.h"
 #include "Effect/CardEffect.h"
+#include "RemainCardLayer.h"
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 
@@ -63,11 +64,15 @@ _cardCount(0)
 
 	auto _listener_5 = EventListenerCustom::create(SHOW_RATIOLAYER, [=](EventCustom*event){
 		auto delayTime = DelayTime::create(1.0f);
+		auto callfuncEffect = CallFunc::create([=]{
+			string str = "effect/fanxing.png";
+			addEffect(str);
+		});
 		auto callfunc = CallFunc::create([=]{
 			RatioLayer* ratiolayer = RatioLayer::create(this);
 			addChild(ratiolayer);
 		});
-		this->runAction(Sequence::create(delayTime, callfunc, nullptr));
+		this->runAction(Sequence::create(delayTime, callfuncEffect, delayTime, callfunc, nullptr));
 	});
 
 	//REPLACE_ACCOUNTS //跳转到结算
@@ -79,12 +84,25 @@ _cardCount(0)
 		this->runAction(Sequence::create(delayTime,callfunc,nullptr));
 	});
 
+	auto _listener_7 = EventListenerCustom::create(SHOW_REMAINLAYER, [=](EventCustom*event){
+		auto delayTime = DelayTime::create(1.0f);
+		auto callfuncEffect = CallFunc::create([=]{
+			_eventDispatcher->dispatchCustomEvent(SHOW_RATIOLAYER);
+		});
+		auto callfunc = CallFunc::create([=]{
+			RemainCardLayer* remainLayer = RemainCardLayer::create(this);
+			addChild(remainLayer);
+		});
+		this->runAction(Sequence::create(delayTime, callfunc, delayTime, callfuncEffect, nullptr));
+	});
+
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_1, 1);
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_2, 1);
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_3, 1);
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_4, 1);
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_5, 1);
 	_eventDispatcher->addEventListenerWithFixedPriority(_listener_6, 1);
+	_eventDispatcher->addEventListenerWithFixedPriority(_listener_7, 1);
 }
 
 GameLayer::~GameLayer()
@@ -95,6 +113,7 @@ GameLayer::~GameLayer()
 	_eventDispatcher->removeCustomEventListeners(PLAYER_CHI);
 	_eventDispatcher->removeCustomEventListeners(SHOW_RATIOLAYER);
 	_eventDispatcher->removeCustomEventListeners(REPLACE_ACCOUNTS);
+	_eventDispatcher->removeCustomEventListeners(SHOW_REMAINLAYER);
 
 }
 
@@ -153,6 +172,7 @@ bool GameLayer::init()
 	runAction(_seq);
 
 	addChild(CardEffect::create());
+
 	return true;
 }
 
@@ -388,7 +408,6 @@ void GameLayer::doPengACard()
 bool GameLayer::checkChi()
 {
 	bool isAction = false;	//有可吃的
-
 	if (!m_TempChiCard.empty())
 	{
 		m_TempChiCard.clear();
@@ -436,8 +455,8 @@ bool GameLayer::checkChi()
 
 		isAction = true;
 	}
-
-	if (t_Player[2].checkChiACardA_A_a_a(m_newCard.m_Type, m_newCard.m_Value))
+	//有问题
+	/*if (t_Player[2].checkChiACardA_A_a_a(m_newCard.m_Type, m_newCard.m_Value))
 	{
 		for (auto &_data : t_Player[2].m_TempChiCardList)
 		{
@@ -445,7 +464,7 @@ bool GameLayer::checkChi()
 		}
 
 		isAction = true;
-	}
+	}*/
 
 	if (isAction)
 	{
@@ -991,7 +1010,7 @@ void GameLayer::initUI()
 	if (m_dipai)
 	{
 		addChild(m_dipai);
-		m_dipai->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, Vec2(80, -75)));
+		m_dipai->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, Vec2(180, -165)));
 	}
 
 	//机器人
@@ -1040,7 +1059,7 @@ void GameLayer::getANewCard()
 		cout << "黄庄" << endl;
 		UserDefault::getInstance()->setBoolForKey(ISHZ, true);			//黄庄	
 
-		auto delay = DelayTime::create(3.0f);
+		auto delay = DelayTime::create(2.0f);
 		auto clallfunc = CallFunc::create([](){
 			Director::getInstance()->replaceScene(TransitionFade::create(0.5f, AccountsLayer::createScene()));
 
@@ -1093,6 +1112,8 @@ void GameLayer::xipai()
 
 	logAllCard();
 	createMyCardWall();
+
+	//SplitCardWall();
 }
 
 void GameLayer::logAllCard()
@@ -1157,7 +1178,401 @@ void GameLayer::createMyCardWall()
 
 	setCardState();
 }
+/*************************************/
+//分牌 4，3，2，1
+void  GameLayer::SplitCardWall()
+{
 
+	vector<int> mycard[2];
+	if (t_Player[2].m_MyCard[0].size() > 0)
+	{
+		for (int i = 0; i < t_Player[2].m_MyCard[0].size(); i++)
+		{
+			mycard[0].push_back(t_Player[2].m_MyCard[0].at(i));
+		}
+	}
+	if (t_Player[2].m_MyCard[1].size() > 0)
+	{
+		for (int i = 0; i < t_Player[2].m_MyCard[1].size(); i++)
+		{
+			mycard[1].push_back(t_Player[2].m_MyCard[1].at(i));
+		}
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		if (t_Player[2].m_MyCard[i].size() > 0)
+		{
+			for (int k = 0; k < t_Player[2].m_MyCard[i].size(); k++)	
+			{
+				int count = 0;
+				for (int y = 0; y < mycard[i].size(); y++)
+				{
+					if (t_Player[2].m_MyCard[i].at(k) == mycard[i].at(y))
+					{
+						count++;
+					}
+					else
+					{
+						continue;
+					}
+				}
+				if (count == 4)
+				{
+					Card_4[i].push_back(t_Player[2].m_MyCard[i].at(k));
+				}if (count == 3)
+				{
+					Card_3[i].push_back(t_Player[2].m_MyCard[i].at(k));
+				}
+				if (count == 2)
+				{
+					Card_2[i].push_back(t_Player[2].m_MyCard[i].at(k));
+				}
+				if (count == 1)
+				{
+					Card_1[i].push_back(t_Player[2].m_MyCard[i].at(k));
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		if (!Card_4[i].empty())
+		{
+			for (int j = 0; j < Card_4[i].size(); j++)
+			{
+				log("Card_4: t:%d ,v：%d",i,Card_4[i].at(j));
+				log("Card_4.size:%d", Card_4[i].size());
+			}
+		}
+		if (!Card_3[i].empty())
+		{
+			for (int j = 0; j < Card_3[i].size(); j++)
+			{
+				log("Card_3: t:%d ,v：%d", i, Card_3[i].at(j));
+				log("Card_3.size:%d", Card_3[i].size());
+			}
+		}
+		if (!Card_2[i].empty())
+		{
+			for (int j = 0; j < Card_2[i].size(); j++)
+			{
+				log("Card_2: t:%d ,v：%d", i, Card_2[i].at(j));
+				log("Card_2.size:%d", Card_2[i].size());
+			}
+		}
+		if (!Card_1[i].empty())
+		{
+			for (int j = 0; j < Card_1[i].size(); j++)
+			{
+				log("Card_1: t:%d ,v：%d", i, Card_1[i].at(j));
+				log("Card_1.size:%d", Card_1[i].size());
+			}
+		}
+	}
+
+	reCardSprite();
+
+}
+
+void  GameLayer::reCardSprite()
+{
+	vector<CardPoint> cardwall;
+	if (Card_4[0].size() > 0)
+	{
+		for (int i = 0; i < Card_4[0].size(); i++)
+		{
+			CardPoint cardpoint;
+			auto _card_1 = ShowCard::create(0, Card_4[0].at(i)); // 0
+			if (_card_1)
+			{
+				cardpoint.card_1 = _card_1;
+			}
+			i++;
+			auto _card_2 = ShowCard::create(0, Card_4[0].at(i)); // 1
+			if (_card_2)
+			{
+				cardpoint.card_2 = _card_2;
+			}
+			i++;
+			auto _card_3 = ShowCard::create(0, Card_4[0].at(i)); // 2
+			if (_card_3)
+			{
+				cardpoint.card_3 = _card_3;
+			}
+			i++;
+			auto _card_4 = ShowCard::create(0, Card_4[0].at(i)); // 3
+			if (_card_4)
+			{
+				cardpoint.card_4 = _card_4;
+			}
+			cardwall.push_back(cardpoint);
+		}
+	}
+	if (Card_3[0].size() > 0)
+	{
+		for (int i = 0; i < Card_3[0].size(); i++)
+		{
+			CardPoint cardpoint;
+			auto _card_1 = ShowCard::create(0, Card_3[0].at(i)); // 0
+			if (_card_1)
+			{
+				cardpoint.card_1 = _card_1;
+			}
+			i++;
+			auto _card_2 = ShowCard::create(0, Card_3[0].at(i)); // 1
+			if (_card_2)
+			{
+				cardpoint.card_2 = _card_2;
+			}
+			i++;
+			auto _card_3 = ShowCard::create(0, Card_3[0].at(i)); // 2
+			if (_card_3)
+			{
+				cardpoint.card_3 = _card_3;
+			}
+			cardpoint.card_4 = nullptr;
+			cardwall.push_back(cardpoint);
+		}
+	}
+	if (Card_2[0].size() > 0)
+	{
+		for (int i = 0; i < Card_2[0].size(); i++)
+		{
+			CardPoint cardpoint;
+			auto _card_1 = ShowCard::create(0, Card_2[0].at(i)); // 0
+			if (_card_1)
+			{
+				cardpoint.card_1 = _card_1;
+			}
+			i++;
+			auto _card_2 = ShowCard::create(0, Card_2[0].at(i)); // 1
+			if (_card_2)
+			{
+				cardpoint.card_2 = _card_2;
+			}
+			cardpoint.card_3 = nullptr;
+			cardpoint.card_4 = nullptr;
+			cardwall.push_back(cardpoint);
+		}
+	}
+	if (Card_1[0].size() > 0)
+	{
+		for (int i = 0; i < Card_1[0].size(); i++)
+		{
+			CardPoint cardpoint;
+			if (i != Card_1[0].size())
+			{
+				auto _card_1 = ShowCard::create(0, Card_1[0].at(i)); // 0
+				if (_card_1)
+				{
+					cardpoint.card_1 = _card_1;
+				}
+				i++;
+			}
+			else
+			{
+				cardpoint.card_1 = nullptr;
+			}
+			if (i != Card_1[0].size())
+			{
+				auto _card_2 = ShowCard::create(0, Card_1[0].at(i)); // 1
+				if (_card_2)
+				{
+					cardpoint.card_2 = _card_2;
+				}
+				i++;
+			}
+			else
+			{
+				cardpoint.card_2 = nullptr;
+			}
+			if (i != Card_1[0].size())
+			{
+				auto _card_3 = ShowCard::create(0, Card_1[0].at(i)); // 2
+				if (_card_3)
+				{
+					cardpoint.card_3 = _card_3;
+				}
+			}
+			else
+			{
+				cardpoint.card_3 = nullptr;
+			}
+			cardpoint.card_4 = nullptr;
+			cardwall.push_back(cardpoint);
+			if (i>Card_1[0].size())
+			{
+				break;
+			}
+		}
+	}
+	if (Card_4[1].size() > 0)
+	{
+		for (int i = 0; i < Card_4[1].size(); i++)
+		{
+			CardPoint cardpoint;
+			auto _card_1 = ShowCard::create(1, Card_4[1].at(i)); // 0
+			if (_card_1)
+			{
+				cardpoint.card_1 = _card_1;
+			}
+			i++;
+			auto _card_2 = ShowCard::create(1, Card_4[1].at(i)); // 1
+			if (_card_2)
+			{
+				cardpoint.card_2 = _card_2;
+			}
+			i++;
+			auto _card_3 = ShowCard::create(1, Card_4[1].at(i)); // 2
+			if (_card_3)
+			{
+				cardpoint.card_3 = _card_3;
+			}
+			i++;
+			auto _card_4 = ShowCard::create(1, Card_4[1].at(i)); // 3
+			if (_card_4)
+			{
+				cardpoint.card_4 = _card_4;
+			}
+			cardwall.push_back(cardpoint);
+		}
+	}
+	if (Card_3[1].size() > 0)
+	{
+		for (int i = 0; i < Card_3[1].size(); i++)
+		{
+			CardPoint cardpoint;
+			auto _card_1 = ShowCard::create(1, Card_3[1].at(i)); // 0
+			if (_card_1)
+			{
+				cardpoint.card_1 = _card_1;
+			}
+			i++;
+			auto _card_2 = ShowCard::create(1, Card_3[1].at(i)); // 1
+			if (_card_2)
+			{
+				cardpoint.card_2 = _card_2;
+			}
+			i++;
+			auto _card_3 = ShowCard::create(1, Card_3[1].at(i)); // 2
+			if (_card_3)
+			{
+				cardpoint.card_3 = _card_3;
+			}
+			cardpoint.card_4 = nullptr;
+			cardwall.push_back(cardpoint);
+		}
+	}
+	if (Card_2[1].size() > 0)
+	{
+		for (int i = 0; i < Card_2[0].size(); i++)
+		{
+			CardPoint cardpoint;
+			auto _card_1 = ShowCard::create(1, Card_2[1].at(i)); // 0
+			if (_card_1)
+			{
+				cardpoint.card_1 = _card_1;
+			}
+			i++;
+			auto _card_2 = ShowCard::create(1, Card_2[1].at(i)); // 1
+			if (_card_2)
+			{
+				cardpoint.card_2 = _card_2;
+			}
+			cardpoint.card_3 = nullptr;
+			cardpoint.card_4 = nullptr;
+			cardwall.push_back(cardpoint);
+		}
+	}
+	if (Card_1[1].size() > 0)
+	{
+		for (int i = 0; i < Card_1[1].size(); i++)
+		{
+			CardPoint cardpoint;
+			if (i != Card_1[1].size())
+			{
+				auto _card_1 = ShowCard::create(1, Card_1[1].at(i)); // 0
+				if (_card_1)
+				{
+					cardpoint.card_1 = _card_1;
+				}
+				i++;
+			}
+			else
+			{
+				cardpoint.card_1 = nullptr;
+			}
+			if (i != Card_1[1].size())
+			{
+				auto _card_2 = ShowCard::create(1, Card_1[1].at(i)); // 1
+				if (_card_2)
+				{
+					cardpoint.card_2 = _card_2;
+				}
+				i++;
+			}
+			else
+			{
+				cardpoint.card_2 = nullptr;
+			}
+			if (i != Card_1[1].size())
+			{
+				auto _card_3 = ShowCard::create(1, Card_1[1].at(i)); // 2
+				if (_card_3)
+				{
+					cardpoint.card_3 = _card_3;
+				}
+			}
+			else
+			{
+				cardpoint.card_3 = nullptr;
+			}
+			cardpoint.card_4 = nullptr;
+			cardwall.push_back(cardpoint);
+			if (i>Card_1[1].size())
+			{
+				break;
+			}
+		}
+	}
+
+	for (int i = 0; i < cardwall.size(); i++)
+	{
+		if (cardwall.at(i).card_1 != nullptr)
+		{
+			int height = cardwall.at(i).card_1->getContentSize().height;
+			int width = cardwall.at(i).card_1->getContentSize().width;
+			cardwall.at(i).card_1->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2(100 + width * i, 0)));
+			addChild(cardwall.at(i).card_1);
+		}
+		if (cardwall.at(i).card_2 != nullptr)
+		{
+			int height = cardwall.at(i).card_2->getContentSize().height;
+			int width = cardwall.at(i).card_2->getContentSize().width;
+			cardwall.at(i).card_2->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2(100 + width * i, height * 1)));
+			addChild(cardwall.at(i).card_2);
+		}
+		if (cardwall.at(i).card_3 != nullptr)
+		{
+			int height = cardwall.at(i).card_3->getContentSize().height;
+			int width = cardwall.at(i).card_3->getContentSize().width;
+			cardwall.at(i).card_3->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2(100 + width * i, height * 2)));
+			addChild(cardwall.at(i).card_3);
+		}
+		if (cardwall.at(i).card_4 != nullptr)
+		{
+			int height = cardwall.at(i).card_4->getContentSize().height;
+			int width = cardwall.at(i).card_4->getContentSize().width;
+			cardwall.at(i).card_4->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, Vec2(100 + width * i, height * 3)));
+			addChild(cardwall.at(i).card_4);
+		}
+
+	}
+}
+
+/*******************************************/
 void GameLayer::setVisibleOneByOne()
 {
 	 if (_cardCount < m_CardList.size())

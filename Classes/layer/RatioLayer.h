@@ -31,6 +31,7 @@ public:
 	void showAllCard();
 
 	void checkRatio();
+	void calculateRatio(CardData _card);  //计算翻新
 
 private:
 

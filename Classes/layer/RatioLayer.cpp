@@ -79,132 +79,394 @@ void RatioLayer:: AddUI()
 
 
 }
-
-void RatioLayer::checkRatio()
+void RatioLayer::calculateRatio(CardData _card)  //计算翻新
 {
-	//起一张剩余的牌
-	//CardEx r_Card = _gameLayer->t_ZPManage.GetAPai();
-	_gameLayer->getANewCard();
-	auto _card = _gameLayer->m_newCard;
-	GetScore::getInstance()->showCardList.push_back(_card);
-	_eventDispatcher->dispatchCustomEvent(NEW_CARD);
-	//_gameLayer->m_newCard = r_Card;
+
 	//获得胡牌用户手里的牌墙
 
 	if (_card.m_Type == 0)
 	{
 		for (int i = 0; i < _gameLayer->t_Player[2].m_MyCard[0].size(); i++)
 		{
+
 			int value = _gameLayer->t_Player[2].m_MyCard[0][i];
-			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			log("m_MyCard【0】t : %d, v : %d", 0, value);
+			if (_card.m_Value == 1 || _card.m_Value == 10)
 			{
-				ratioNum++;
+				if (_card.m_Value == 1)
+				{
+					if (_card.m_Value == (value - 1) || value == 10)
+					{
+						ratioNum++;
+					}
+				}
+				if (_card.m_Value == 10)
+				{
+					if (_card.m_Value == (value + 1) || value == 1)
+					{
+						ratioNum++;
+					}
+				}
 			}
+			else
+			{
+				if (_card.m_Value == (value + 1) || _card.m_Value == (value - 1))
+				{
+					ratioNum++;
+				}
+			}
+
 		}
 		//peng
 		for (int i = 0; i < _gameLayer->t_Player[2].m_PengCardVec[0].size(); i++)
 		{
 			int value = _gameLayer->t_Player[2].m_PengCardVec[0][i];
-			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			if (_card.m_Value == 1 || _card.m_Value == 10)
 			{
-				ratioNum++;
+				if (_card.m_Value == 1)
+				{
+					if (_card.m_Value == (value - 1) || value == 10)
+					{
+						ratioNum++;
+					}
+				}
+				if (_card.m_Value == 10)
+				{
+					if (_card.m_Value == (value + 1) || value == 1)
+					{
+						ratioNum++;
+					}
+				}
 			}
+			else
+			{
+				if (_card.m_Value == (value + 1) || _card.m_Value == (value - 1))
+				{
+					ratioNum++;
+				}
+			}
+
 		}
 		// iduo
 		for (int i = 0; i < _gameLayer->t_Player[2].m_KaiDuoCardVec[0].size(); i++)
 		{
 			int value = _gameLayer->t_Player[2].m_KaiDuoCardVec[0][i];
-			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			if (_card.m_Value == 1 || _card.m_Value == 10)
 			{
-				ratioNum++;
+				if (_card.m_Value == 1)
+				{
+					if (_card.m_Value == (value - 1) || value == 10)
+					{
+						ratioNum++;
+					}
+				}
+				if (_card.m_Value == 10)
+				{
+					if (_card.m_Value == (value + 1) || value == 1)
+					{
+						ratioNum++;
+					}
+				}
 			}
+			else
+			{
+				if (_card.m_Value == (value + 1) || _card.m_Value == (value - 1))
+				{
+					ratioNum++;
+				}
+			}
+
 		}
 		//m_SaoChuanCardVec[0]
 		for (int i = 0; i < _gameLayer->t_Player[2].m_SaoChuanCardVec[0].size(); i++)
 		{
 			int value = _gameLayer->t_Player[2].m_SaoChuanCardVec[0][i];
-			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			if (_card.m_Value == 1 || _card.m_Value == 10)
 			{
-				ratioNum++;
+				if (_card.m_Value == 1)
+				{
+					if (_card.m_Value == (value - 1) || value == 10)
+					{
+						ratioNum++;
+					}
+				}
+				if (_card.m_Value == 10)
+				{
+					if (_card.m_Value == (value + 1) || value == 1)
+					{
+						ratioNum++;
+					}
+				}
+			}
+			else
+			{
+				if (_card.m_Value == (value + 1) || _card.m_Value == (value - 1))
+				{
+					ratioNum++;
+				}
 			}
 		}
 		//m_SaoCardVec[0]
 		for (int i = 0; i < _gameLayer->t_Player[2].m_SaoCardVec[0].size(); i++)
 		{
 			int value = _gameLayer->t_Player[2].m_SaoCardVec[0][i];
-			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			if (_card.m_Value == 1 || _card.m_Value == 10)
 			{
-				ratioNum++;
+				if (_card.m_Value == 1)
+				{
+					if (_card.m_Value == (value - 1) || value == 10)
+					{
+						ratioNum++;
+					}
+				}
+				if (_card.m_Value == 10)
+				{
+					if (_card.m_Value == (value + 1) || value == 1)
+					{
+						ratioNum++;
+					}
+				}
+			}
+			else
+			{
+				if (_card.m_Value == (value + 1) || _card.m_Value == (value - 1))
+				{
+					ratioNum++;
+				}
 			}
 		}
 		//m_ChiCardVec[0]
 		for (int i = 0; i < _gameLayer->t_Player[2].m_ChiCardVec[0].size(); i++)
 		{
 			int value = _gameLayer->t_Player[2].m_ChiCardVec[0][i];
-			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			if (_card.m_Value == 1 || _card.m_Value == 10)
 			{
-				ratioNum++;
+				if (_card.m_Value == 1)
+				{
+					if (_card.m_Value == (value - 1) || value == 10)
+					{
+						ratioNum++;
+					}
+				}
+				if (_card.m_Value == 10)
+				{
+					if (_card.m_Value == (value + 1) || value == 1)
+					{
+						ratioNum++;
+					}
+				}
+			}
+			else
+			{
+				if (_card.m_Value == (value + 1) || _card.m_Value == (value - 1))
+				{
+					ratioNum++;
+				}
 			}
 		}
-
 	}
 	if (_card.m_Type == 1)
 	{
 		for (int i = 0; i < _gameLayer->t_Player[2].m_MyCard[1].size(); i++)
 		{
 			int value = _gameLayer->t_Player[2].m_MyCard[1][i];
-			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			log("m_MyCard【1】t : %d, v : %d", 1, value);
+			if (_card.m_Value == 1 || _card.m_Value == 10)
 			{
-				ratioNum++;
+				if (_card.m_Value == 1)
+				{
+					if (_card.m_Value == (value - 1) || value == 10)
+					{
+						ratioNum++;
+					}
+				}
+				if (_card.m_Value == 10)
+				{
+					if (_card.m_Value == (value + 1) || value == 1)
+					{
+						ratioNum++;
+					}
+				}
+			}
+			else
+			{
+				if (_card.m_Value == (value + 1) || _card.m_Value == (value - 1))
+				{
+						ratioNum++;
+				}
 			}
 		}
-		//peng
+			//peng
 		for (int i = 0; i < _gameLayer->t_Player[2].m_PengCardVec[1].size(); i++)
 		{
 			int value = _gameLayer->t_Player[2].m_PengCardVec[1][i];
-			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			if (_card.m_Value == 1 || _card.m_Value == 10)
 			{
-				ratioNum++;
+				if (_card.m_Value == 1)
+				{
+					if (_card.m_Value == (value - 1) || value == 10)
+					{
+						ratioNum++;
+					}
+				}
+				if (_card.m_Value == 10)
+				{
+					if (_card.m_Value == (value + 1) || value == 1)
+					{
+						ratioNum++;
+					}				
+				}			
+			}
+			else
+			{
+				if (_card.m_Value == (value + 1) || _card.m_Value == (value - 1))
+				{
+					ratioNum++;
+				}
 			}
 		}
-		// iduo
+			// iduo
 		for (int i = 0; i < _gameLayer->t_Player[2].m_KaiDuoCardVec[1].size(); i++)
 		{
 			int value = _gameLayer->t_Player[2].m_KaiDuoCardVec[1][i];
-			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			if (_card.m_Value == 1 || _card.m_Value == 10)
 			{
-				ratioNum++;
+				if (_card.m_Value == 1)
+				{
+					if (_card.m_Value == (value - 1) || value == 10)
+					{
+						ratioNum++;
+					}
+				}
+				if (_card.m_Value == 10)
+				{
+					if (_card.m_Value == (value + 1) || value == 1)				
+					{
+						ratioNum++;
+					}
+				}
 			}
-		}
-		//m_SaoChuanCardVec[0]
-		for (int i = 0; i < _gameLayer->t_Player[2].m_SaoChuanCardVec[1].size(); i++)
-		{
-			int value = _gameLayer->t_Player[2].m_SaoChuanCardVec[1][i];
-			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			else
 			{
-				ratioNum++;
+					if (_card.m_Value == (value + 1) || _card.m_Value == (value - 1))
+					{
+						ratioNum++;
+					}
+				}
 			}
-		}
-		//m_SaoCardVec[0]
-		for (int i = 0; i < _gameLayer->t_Player[2].m_SaoCardVec[1].size(); i++)
-		{
-			int value = _gameLayer->t_Player[2].m_SaoCardVec[1][i];
-			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			//m_SaoChuanCardVec[0]
+			for (int i = 0; i < _gameLayer->t_Player[2].m_SaoChuanCardVec[1].size(); i++)
 			{
-				ratioNum++;
+				int value = _gameLayer->t_Player[2].m_SaoChuanCardVec[1][i];
+				if (_card.m_Value == 1 || _card.m_Value == 10)
+				{
+					if (_card.m_Value == 1)
+					{
+						if (_card.m_Value == (value - 1) || value == 10)
+						{
+							ratioNum++;
+						}
+					}
+					if (_card.m_Value == 10)
+					{
+						if (_card.m_Value == (value + 1) || value == 1)
+						{
+							ratioNum++;
+						}
+					}
+				}
+				else
+				{
+					if (_card.m_Value == (value + 1) || _card.m_Value == (value - 1))
+					{
+						ratioNum++;
+					}
+				}
 			}
-		}
-		//m_ChiCardVec[0]
-		for (int i = 0; i < _gameLayer->t_Player[2].m_ChiCardVec[1].size(); i++)
-		{
-			int value = _gameLayer->t_Player[2].m_ChiCardVec[1][i];
-			if (_card.m_Value == value + 1 || _card.m_Value == value - 1)
+			//m_SaoCardVec[0]
+			for (int i = 0; i < _gameLayer->t_Player[2].m_SaoCardVec[1].size(); i++)
 			{
-				ratioNum++;
+				int value = _gameLayer->t_Player[2].m_SaoCardVec[1][i];
+				if (_card.m_Value == 1 || _card.m_Value == 10)
+				{
+					if (_card.m_Value == 1)
+					{
+						if (_card.m_Value == (value - 1) || value == 10)
+						{
+							ratioNum++;
+						}
+					}
+					if (_card.m_Value == 10)
+					{
+						if (_card.m_Value == (value + 1) || value == 1)
+						{
+							ratioNum++;
+						}
+					}
+				}
+				else
+				{
+					if (_card.m_Value == (value + 1) || _card.m_Value == (value - 1))
+					{
+						ratioNum++;
+					}
+				}
+			}
+			//m_ChiCardVec[0]
+			for (int i = 0; i < _gameLayer->t_Player[2].m_ChiCardVec[1].size(); i++)
+			{
+				int value = _gameLayer->t_Player[2].m_ChiCardVec[1][i];
+				if (_card.m_Value == 1 || _card.m_Value == 10)
+				{
+					if (_card.m_Value == 1)
+					{
+						if (_card.m_Value == (value - 1) || value == 10)
+						{
+							ratioNum++;
+						}
+					}
+					if (_card.m_Value == 10)
+					{
+						if (_card.m_Value == (value + 1) || value == 1)
+						{
+							ratioNum++;
+						}
+					}
+				}
+				else
+				{
+					if (_card.m_Value == (value + 1) || _card.m_Value == (value - 1))
+					{
+						ratioNum++;
+					}
+				}
 			}
 		}
 
+	
+}
+
+void RatioLayer::checkRatio()
+{
+	//起一张剩余的牌
+	auto _card = _gameLayer->t_ZPManage.GetAPai().m_NewCard;
+	GetScore::getInstance()->showCardList.push_back(_card);
+	CardSprite* fanpai = CardSprite::create(_card.m_Type,_card.m_Value);
+	if (fanpai)
+	{
+		addChild(fanpai);
+		float height = fanpai->getContentSize().height;
+		fanpai->setPosition(CommonFunction::getVisibleAchor(Anchor::MidTop, Vec2(0,height / 2 )));
+
+		auto delayTime = DelayTime::create(0.8f);
+		auto moveTo = MoveTo::create(0.5f, CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, height + 40)));
+		auto sqe = Sequence::create(moveTo,delayTime,nullptr);
+		fanpai->runAction(sqe);
 	}
+
+	//获得胡牌用户手里的牌墙
+	calculateRatio(_card);
+
 	count++;
 
 	//刷新一下ratioLabel
@@ -218,7 +480,13 @@ void RatioLayer::checkRatio()
 	if (ratioNum >= (count * 4))
 	{
 		log("****");
-		checkRatio();
+		auto delayTime = DelayTime::create(1.0f);
+		//yanshi 
+		auto callFun = CallFunc::create([=]{
+			checkRatio();
+		});
+		auto seq = Sequence::create(delayTime,callFun,nullptr);
+		this->runAction(seq);
 	}
 	else
 	{

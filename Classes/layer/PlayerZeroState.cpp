@@ -44,7 +44,16 @@ PlayerZeroState::PlayerZeroState()
 				GAMELAYER->changeState(new PlayerTwoState());
 			});
 			auto delay = DelayTime::create(1.5f);
-			GAMELAYER->runAction(Sequence::create(delay, _callf_1, _callf_2, nullptr));
+			GAMELAYER->runAction(Sequence::create(delay, _callf_1, nullptr));
+
+			//我检测，若有牌型则我出牌 再下家检测
+			if (myCheckZeroPop())
+			{
+			}
+			else
+			{
+				GAMELAYER->runAction(Sequence::create(delay, _callf_2, nullptr));
+			}
 		}
 		else
 		{
@@ -156,6 +165,145 @@ bool PlayerZeroState::zeroCheck()
 		//ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"上家吃牌"));
 		GAMELAYER->t_Player[0].doChiA_B_C(GAMELAYER->m_newCard.m_Type, GAMELAYER->m_newCard.m_Value, 0);
 		GetLayer::getInstance()->getZeroLayer()->showChiCard();
+		return true;
+	}
+	return false;
+}
+
+bool PlayerZeroState::myCheckZeroPop()
+{
+	if (GAMELAYER->t_Player[2].checkKaiduoACard(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
+	{
+		//ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我手牌开舵"));
+		GAMELAYER->t_Player[2].doKaiDuo(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value);
+
+		GAMELAYER->refrishCardPos();
+		//特效
+		string str = "effect/kaiduo.png";
+		GAMELAYER->addEffect(str);
+
+		Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(SHOW_KAIDUOCARD);
+		UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//开舵后我打牌
+		UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
+		GAMELAYER->changeState(new PlayerTwoState());
+
+		return true;
+	}
+	else if (checkChi() && checkPeng())//可吃可碰
+	{
+		auto delay = DelayTime::create(1.5f);
+		auto callfunc = CallFunc::create([](){
+			auto chooseLayer = ChooseLayer::create();
+			GAMELAYER->addChild(chooseLayer);
+			chooseLayer->setBtnEnable(4);
+			chooseLayer->setName(CHOOSELAYER);
+		});
+		auto seq = Sequence::create(delay,callfunc,nullptr);
+		GAMELAYER->runAction(seq);
+
+		return true;
+	}
+	else if (checkChi() && !checkPeng())	//可吃不能碰
+	{
+		auto delay = DelayTime::create(1.5f);
+		auto callfunc = CallFunc::create([](){
+			auto chooseLayer = ChooseLayer::create();
+			GAMELAYER->addChild(chooseLayer);
+			chooseLayer->setBtnEnable(1);
+			chooseLayer->setName(CHOOSELAYER);
+		});
+		auto seq = Sequence::create(delay, callfunc, nullptr);
+		GAMELAYER->runAction(seq);
+		return true;
+	}
+	else if (!checkChi() && checkPeng())//可吃不能碰
+	{
+		auto delay = DelayTime::create(1.5f);
+		auto callfunc = CallFunc::create([](){
+			auto chooseLayer = ChooseLayer::create();
+			GAMELAYER->addChild(chooseLayer);
+			chooseLayer->setBtnEnable(2);
+			chooseLayer->setName(CHOOSELAYER);
+		});
+		auto seq = Sequence::create(delay, callfunc, nullptr);
+		GAMELAYER->runAction(seq);
+		return true;
+	}
+	return false;
+}
+
+bool PlayerZeroState::checkChi()
+{
+	bool isAction = false;	//有可吃的
+	if (!GAMELAYER->m_TempChiCard.empty())
+	{
+		GAMELAYER->m_TempChiCard.clear();
+	}
+
+	if (!GAMELAYER->m_TempChiList.empty())
+	{
+		GAMELAYER->m_TempChiList.clear();
+	}
+
+	/*if (t_Player[2].checkChiACard1_2_3(m_newCard.m_Type, m_newCard.m_Value))
+	{
+	for (auto &_data:t_Player[2].m_TempChiCardVec)
+	{
+	m_TempChiCard.push_back(_data);
+	}
+	isAction = true;
+	}*/
+
+	if (GAMELAYER->t_Player[2].checkChiACard2_7_10(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
+	{
+		for (auto &_data : GAMELAYER->t_Player[2].m_TempChiCardVec)
+		{
+			GAMELAYER->m_TempChiCard.push_back(_data);
+		}
+		isAction = true;
+	}
+
+	if (GAMELAYER->t_Player[2].checkChiA_B_C(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
+	{
+		for (auto &_data : GAMELAYER->t_Player[2].m_TempChiCardVec)
+		{
+			GAMELAYER->m_TempChiCard.push_back(_data);
+		}
+
+		isAction = true;
+	}
+
+	if (GAMELAYER->t_Player[2].checkChiACardA_A_a(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
+	{
+		for (auto &_data : GAMELAYER->t_Player[2].m_TempChiCardList)
+		{
+			GAMELAYER->m_TempChiList.push_back(_data);
+		}
+
+		isAction = true;
+	}
+	//有问题
+	/*if (t_Player[2].checkChiACardA_A_a_a(m_newCard.m_Type, m_newCard.m_Value))
+	{
+	for (auto &_data : t_Player[2].m_TempChiCardList)
+	{
+	m_TempChiList.push_back(_data);
+	}
+
+	isAction = true;
+	}*/
+
+	if (isAction)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool PlayerZeroState::checkPeng()
+{
+	if (GAMELAYER->t_Player[2].checkPengACard(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
+	{
 		return true;
 	}
 	return false;

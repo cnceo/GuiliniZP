@@ -28,7 +28,8 @@ using namespace cocos2d;
 
 #define SHOW_CHICARDLAYER	"showChiCardLayer"	//显示吃层
 #define SHOW_RATIOLAYER     "showRatioLayer"	//显示番醒
-#define REPLACE_ACCOUNTS    "replaceAccounts"	//跳转到结算	
+#define REPLACE_ACCOUNTS    "replaceAccounts"	//跳转到结算
+#define SHOW_REMAINLAYER	"showRemainLayer"	//显示对家牌面
 
 #define TIMEOUT_CLOSE		"timeoutClose"		//时间超过15秒自动过
 #define SHOW_TIMECOUNT		"showTimeCount"		//屏幕中间 显示倒计时

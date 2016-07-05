@@ -6,6 +6,8 @@
 #include "layer/ShowCard.h"
 #include <vector>
 
+#include "layer/GameLayer.h"
+
 using	namespace std;
 
 using namespace cocos2d;
@@ -37,10 +39,8 @@ public:
 	
 	void showMyCardWall(vector<int> ver[2]);
 
-	void showThreeVer( vector<int> ver[2], vector<ShowCard*> verCard);
-	void showFourVer( vector<int> ver[2], vector<ShowCard*> verCard);
-	void showThreeCardVer(vector<ShowCard*> verCard);
-	void showFourCardVer(vector<ShowCard*> verCard);
+	void showThreeVer( vector<int> ver[2]);
+	void showFourVer( vector<int> ver[2]);
 
 	//添加label
 	void AddLabel();
@@ -55,6 +55,9 @@ public:
 	void showTowCardVer(vector<ShowCard*> verCard);
 	void showOneCardVer(vector<ShowCard*> verCard);
 
+	void showCardPVer();
+	void setCardVerPoint();
+
 public:
 
 	void quiteCallback(Ref* sender);
@@ -65,10 +68,11 @@ private:
 
 	static int count;
 
-	vector<ShowCard* > m_ThreeCardSprite;//three card
-	vector<ShowCard* > m_FourCardSprite;//four card
+	vector<int> Card_4[2];
+	vector<int> Card_3[2];
+	vector<int> Card_2[2];
+	vector<int> Card_1[2];
 
-	vector<ShowCard* > m_TowCardSprite;//tow card
-	vector<ShowCard* > m_OneCardSprite;//one card
+	vector<CardPoint> showCard; //sizhangyilie
 };
 

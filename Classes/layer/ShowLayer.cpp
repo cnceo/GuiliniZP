@@ -244,6 +244,7 @@ void ShowLayer::flyToHand()
 		auto callfun_1 = CallFunc::create([=](){
 			m_GameLayer->t_Player[2].addCard(m_GameLayer->m_newCard.m_Type, m_GameLayer->m_newCard.m_Value);
 			m_GameLayer->refrishCardPos();
+			m_GameLayer->t_Player[2].notChi();
 		});
 		auto seq = Sequence::create(delay, move, callfun, callfun_1, nullptr);
 		m_NewCard->runAction(seq);
@@ -444,6 +445,8 @@ void ShowLayer::showSaochuanCard()
 			auto _card = ShowCard::create(0, _saochuanList[0][i]);
 			if (_card)
 			{
+				_card->setCardState(ShowCard::ISSAO::YES);
+				_card->turnToBack();
 				addChild(_card);
 				m_tmpSaoChuanCardVec.pushBack(_card);
 			}
@@ -457,6 +460,8 @@ void ShowLayer::showSaochuanCard()
 			auto _card = ShowCard::create(1, _saochuanList[1][i]);
 			if (_card)
 			{
+				_card->setCardState(ShowCard::ISSAO::YES);
+				_card->turnToBack();
 				addChild(_card);
 				m_tmpSaoChuanCardVec.pushBack(_card);
 			}
@@ -500,6 +505,8 @@ void ShowLayer::showSaoCard()
 			auto _card = ShowCard::create(0, _saoList[0][i]);
 			if (_card)
 			{
+				_card->setCardState(ShowCard::ISSAO::YES);
+				_card->turnToBack();
 				addChild(_card);
 				m_tmpSaoCardVec.pushBack(_card);
 			}
@@ -513,6 +520,8 @@ void ShowLayer::showSaoCard()
 			auto _card = ShowCard::create(1, _saoList[1][i]);
 			if (_card)
 			{
+				_card->setCardState(ShowCard::ISSAO::YES);
+				_card->turnToBack();
 				addChild(_card);
 				m_tmpSaoCardVec.pushBack(_card);
 			}

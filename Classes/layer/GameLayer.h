@@ -7,6 +7,7 @@
 #include "Card/CardSprite.h"
 #include "utils/Actionstate.h"
 #include "StateManager.h"
+#include "Card/ShortCardSprite.h"
 
 using namespace cocos2d;
 using namespace ui;
@@ -16,7 +17,22 @@ using namespace ui;
 	1 下家
 	2 自己
 */
+//shuaxin分容器装牌
+struct CardPoint
+{
+	ShowCard*		card_4;
+	ShowCard*		card_3;
+	ShowCard*		card_2;
+	ShowCard*		card_1;
 
+	CardPoint()
+	{
+		card_4 = nullptr;
+		card_3 = nullptr;
+		card_2 = nullptr;
+		card_1 = nullptr;
+	}
+};
 class GameLayer :public Layer
 {
 public:
@@ -121,5 +137,24 @@ private:
 	bool		_needVisible;
 	float		_SumTime;
 	int			_cardCount;
+/********************************************************************/
+public:
+	//分牌 4，3，2，1
+	void SplitCardWall();
+	//shuaxin分容器装牌
+	void reCardSprite();
+
+
+private:
+	Vector<ShortCardSprite* > four_CardList;		//四张
+	Vector<ShortCardSprite* > three_Same_CardList;	//三张相同
+	Vector<ShortCardSprite* > three_Diff_CardList;	//三张不同	(没有检测，就相当于单张好了)
+	Vector<ShortCardSprite* > two_CardList;			//两张
+	Vector<ShortCardSprite* > one_CardList;			//一张
+
+	vector<int> Card_4[2];
+	vector<int> Card_3[2];
+	vector<int> Card_2[2];
+	vector<int> Card_1[2];
 };
 

@@ -9,7 +9,8 @@ fanXin(0),
 tianHu(0),
 diHu(0),
 sanLongWuK(0),
-ziMo(0)
+ziMo(0),
+huDuo(0)
 {
 }
 
@@ -99,14 +100,18 @@ int GetScore::getHuDuo()
 {
 	if (getScore() >= 10)
 	{
-		int num = ((getScore() - 10) / 5) + 1;
-		return num;
+		huDuo = ((getScore() - 10) / 5) + 1;
+		return huDuo;
 	}
 	else
 	{
-		int num = 0;
-		return num;
+		huDuo = 0;
+		return huDuo;
 	}
+}
+void GetScore::setHuDuo(int num)
+{
+	huDuo = num;
 }
 
 int GetScore::getBeiShu()
