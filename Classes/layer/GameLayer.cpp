@@ -432,14 +432,14 @@ bool GameLayer::checkChi()
 		}
 		isAction = true;
 	}*/
-	/*if (t_Player[2].checkChiACard2_7_10(m_newCard.m_Type, m_newCard.m_Value))
+	if (t_Player[2].checkChiACard2_7_10(m_newCard.m_Type, m_newCard.m_Value))
 	{
 		for (auto &_data : t_Player[2].m_TempChiCardVec)
 		{
 			m_TempChiCard.push_back(_data);
 		}
 		isAction = true;
-	}*/
+	}
 
 	if (t_Player[2].checkChiA_B_C(m_newCard.m_Type, m_newCard.m_Value))
 	{
@@ -451,7 +451,7 @@ bool GameLayer::checkChi()
 		isAction = true;
 	}
 
-	/*if (t_Player[2].checkChiACardA_A_a(m_newCard.m_Type, m_newCard.m_Value))
+	if (t_Player[2].checkChiACardA_A_a(m_newCard.m_Type, m_newCard.m_Value))
 	{
 		for (auto &_data : t_Player[2].m_TempChiCardList)
 		{
@@ -459,9 +459,9 @@ bool GameLayer::checkChi()
 		}
 
 		isAction = true;
-	}*/
+	}
 	//有问题
-	/*if (t_Player[2].checkChiACardA_A_a_a(m_newCard.m_Type, m_newCard.m_Value))
+	if (t_Player[2].checkChiACardA_A_a_a(m_newCard.m_Type, m_newCard.m_Value))
 	{
 		for (auto &_data : t_Player[2].m_TempChiCardList)
 		{
@@ -469,7 +469,7 @@ bool GameLayer::checkChi()
 		}
 
 		isAction = true;
-	}*/
+	}
 
 	if (isAction)
 	{
