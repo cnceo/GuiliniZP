@@ -121,13 +121,16 @@ bool PlayerZeroState::myCheck()
 		chooseLayer->setName(CHOOSELAYER);
 		return true;
 	}
-	else if (!GAMELAYER->checkChi() && GAMELAYER->checkPeng())//可吃不能碰
+	else if (!GAMELAYER->checkChi() && GAMELAYER->checkPeng())//可碰不能吃
 	{
-		auto chooseLayer = ChooseLayer::create();
-		GAMELAYER->addChild(chooseLayer);
-		chooseLayer->setBtnEnable(2);
-		chooseLayer->setName(CHOOSELAYER);
-		return true;
+		if (!GAMELAYER->t_Player[2].checkGuoSao(GAMELAYER->m_newCard.m_Type, GAMELAYER->m_newCard.m_Value))
+		{
+			auto chooseLayer = ChooseLayer::create();
+			GAMELAYER->addChild(chooseLayer);
+			chooseLayer->setBtnEnable(2);
+			chooseLayer->setName(CHOOSELAYER);
+			return true;
+		}
 	}
 	return false;
 }
@@ -216,7 +219,7 @@ bool PlayerZeroState::myCheckZeroPop()
 		GAMELAYER->runAction(seq);
 		return true;
 	}
-	else if (!checkChi() && checkPeng())//可吃不能碰
+	else if (!checkChi() && checkPeng())//可碰不能吃
 	{
 		auto delay = DelayTime::create(1.5f);
 		auto callfunc = CallFunc::create([](){
@@ -224,10 +227,11 @@ bool PlayerZeroState::myCheckZeroPop()
 			GAMELAYER->addChild(chooseLayer);
 			chooseLayer->setBtnEnable(2);
 			chooseLayer->setName(CHOOSELAYER);
-		});
+			});
 		auto seq = Sequence::create(delay, callfunc, nullptr);
 		GAMELAYER->runAction(seq);
 		return true;
+
 	}
 	return false;
 }
@@ -253,6 +257,12 @@ bool PlayerZeroState::checkChi()
 	}
 	isAction = true;
 	}*/
+
+	if (GAMELAYER->t_Player[2].checkChouPai(GAMELAYER->m_newCard.m_Type, GAMELAYER->m_newCard.m_Value))
+	{
+		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"臭牌"));
+		return false;
+	}
 
 	if (GAMELAYER->t_Player[2].checkChiACard2_7_10(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
 	{
@@ -304,7 +314,10 @@ bool PlayerZeroState::checkPeng()
 {
 	if (GAMELAYER->t_Player[2].checkPengACard(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
 	{
-		return true;
+		if (!GAMELAYER->t_Player[2].checkGuoSao(GAMELAYER->m_newCard.m_Type, GAMELAYER->m_newCard.m_Value))
+		{
+			return true;
+		}
 	}
 	return false;
 }

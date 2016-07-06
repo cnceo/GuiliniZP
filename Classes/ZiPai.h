@@ -80,7 +80,7 @@ public:
 	void	logAllChiCard();						//打印所有吃的牌
 
 	void	logAllTempCard();						//所有可以吃的牌
-
+	void	logNotChi();
 public:
 
 	void	addCard(int p_type, int p_value);	//初始化手牌

@@ -104,10 +104,13 @@ void PlayerOneState::myCheck()
 	}
 	else if (GAMELAYER->checkPeng())
 	{
-		auto chooseLayer = ChooseLayer::create();
-		GAMELAYER->addChild(chooseLayer);
-		chooseLayer->setBtnEnable(2);
-		chooseLayer->setName(CHOOSELAYER);
+		if (!GAMELAYER->t_Player[2].checkGuoSao(GAMELAYER->m_newCard.m_Type, GAMELAYER->m_newCard.m_Value))
+		{
+			auto chooseLayer = ChooseLayer::create();
+			GAMELAYER->addChild(chooseLayer);
+			chooseLayer->setBtnEnable(2);
+			chooseLayer->setName(CHOOSELAYER);
+		}
 	}
 	else
 	{
@@ -219,16 +222,19 @@ bool PlayerOneState::myCheckOnePop()
 	{
 		//ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"下家打牌我能碰"));
 		//需要延迟1.5秒
-		auto delay = DelayTime::create(1.5f);
-		auto callfunc = CallFunc::create([](){
-			auto chooseLayer = ChooseLayer::create();
-			GAMELAYER->addChild(chooseLayer);
-			chooseLayer->setBtnEnable(2);
-			chooseLayer->setName(CHOOSELAYER);
-		});
-		auto seq = Sequence::create(delay,callfunc,nullptr);
-		GAMELAYER->runAction(seq);
-		return true;
+		if (!GAMELAYER->t_Player[2].checkGuoSao(GAMELAYER->m_newCard.m_Type, GAMELAYER->m_newCard.m_Value))
+		{
+			auto delay = DelayTime::create(1.5f);
+			auto callfunc = CallFunc::create([](){
+				auto chooseLayer = ChooseLayer::create();
+				GAMELAYER->addChild(chooseLayer);
+				chooseLayer->setBtnEnable(2);
+				chooseLayer->setName(CHOOSELAYER);
+			});
+			auto seq = Sequence::create(delay, callfunc, nullptr);
+			GAMELAYER->runAction(seq);
+			return true;
+		}
 	}
 	return false;
 }

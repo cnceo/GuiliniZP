@@ -158,7 +158,18 @@ void ChooseLayer::closeBtnCbk(Ref* psender)
 	_eventDispatcher->dispatchCustomEvent(CLOSE_CHOOSELAYER);
 	_eventDispatcher->dispatchCustomEvent(HIDE_TIMECOUNT);
 	//_eventDispatcher->dispatchCustomEvent(SHOW_QIPAI);
+	auto gameLayer = GetLayer::getInstance()->getgameLayer();
+	if (m_chi_btn->isEnabled())
+	{
+		//检测臭牌
+		gameLayer->t_Player[2].m_Not_Chi[gameLayer->m_newCard.m_Type].push_back(gameLayer->m_newCard.m_Value);
+	}
 
+	if (m_peng_btn->isEnabled())
+	{
+		//检测过扫(能碰未碰)
+		gameLayer->t_Player[2].m_Not_Peng[gameLayer->m_newCard.m_Type].push_back(gameLayer->m_newCard.m_Value);
+	}
 	close();
 }
 

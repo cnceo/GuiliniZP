@@ -11,6 +11,8 @@ USING_NS_CC;
 
 PlayerTwoState::PlayerTwoState()
 {
+	
+
 	std::cout << "我[2]摸牌打牌" << std::endl;
 	UserDefault::getInstance()->setIntegerForKey(GAMESTATE, 2);
 	if (!UserDefault::getInstance()->getBoolForKey(ISFIRSTPLAY))
@@ -26,6 +28,7 @@ PlayerTwoState::PlayerTwoState()
 	{
 		if (UserDefault::getInstance()->getBoolForKey(ISGETORPLAY))
 		{
+			GAMELAYER->t_Player[2].notChi();
 			//摸牌不打牌
 			auto callfunc = CallFunc::create([](){
 				Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(PLAYERBLINK_2);

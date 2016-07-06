@@ -197,7 +197,18 @@ void ShowLayer::createACard()
 			if (m_ACard)
 			{
 				m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftTop, Vec2::ZERO));
-				m_ACard->runAction(seq);
+
+				auto moveTo = MoveTo::create(0.3, CommonFunction::getVisibleAchor(Anchor::Center, Vec2(-300, 200)));
+				auto scaleTo = ScaleTo::create(0.3f, 0.6f);
+				auto spawn = Spawn::create(moveTo, scaleTo, nullptr);
+
+				auto delay = DelayTime::create(1.0f);
+				auto callfunc = CallFunc::create([=](){
+					m_ACard->setVisible(false);
+				});
+				auto _seq = Sequence::create(spawn, delay, callfunc, nullptr);
+
+				m_ACard->runAction(_seq);
 			}
 		}
 		else if (gameState == 1)
@@ -205,7 +216,18 @@ void ShowLayer::createACard()
 			if (m_ACard)
 			{
 				m_ACard->setPosition(CommonFunction::getVisibleAchor(Anchor::RightTop, Vec2::ZERO));
-				m_ACard->runAction(seq);
+
+				auto moveTo = MoveTo::create(0.3, CommonFunction::getVisibleAchor(Anchor::Center, Vec2(300, 200)));
+				auto scaleTo = ScaleTo::create(0.3f, 0.6f);
+				auto spawn = Spawn::create(moveTo, scaleTo, nullptr);
+
+				auto delay = DelayTime::create(1.0f);
+				auto callfunc = CallFunc::create([=](){
+					m_ACard->setVisible(false);
+				});
+				auto _seq = Sequence::create(spawn, delay, callfunc, nullptr);
+
+				m_ACard->runAction(_seq);
 			}
 		}
 		else if (gameState == 2)
