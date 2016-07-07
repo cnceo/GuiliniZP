@@ -460,7 +460,7 @@ bool GameLayer::checkChi()
 
 		isAction = true;
 	}
-	//有问题
+
 	if (t_Player[2].checkChiACardA_A_a_a(m_newCard.m_Type, m_newCard.m_Value))
 	{
 		for (auto &_data : t_Player[2].m_TempChiCardList)

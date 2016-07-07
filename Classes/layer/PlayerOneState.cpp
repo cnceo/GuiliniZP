@@ -222,7 +222,7 @@ bool PlayerOneState::myCheckOnePop()
 	{
 		//ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"下家打牌我能碰"));
 		//需要延迟1.5秒
-		if (!GAMELAYER->t_Player[2].checkGuoSao(GAMELAYER->m_newCard.m_Type, GAMELAYER->m_newCard.m_Value))
+		if (!GAMELAYER->t_Player[2].checkGuoSao(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
 		{
 			auto delay = DelayTime::create(1.5f);
 			auto callfunc = CallFunc::create([](){

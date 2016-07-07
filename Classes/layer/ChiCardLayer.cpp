@@ -261,6 +261,126 @@ void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
 	}
 }
 
+/*
+void ChiCardLayer::onTouchEnded(Touch *touch, Event *unused_event)
+{
+	if (!m_tmpChiCardList.empty())
+	{
+		int _cardTag_0 = -1;
+		for (auto iter = m_tmpChiCardList.begin(); iter != m_tmpChiCardList.end(); ++iter)
+		{
+			SmallCard* _card = static_cast<SmallCard*>(*iter);
+			Point locationInNode = _card->convertToNodeSpace(touch->getLocation());
+
+			Size s = _card->getContentSize();
+			Rect rect = Rect(-s.width / 2, -s.height / 2, s.width, s.height);
+
+			if (rect.containsPoint(locationInNode))
+			{
+				log("---------tag=%d", _card->getTag());
+				//log("tag/3==%d",_card->getTag() / 3);
+				//log("T:%d,V:%d", _card->getCardData().m_Type, _card->getCardData().m_Value);
+				_cardTag_0 = _card->getTag() / 3;
+			}
+		}
+
+		if (_cardTag_0 >= 0)
+		{
+			int record = -1;
+			//先把新牌添加到手里，再删除
+			_gameLayer->t_Player[2].addCard(_gameLayer->m_newCard.m_Type, _gameLayer->m_newCard.m_Value);
+			//ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我吃牌！"));
+			GetLayer::getInstance()->getgameLayer()->addEffect("effect/chi.png");
+			for (auto &_scard : m_tmpChiCardList)
+			{
+				if (_scard->getTag() / 3 == _cardTag_0)
+				{
+					log("___T:%d,___V:%d", _scard->getCardData().m_Type, _scard->getCardData().m_Value);
+					if (_gameLayer)
+					{
+						int _type = _scard->getCardData().m_Type;
+						int _value = _scard->getCardData().m_Value;
+						_gameLayer->t_Player[2].m_ChiCardVec[_type].push_back(_value);			//连续的
+						//log("___size =%d", _gameLayer->t_Player[2].m_ChiCardVec[_type].size());
+						_gameLayer->t_Player[2].delACard(_type, _value);
+					}
+				}
+			}
+			_gameLayer->refrishCardPos();
+			_eventDispatcher->dispatchCustomEvent(SHOW_CHICARD);
+
+			if (getParent())
+			{
+				_gameLayer->removeChildByName(CHOOSELAYER);
+
+				UserDefault::getInstance()->setIntegerForKey(GAMESTATE, 0);
+				UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//吃完后我打牌
+				UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
+
+				_gameLayer->chooseLayerClose();
+				removeFromParent();
+			}
+		}
+	}
+
+	if (!m_tmpChiCardVec.empty())
+	{
+		int _cardTag_1 = -1;
+		for (auto iter = m_tmpChiCardVec.begin(); iter != m_tmpChiCardVec.end(); ++iter)
+		{
+			SmallCard* _card = static_cast<SmallCard*>(*iter);
+			Point locationInNode = _card->convertToNodeSpace(touch->getLocation());
+
+			Size s = _card->getContentSize();
+			Rect rect = Rect(-s.width / 2, -s.height / 2, s.width, s.height);
+
+			if (rect.containsPoint(locationInNode))
+			{
+				log("tag=%d---------", _card->getTag());
+				//log("tag/3==%d",_card->getTag() / 3);
+				//log("T:%d,V:%d", _card->getCardData().m_Type, _card->getCardData().m_Value);
+				_cardTag_1 = _card->getTag() / 3;
+			}
+		}
+
+		if (_cardTag_1 >= 0)
+		{
+			_gameLayer->t_Player[2].addCard(_gameLayer->m_newCard.m_Type, _gameLayer->m_newCard.m_Value);
+			//ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"我吃牌！"));
+			GetLayer::getInstance()->getgameLayer()->addEffect("effect/chi.png");
+
+			for (auto &_scard : m_tmpChiCardVec)
+			{
+				if (_scard->getTag() / 3 == _cardTag_1)
+				{
+					//log("T:___%d,V___:%d", _scard->getCardData().m_Type, _scard->getCardData().m_Value);
+					if (_gameLayer)
+					{
+						int _type = _scard->getCardData().m_Type;
+						int _value = _scard->getCardData().m_Value;
+						_gameLayer->t_Player[2].m_ChiCardList[_type].push_back(_value);
+						//log("type__=%d,size___ =%d", _type, _gameLayer->t_Player[2].m_ChiCardList[_type].size());	//A_A_a_a
+						_gameLayer->t_Player[2].delACard(_type, _value);
+					}
+				}
+			}
+			_gameLayer->refrishCardPos();
+			_eventDispatcher->dispatchCustomEvent(SHOW_CHICARD);
+
+			if (getParent())
+			{
+				_gameLayer->removeChildByName(CHOOSELAYER);
+				UserDefault::getInstance()->setIntegerForKey(GAMESTATE, 0);
+				UserDefault::getInstance()->setBoolForKey(ISGETORPLAY, false);	//吃完后我打牌
+				UserDefault::getInstance()->setBoolForKey(ISPLAYCAED, true);	//可以打牌
+
+				_gameLayer->chooseLayerClose();
+				removeFromParent();
+			}
+		}
+	}
+}
+*/
 void ChiCardLayer::initData()
 {
 	auto layercolor = LayerColor::create(Color4B(0, 0, 0, 150));
@@ -360,18 +480,18 @@ void ChiCardLayer::initUI()
 			m_allChiCardVec.at(i)->setTag(i);
 		}
 	}
-	/*
-	if (!m_tmpChiCardList.empty())
+
+	checkXiabi();
+}
+
+void ChiCardLayer::checkXiabi()
+{
+	/*if (m_allChiCardVec.empty())return;
+
+	for (int i = 0; i < m_allChiCardVec.size();i++)
 	{
-		for (int i = 0; i < m_tmpChiCardList.size(); i++)
-		{
-			int _height = m_tmpChiCardList.at(i)->getContentSize().height;
-			//m_tmpChiCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i % 3)*(_height)+100, i / 3 * (_height - 73))));
-			m_tmpChiCardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2((i / 3)*(_height + 15) + 150, i % 3 * (_height - 83) + 100)));
-			m_tmpChiCardList.at(i)->setTag(i);
-		}
-	}
-	*/
+		int _index = m_allChiCardVec.at(i)->getTag() / 3;
+	}*/
 }
 
 Sprite* ChiCardLayer::createSmallCardSprite(int p_Type, int p_Value)

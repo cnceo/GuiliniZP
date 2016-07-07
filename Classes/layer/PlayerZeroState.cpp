@@ -238,7 +238,7 @@ bool PlayerZeroState::myCheckZeroPop()
 
 bool PlayerZeroState::checkChi()
 {
-	bool isAction = false;	//有可吃的
+	bool isAction = false;
 	if (!GAMELAYER->m_TempChiCard.empty())
 	{
 		GAMELAYER->m_TempChiCard.clear();
@@ -249,16 +249,16 @@ bool PlayerZeroState::checkChi()
 		GAMELAYER->m_TempChiList.clear();
 	}
 
-	/*if (t_Player[2].checkChiACard1_2_3(m_newCard.m_Type, m_newCard.m_Value))
+	/*if (GAMELAYER->t_Player[2].checkChiACard1_2_3(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
 	{
-	for (auto &_data:t_Player[2].m_TempChiCardVec)
-	{
-	m_TempChiCard.push_back(_data);
-	}
-	isAction = true;
+		for (auto &_data:GAMELAYER->t_Player[2].m_TempChiCardVec)
+		{
+			GAMELAYER->m_TempChiCard.push_back(_data);
+		}
+		isAction = true;
 	}*/
 
-	if (GAMELAYER->t_Player[2].checkChouPai(GAMELAYER->m_newCard.m_Type, GAMELAYER->m_newCard.m_Value))
+	if (GAMELAYER->t_Player[2].checkChouPai(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
 	{
 		ToastManger::getInstance()->createToast(CommonFunction::WStrToUTF8(L"臭牌"));
 		return false;
@@ -292,16 +292,16 @@ bool PlayerZeroState::checkChi()
 
 		isAction = true;
 	}
-	//有问题
-	/*if (t_Player[2].checkChiACardA_A_a_a(m_newCard.m_Type, m_newCard.m_Value))
-	{
-	for (auto &_data : t_Player[2].m_TempChiCardList)
-	{
-	m_TempChiList.push_back(_data);
-	}
 
-	isAction = true;
-	}*/
+	if (GAMELAYER->t_Player[2].checkChiACardA_A_a_a(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
+	{
+		for (auto &_data : GAMELAYER->t_Player[2].m_TempChiCardList)
+		{
+			GAMELAYER->m_TempChiList.push_back(_data);
+		}
+
+		isAction = true;
+	}
 
 	if (isAction)
 	{
@@ -314,7 +314,7 @@ bool PlayerZeroState::checkPeng()
 {
 	if (GAMELAYER->t_Player[2].checkPengACard(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
 	{
-		if (!GAMELAYER->t_Player[2].checkGuoSao(GAMELAYER->m_newCard.m_Type, GAMELAYER->m_newCard.m_Value))
+		if (!GAMELAYER->t_Player[2].checkGuoSao(GAMELAYER->PopPai.m_Type, GAMELAYER->PopPai.m_Value))
 		{
 			return true;
 		}

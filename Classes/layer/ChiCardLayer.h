@@ -32,6 +32,7 @@ private:
 
 	void initData();
 	void initUI();
+	void checkXiabi();	//检测下比
 
 	Sprite* createSmallCardSprite(int p_Type, int p_Value);
 
