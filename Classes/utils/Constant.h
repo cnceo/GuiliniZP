@@ -39,7 +39,7 @@ using namespace cocos2d;
 //层zorder
 
 #define CARD_ZORDER_1 10
-#define CARD_ZORDER_2 20
+#define CARD_ZORDER_2 100
 
 //userdefault 数据存储
 

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "cocos2d.h"
-#include "GameLayer.h"
+#include "../GameLayer.h"
 #include "Card/ShortCardSprite.h"
 
 using namespace cocos2d;
@@ -44,6 +44,7 @@ private:
 	bool check_Two_card();
 	bool check_One_card();
 	void refrishCardPos();							//刷新位置
+	void refrishCardPosByIndex();					//刷新位置
 
 	Vector<ShortCardSprite* > _four_CardList[2];		//四张
 	Vector<ShortCardSprite* > _three_Same_CardList[2];	//三张相同
@@ -59,4 +60,7 @@ private:
 	int m_OldZorder;
 
 	int count;
+
+	const int MAX_X = 9;
+	const int MAX_Y = 4;
 };

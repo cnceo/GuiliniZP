@@ -27,17 +27,16 @@ public:
 	virtual bool onTouchBegan(Touch *touch, Event *unused_event);
 	virtual void onTouchMoved(Touch *touch, Event *unused_event);
 	virtual void onTouchEnded(Touch *touch, Event *unused_event);
+	GameLayer* _gameLayer;
 
 private:
 
 	void initData();
 	void initUI();
-	void checkXiabi();	//检测下比
 
 	Sprite* createSmallCardSprite(int p_Type, int p_Value);
 
 private:
-	GameLayer* _gameLayer;
 	Vector<SmallCard* > m_tmpChiCardList;		//只管连续的
 	Vector<SmallCard* > m_tmpChiCardVec;		//只管A_A_a_a或A_A_a
 

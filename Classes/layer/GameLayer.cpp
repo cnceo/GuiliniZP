@@ -20,7 +20,7 @@
 #include "ShowZeroLayer.h"
 #include "utils/GetLayer.h"
 #include "RatioLayer.h"
-#include "MyCardWall.h"
+#include "CardBoard/MyCardWall.h"
 #include "Effect/CardEffect.h"
 #include "RemainCardLayer.h"
 
@@ -159,7 +159,7 @@ bool GameLayer::init()
 		xipai();
 		_needVisible = true;
 		//log("visible=%d", _needVisible?true:false);
-		//addChild(MyCardWall::create(this));
+		addChild(MyCardWall::create(this));
 	});
 	auto _callfunc_2 = CallFunc::create([=](){
 		creatAction();

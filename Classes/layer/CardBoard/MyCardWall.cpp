@@ -2,6 +2,7 @@
 #include "utils/CommonFunction.h"
 #include "utils/Constant.h"
 #include "layerUtils/ToastLayer/ToastManger.h"
+#include "Tools.h"
 
 MyCardWall::MyCardWall():
 m_GameLayer(nullptr),
@@ -109,8 +110,6 @@ void MyCardWall::createCardWall()
 		}
 	}
 
-
-
 	if (!_cardList.empty())
 	{
 		float _width = _cardList.at(0)->getContentSize().width;
@@ -118,15 +117,17 @@ void MyCardWall::createCardWall()
 
 		for (int i = 0; i < _cardList.size(); ++i)
 		{
-			_cardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, 0, Vec2(_width * i + 30 + _leftSize * (45 / 2), 0)));
+			_cardList.at(i)->setBoardIndex(i);
+			//_cardList.at(i)->setPosition(CommonFunction::getVisibleAchor(Anchor::LeftMid, 0, Vec2(_width * i + 30 + _leftSize * (45 / 2), 0)));
+			_cardList.at(i)->setPosition(Tools::getPosByIndex(i));
+			//_cardList.at(i)->setLocalZOrder(Tools::getCellZOrder(i));
 		}
-		//int _middle = _cardList.size() / 2;
-		//_cardList.at(_middle)->setPosition(CommonFunction::getVisibleAchor(Anchor::Center, Vec2(0, 30)));
 	}
 
 	setSortState();
 	setCardState();
-	refrishCardPos();
+//	refrishCardPos();	//发牌的时候手牌整理 TODO
+	//refrishCardPosByIndex();
 }
 
 bool MyCardWall::onTouchBegan(Touch *touch, Event *unused_event)
@@ -198,6 +199,76 @@ void MyCardWall::onTouchEnded(Touch *touch, Event *unused_event)
 	{
 		return;
 	}
+
+	if (Tools::getXValueByPos(touch->getLocation()) != Tools::getXValueByIndex(m_TempMoveCard->getBoardIndex()) 
+		&& Tools::getXValueByPos(touch->getLocation()) <10 
+		&& Tools::getXValueByPos(touch->getLocation()) >= 0
+		)
+	{
+		int moveOutX = Tools::getXValueByIndex(m_TempMoveCard->getBoardIndex());
+		//获取新的index
+		cocos2d::Vector<ShortCardSprite*> cells;
+		int _count = 0;
+		bool isMAX_Y = false;
+		for (auto var : _cardList)
+		{
+			if (Tools::getXValueByIndex(var->getBoardIndex()) == Tools::getXValueByPos(touch->getLocation()))
+				_count++;
+		}
+		if (_count >= MAX_Y)
+		{
+			isMAX_Y = true;
+		}
+		else
+		{
+			for (auto var : _cardList)
+			if (Tools::getXValueByIndex(var->getBoardIndex()) == Tools::getXValueByPos(touch->getLocation()))
+			{
+				cells.pushBack(var);
+			}
+		}
+
+		if (!isMAX_Y)
+		{
+			cells.pushBack(m_TempMoveCard);
+
+			//TODO 重新排列cells的大小
+			for (int i = 0; i<cells.size(); i++)
+			{
+				cells.at(i)->setBoardIndex(10 * i + Tools::getXValueByPos(touch->getLocation()));
+				cells.at(i)->setPosition(Tools::getPosByIndex(cells.at(i)->getBoardIndex()));
+				cells.at(i)->setLocalZOrder(CARD_ZORDER_1);
+			}
+			//离开的那列重新整理
+			cocos2d::Vector<ShortCardSprite*> cells2;
+			for (auto var2 : _cardList)
+			{
+				if (Tools::getXValueByIndex(var2->getBoardIndex()) == moveOutX)
+				{
+					cells2.pushBack(var2);
+				}
+			}
+			for (int j = 0; j<cells2.size(); j++)
+			{
+				cells2.at(j)->setBoardIndex(10 * j + moveOutX);
+				cells2.at(j)->setPosition(Tools::getPosByIndex(cells2.at(j)->getBoardIndex()));
+			}
+		}
+		else
+		{
+			m_TempMoveCard->setPosition(Tools::getPosByIndex(m_TempMoveCard->getBoardIndex()));
+			m_TempMoveCard->setLocalZOrder(m_OldZorder);
+			//m_TempMoveCard->setPosition(m_OldPos);
+		}
+	}
+	else
+	{
+		m_TempMoveCard->setPosition(Tools::getPosByIndex(m_TempMoveCard->getBoardIndex()));
+		m_TempMoveCard->setLocalZOrder(m_OldZorder);
+		//m_TempMoveCard->setPosition(m_OldPos);
+		
+	}
+	/*
 	if (touch->getLocation().y > VISIBLESIZE.height / 2 + 150)
 	{
 		int _type = m_TempMoveCard->getCardData()->m_Type;
@@ -225,7 +296,7 @@ void MyCardWall::onTouchEnded(Touch *touch, Event *unused_event)
 		auto moveTo = MoveTo::create(0.2, m_OldPos);
 		m_TempMoveCard->runAction(moveTo);
 	}
-
+	*/
 	if (m_TempMoveCard)
 	{
 		m_TempMoveCard = nullptr;
@@ -323,6 +394,31 @@ void MyCardWall::setSortState()
 
 	check_Three_Diff_Card();
 	check_One_card();
+}
+
+void MyCardWall::refrishCardPosByIndex()
+{
+	if (_cardList.empty())
+	{
+		return;
+	}
+	if (!_two_CardList[0].empty())
+	{
+		for (int i = 0; i < _two_CardList[0].size(); i++)
+		{
+			_two_CardList[0].at(i)->setBoardIndex(10 * i);
+			_two_CardList[0].at(i)->setPosition(Tools::getPosByIndex(_two_CardList[0].at(i)->getBoardIndex()));
+		}
+	}
+
+	if (!_two_CardList[1].empty())
+	{
+		for (int i = 0; i < _two_CardList[1].size(); i++)
+		{
+			_two_CardList[1].at(i)->setBoardIndex(10 * i );
+			_two_CardList[1].at(i)->setPosition(Tools::getPosByIndex(_two_CardList[1].at(i)->getBoardIndex()));
+		}
+	}
 }
 
 void MyCardWall::refrishCardPos()

@@ -32,11 +32,12 @@ public:
 	virtual bool	init(int type, int value);
 
 	void initUI(int type, int value);
+	void setCardOpacity(GLubyte opacity);
 
 	CC_SYNTHESIZE(CardState, _state, State);
 	CC_SYNTHESIZE(SortState, _sortState, sortState);
+	CC_SYNTHESIZE(int, boardIndex, BoardIndex);			//NEW
 
-	void setCardOpacity(GLubyte opacity);
 public:
 	 CardData*	getCardData();
 

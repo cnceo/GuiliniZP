@@ -6,6 +6,7 @@
 #include "utils/GetScore.h"
 #include "utils/GetLayer.h"
 #include "layerUtils/ToastLayer/ToastManger.h"
+#include "XiaBiLayer.h"
 
 ChiCardLayer::ChiCardLayer():
 _gameLayer(nullptr)
@@ -45,6 +46,7 @@ bool ChiCardLayer::init(GameLayer* _layer)
 
 	initData();
 	initUI();
+	addChild(XiaBiLayer::create(this));
 	return true;
 }
 
@@ -481,17 +483,7 @@ void ChiCardLayer::initUI()
 		}
 	}
 
-	checkXiabi();
-}
 
-void ChiCardLayer::checkXiabi()
-{
-	/*if (m_allChiCardVec.empty())return;
-
-	for (int i = 0; i < m_allChiCardVec.size();i++)
-	{
-		int _index = m_allChiCardVec.at(i)->getTag() / 3;
-	}*/
 }
 
 Sprite* ChiCardLayer::createSmallCardSprite(int p_Type, int p_Value)

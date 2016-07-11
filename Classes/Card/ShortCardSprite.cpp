@@ -49,16 +49,16 @@ void ShortCardSprite::initUI(int type, int value)
 	if (type == 0)
 	{
 		card = Sprite::create(StringUtils::format("duanpai_x%d.png", value));
-		card->setScale(0.6f);
+		card->setScale(0.8f);
 	}
 	else if (type == 1)
 	{
 		card = Sprite::create(StringUtils::format("duanpai_d%d.png", value));
-		card->setScale(0.6f);
+		card->setScale(0.8f);
 	}
 	addChild(card);
 
-	this->setContentSize(card->getContentSize() *0.6f);
+	this->setContentSize(card->getContentSize() *0.8f);
 }
 
 CardData*	ShortCardSprite::getCardData()
